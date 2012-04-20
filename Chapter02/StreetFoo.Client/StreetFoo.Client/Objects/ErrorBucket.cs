@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
-    public delegate void FailureHandler(ErrorBucket errors, object callbackArgs = null);
-
+    // holds a set of errors that we can build up as work through a process...
     public class ErrorBucket
     {
         private List<string> Errors { get; set; }

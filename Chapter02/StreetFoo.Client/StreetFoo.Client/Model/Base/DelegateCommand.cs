@@ -15,6 +15,7 @@ namespace StreetFoo.Client
 
         public DelegateCommand(Action<object> handler)
         {
+            // store a reference to the delegate to invoke...
             this.Handler = handler;
         }
 
@@ -25,6 +26,7 @@ namespace StreetFoo.Client
 
         public void Execute(object parameter)
         {
+            // invoke the delegate that we stored earlier...
             Handler(parameter);
         }
     }

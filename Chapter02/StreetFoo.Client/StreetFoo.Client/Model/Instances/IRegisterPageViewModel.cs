@@ -7,6 +7,7 @@ using System.Windows.Input;
 
 namespace StreetFoo.Client
 {
+    // exposes the map of public binding properties on RegisterPage's view-model...
     public interface IRegisterPageViewModel
     {
         string Username

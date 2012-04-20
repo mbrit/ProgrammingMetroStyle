@@ -9,6 +9,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace StreetFoo.Client.UI
 {
+    // extension methods for presenting MessageDialog instances...
     internal static class Alert
     {
         internal static IAsyncOperation<IUICommand> ShowAlertAsync(this Page page, ErrorBucket errors)

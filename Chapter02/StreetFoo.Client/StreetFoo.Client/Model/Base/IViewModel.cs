@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
+    // base class for view-model implementations...
     public interface IViewModel : INotifyPropertyChanged
     {
     }

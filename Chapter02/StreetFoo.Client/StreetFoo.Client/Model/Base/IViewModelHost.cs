@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
+    // provides a route back from a view-model to a view...
     public interface IViewModelHost
     {
         void ShowAlertAsync(ErrorBucket errors);

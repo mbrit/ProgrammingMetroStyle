@@ -114,7 +114,6 @@
     <Compile Include="Model\Base\DelegateCommand.cs" />
     <Compile Include="Model\Instances\IRegisterPageViewModel.cs" />
     <Compile Include="Model\Instances\RegisterPageViewModel.cs" />
-    <Compile Include="Model\Instances\RegistrationResult.cs" />
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

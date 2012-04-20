@@ -8,13 +8,16 @@ using System.Windows.Input;
 
 namespace StreetFoo.Client
 {
+    // concrete implementation of the RegisterPage's view-model...
     public class RegisterPageViewModel : ViewModel, IRegisterPageViewModel
     {
+        // commands...
         public ICommand RegisterCommand { get; private set; }
 
         public RegisterPageViewModel(IViewModelHost host)
             : base(host)
         {
+            // set RegisterCommand to 
             this.RegisterCommand = new DelegateCommand((args) => DoRegistration());
         }
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
+    // base class for view-model implemenations. holds 
     public abstract class ViewModel : IViewModel
     {
         //  somewhere to hold the host...

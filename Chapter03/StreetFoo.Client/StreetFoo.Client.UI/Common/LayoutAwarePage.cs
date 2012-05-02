@@ -373,17 +373,6 @@ namespace StreetFoo.Client.UI.Common
             return this.ShowAlertAsync(message);
         }
 
-        public FailureHandler GetFailureHandler()
-        {
-            // return a point to a default handling method...
-            return this.DefaultFailureHandler;
-        }
-
-        private void DefaultFailureHandler(object sender, ErrorBucket errors)
-        {
-            this.ShowAlertAsync(errors);
-        }
-
         // shows a view from a given view-model...
         public void ShowView(Type viewModelType)
         {

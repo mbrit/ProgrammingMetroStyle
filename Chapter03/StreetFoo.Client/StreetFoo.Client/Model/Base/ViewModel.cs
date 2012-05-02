@@ -56,6 +56,18 @@ namespace StreetFoo.Client
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, e);
-        }    
+        }
+
+        // get a delegate that can be told about fatal errors...
+        protected virtual FailureHandler GetFailureHandler()
+        {
+            return DefaultFailureHandler;
+        }
+
+        // default failure handler that asks the host to show a message...
+        private void DefaultFailureHandler(object sender, ErrorBucket errors)
+        {
+            this.Host.ShowAlertAsync(errors);
+        }
     }
 }

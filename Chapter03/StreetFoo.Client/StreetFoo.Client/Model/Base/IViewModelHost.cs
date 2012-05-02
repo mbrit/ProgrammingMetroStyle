@@ -15,9 +15,6 @@ namespace StreetFoo.Client
         IAsyncOperation<IUICommand> ShowAlertAsync(ErrorBucket errors);
         IAsyncOperation<IUICommand> ShowAlertAsync(string message);
 
-        // get a delegate that can be told about fatal errors...
-        FailureHandler GetFailureHandler();
-
         // shows a view from a given view-model...
         void ShowView(Type viewModelInterfaceType);
     }

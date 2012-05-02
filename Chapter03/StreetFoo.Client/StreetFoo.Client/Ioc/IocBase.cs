@@ -16,11 +16,11 @@ namespace StreetFoo.Client
             this.Handlers = new Dictionary<Type, Type>();
         }
 
-        protected U GetHandlerInternal<U>(params object[] args)
-            where U : T
+        public void SetHandler(Type interfaceType, Type concrete)
         {
-            Type concreteType = GetConcreteType(typeof(U));
-            return (U)Activator.CreateInstance(concreteType, args);
+            // in proper .NET you could do lots of defensive checks here, but apparently
+            // most of the stuff you need for that is missing in .NETCore...
+            Handlers[interfaceType] = concrete;
         }
 
         // gets the concrete type for a given interface type...
@@ -32,12 +32,12 @@ namespace StreetFoo.Client
             else
                 throw new InvalidOperationException(string.Format("A handler for '{0}' was not found.", interfaceType));
         }
-
-        public void SetHandler(Type interfaceType, Type concrete)
+   
+        protected U GetHandlerInternal<U>(params object[] args)
+            where U : T
         {
-            // in proper .NET you could do lots of defensive checks here, but apparently
-            // most of the stuff you need for that is missing in .NETCore...
-            Handlers[interfaceType] = concrete;
+            Type concreteType = GetConcreteType(typeof(U));
+            return (U)Activator.CreateInstance(concreteType, args);
         }
     }
 }

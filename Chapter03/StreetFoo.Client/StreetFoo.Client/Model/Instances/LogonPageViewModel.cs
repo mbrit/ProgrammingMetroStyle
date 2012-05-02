@@ -78,7 +78,7 @@ namespace StreetFoo.Client
 
                     // now what?
 
-                }, this.Host.GetFailureHandler());
+                }, this.GetFailureHandler());
             }
 
             // errors?

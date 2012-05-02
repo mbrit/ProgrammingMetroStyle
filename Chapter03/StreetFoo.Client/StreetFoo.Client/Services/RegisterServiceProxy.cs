@@ -19,7 +19,6 @@ namespace StreetFoo.Client
         {
             // package up the request...
             JsonObject input = new JsonObject();
-            ConfigureInputArgs(input);
             input.Add("username", username);
             input.Add("email", email);
             input.Add("password", password);

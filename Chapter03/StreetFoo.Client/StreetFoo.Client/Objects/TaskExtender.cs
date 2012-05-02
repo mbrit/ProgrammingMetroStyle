@@ -8,7 +8,7 @@ namespace StreetFoo.Client
 {
     public static class TaskExtender
     {
-        public static Task ChainExceptionHandler(this Task task, FailureHandler failure)
+        public static Task ChainFailureHandler(this Task task, FailureHandler failure)
         {
             // create a handler that will raise an exception if an operation fails...
             return task.ContinueWith((t) =>

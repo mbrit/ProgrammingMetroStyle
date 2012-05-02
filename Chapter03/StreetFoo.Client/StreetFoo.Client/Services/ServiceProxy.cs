@@ -23,8 +23,17 @@ namespace StreetFoo.Client
             this.Url = StreetFooRuntime.ServiceUrlBase + "Handle" + handler + ".ashx";
         }
 
+        protected void ConfigureInputArgs(JsonObject data)
+        {
+            // all the requests need an API key...
+            data.Add("apiKey", ApiKey);
+        }
+
         public Task Execute(JsonObject input, Action<JsonObject> processor, FailureHandler failure)
         {
+            // set the api key...
+            ConfigureInputArgs(input);
+
             // create a request...
             HttpWebRequest request = HttpWebRequest.CreateHttp(this.Url);
             request.Method = "POST";
@@ -42,7 +51,6 @@ namespace StreetFoo.Client
                     
                     // send it...
                     stream.Write(bs, 0, bs.Length);
-
                 }
 
                 // now, the response...
@@ -79,18 +87,12 @@ namespace StreetFoo.Client
                         failure(this, bucket);
                     }
 
-                }).ChainExceptionHandler(failure);
+                }).ChainFailureHandler(failure);
 
-            }).ChainExceptionHandler(failure);
+            }).ChainFailureHandler(failure);
 
             // return...
             return grsTask;
-        }
-
-        protected void ConfigureInputArgs(JsonObject data)
-        {
-            // all the requests need an API key...
-            data.Add("apiKey", ApiKey);
         }
     }
 }

@@ -102,7 +102,7 @@ namespace StreetFoo.Client
                     // navigate to the logon page...
                     this.Host.ShowView(typeof(ILogonPageViewModel));
 
-                }, this.Host.GetFailureHandler());
+                }, this.GetFailureHandler());
             }
 
             // errors?

@@ -393,5 +393,25 @@ namespace StreetFoo.Client.UI.Common
             Type handler = ViewFactory.Current.GetConcreteType(viewModelType);
             this.Frame.Navigate(handler);
         }
+
+        public void InvokeOnUiThread(Action action)
+        {
+            // do we need to flip?
+            if (!(this.Dispatcher.HasThreadAccess))
+            {
+                // marshal...
+                this.Dispatcher.Invoke(Windows.UI.Core.CoreDispatcherPriority.Normal, (sender, e) =>
+                {
+                    // at this point, the call will be marshalled...
+                    action();
+
+                }, this, null);
+            }
+            else
+            {
+                // call it without marshalling...
+                action();
+            }
+        }
     }
 }

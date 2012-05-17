@@ -9,6 +9,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
+    <UserControl.Resources>
+        <common:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+        <common:BooleanNegationConverter x:Key="NegationConverter" />
+    </UserControl.Resources>
+
     <Grid Background="{StaticResource ApplicationPageBackgroundBrush}">
 
         <Grid.RowDefinitions>
@@ -19,6 +24,9 @@
             <ColumnDefinition Width="120"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+
+        <ProgressBar Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="true" 
+                     Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"></ProgressBar>
 
         <!-- Back button and page title -->
         <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
@@ -34,8 +42,10 @@
             <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}"/>
 
             <StackPanel Orientation="Horizontal">
-                <Button Content="Logon" Command="{Binding LogonCommand}"></Button>
-                <Button Content="Register" Command="{Binding RegisterCommand}"></Button>
+                <Button Content="Logon" Command="{Binding LogonCommand}" 
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>
+                <Button Content="Register" Command="{Binding RegisterCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>
             </StackPanel>
 
         </StackPanel>

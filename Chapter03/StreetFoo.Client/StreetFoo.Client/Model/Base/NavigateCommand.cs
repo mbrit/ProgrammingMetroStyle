@@ -24,6 +24,12 @@ namespace StreetFoo.Client
             return true;
         }
 
+        protected void OnCanExecuteChanged(EventArgs e)
+        {
+            if (this.CanExecuteChanged != null)
+                this.CanExecuteChanged(this, e);
+        }
+
         public void Execute(object parameter)
         {
             this.Host.ShowView(typeof(T));

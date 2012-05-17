@@ -14,11 +14,10 @@ namespace StreetFoo.Client
         {
         }
 
-        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure)
+        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure, Action complete)
         {
             // input..
             JsonObject input = new JsonObject();
-            ConfigureInputArgs(input);
             input.Add("username", username);
             input.Add("password", password);
 
@@ -29,10 +28,13 @@ namespace StreetFoo.Client
                 string token = output.GetNamedString("token");
 
                 // return...
-                LogonResult result = new LogonResult(token);
-                success(result);
+                if (success != null)
+                {
+                    LogonResult result = new LogonResult(token);
+                    success(result);
+                }
 
-            }, failure);
+            }, failure, complete);
         }
     }
 }

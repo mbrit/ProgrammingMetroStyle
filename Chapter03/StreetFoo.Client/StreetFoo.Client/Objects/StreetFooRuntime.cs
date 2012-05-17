@@ -12,7 +12,7 @@ namespace StreetFoo.Client
         public static string Module { get; private set; }
 
         // gets the base URL of our services...
-        internal const string ServiceUrlBase = "https://streetfoo.apphb.com/handlers/";
+        internal const string ServiceUrlBase = "http://streetfoo.apphb.com/handlers/";
 
         // starts the application/sets up state...
         public static void Start(string module)

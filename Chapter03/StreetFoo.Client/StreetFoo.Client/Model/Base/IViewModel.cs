@@ -10,5 +10,7 @@ namespace StreetFoo.Client
     // base class for view-model implementations...
     public interface IViewModel : INotifyPropertyChanged
     {
+        // shared busy flag...
+        bool IsBusy { get; }
     }
 }

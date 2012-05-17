@@ -15,7 +15,7 @@ namespace StreetFoo.Client
         }
 
         public Task Register(string username, string email, string password, string confirm, Action<RegisterResult> success, 
-            FailureHandler failure)
+            FailureHandler failure, Action complete)
         {
             // package up the request...
             JsonObject input = new JsonObject();
@@ -34,7 +34,7 @@ namespace StreetFoo.Client
                 RegisterResult result = new RegisterResult(userId);
                 success(result);
 
-            }, failure);
+            }, failure, complete);
         }
     }
 }

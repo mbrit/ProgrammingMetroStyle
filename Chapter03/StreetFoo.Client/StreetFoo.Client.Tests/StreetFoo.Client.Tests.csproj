@@ -118,10 +118,11 @@
     <Compile Include="Mocks\MockLogonServiceProxy.cs" />
     <Compile Include="Mocks\MockRegisterServiceProxy.cs" />
     <Compile Include="Mocks\MockViewModelHost.cs" />
+    <Compile Include="Objects\ICommandExtender.cs" />
     <Compile Include="Objects\TestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tests\TestLogonPage.cs" />
-    <Compile Include="Tests\TestRegisterPage.cs" />
+    <Compile Include="Tests\TestLogonViewModel.cs" />
+    <Compile Include="Tests\TestRegisterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">

@@ -18,44 +18,24 @@ namespace StreetFoo.Client
             : base(host)
         {
             // set RegisterCommand to defer to the DoRegistration method...
-            this.LogonCommand = new DelegateCommand((args) => DoLogon(args as TaskWrapper));
+            this.LogonCommand = new DelegateCommand((args) => DoLogon(args as CommandExecutionContext));
             this.RegisterCommand = new NavigateCommand<IRegisterPageViewModel>(host);
         }
 
         public string Username
         {
-            get
-            {
-                // the magic CallerMemberNameAttribute automatically maps this to a
-                // hash key of "Username"...
-                return this.GetStringValue();
-            }
-            set
-            {
-                // likewise, CallerMemberNameAttribute works here too...
-                this.SetValue(value);
-            }
+            get { return this.GetValue<string>(); }
+            set { this.SetValue(value); }
         }
 
         public string Password
         {
-            get
-            {
-                return this.GetStringValue();
-            }
-            set
-            {
-                this.SetValue(value);
-            }
-
+            get { return this.GetValue<string>(); }
+            set { this.SetValue(value); }
         }
 
-        private void DoLogon(TaskWrapper wrapper)
+        private void DoLogon(CommandExecutionContext context)
         {
-            // if we don't have a wrapper, create one...
-            if (wrapper == null)
-                wrapper = new TaskWrapper();
-
             // validate...
             ErrorBucket errors = new ErrorBucket();
             Validate(errors);
@@ -67,18 +47,14 @@ namespace StreetFoo.Client
                 ILogonServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<ILogonServiceProxy>();
 
                 // call...
-                wrapper.Task = proxy.Logon(this.Username, this.Password, async (result) =>
+                this.EnterBusy();
+                proxy.Logon(this.Username, this.Password, async (result) =>
                 {
-                    // if the wrapper has a callback, call it...
-                    wrapper.CallSuccessSafe(result);
-
                     // show a message to say that a user has been created... (this isn't a helpful message, 
                     // included for illustration...)
                     await this.Host.ShowAlertAsync("The user is now logged on.");
 
-                    // now what?
-
-                }, this.GetFailureHandler());
+                }, this.GetFailureHandler(), this.GetCompleteHandler(true)).AddToContext(context);
             }
 
             // errors?

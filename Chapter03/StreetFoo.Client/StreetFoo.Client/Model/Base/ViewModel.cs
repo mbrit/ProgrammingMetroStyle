@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
-    // base class for view-model implemenations. holds 
+    // base class for view-model implemenations. 
     public abstract class ViewModel : IViewModel
     {
         //  somewhere to hold the host...
@@ -17,6 +17,9 @@ namespace StreetFoo.Client
         // somewhere to hold the values...
         private Dictionary<string, object> Values { get; set; }
 
+        // support field for IsBusy flag...
+        private int BusyCounter { get; set; }
+        
         // event for the change...
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -36,10 +39,14 @@ namespace StreetFoo.Client
                 return null;
         }
 
-        protected string GetStringValue([CallerMemberName] string key = null)
+        protected T GetValue<T>([CallerMemberName] string key = null)
         {
             object asObject = GetValue(key);
-            return Convert.ToString(asObject);
+
+            if (asObject != null)
+                return (T)Convert.ChangeType(asObject, typeof(T));
+            else
+                return default(T);
         }
 
         // uses an optional value set to the name of the caller by default...
@@ -49,7 +56,7 @@ namespace StreetFoo.Client
             this.Values[key] = value;
 
             // raise the event...
-            OnPropertyChanged(new PropertyChangedEventArgs(key));
+            this.Host.InvokeOnUiThread(() => OnPropertyChanged(new PropertyChangedEventArgs(key)));
         }
 
         public virtual void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -58,16 +65,54 @@ namespace StreetFoo.Client
                 this.PropertyChanged(this, e);
         }
 
-        // get a delegate that can be told about fatal errors...
+        // gets a delegate that can be told about fatal errors...
         protected virtual FailureHandler GetFailureHandler()
         {
-            return DefaultFailureHandler;
+            return (sender, errors) => this.Host.ShowAlertAsync(errors);
         }
 
-        // default failure handler that asks the host to show a message...
-        private void DefaultFailureHandler(object sender, ErrorBucket errors)
+        // gets a delegate that can be told about completions...
+        protected virtual Action GetCompleteHandler(bool exitBusy = false)
         {
-            this.Host.ShowAlertAsync(errors);
+            if (exitBusy)
+                return () => this.ExitBusy();
+            else
+                return () => { };
+        }
+
+        // indicates whether the view model is busy...
+        public bool IsBusy
+        {
+            get { return GetValue<bool>(); }
+            private set { SetValue(value); }
+        }
+
+        // indicates that the view-model is running a background task...
+        protected void EnterBusy()
+        {
+            this.BusyCounter++;
+
+            // set the flag?
+            if (this.BusyCounter == 1)
+                this.IsBusy = true;
+        }
+
+        // indicates that the view-model is no longer running a background task...
+        protected void ExitBusy()
+        {
+            if(this.BusyCounter > 0)
+                this.BusyCounter--;
+
+            // set the flag?
+            if (this.BusyCounter == 0)
+                this.IsBusy = false;
+        }
+
+        // called when the view is activated...
+        public virtual void Activated()
+        {
+            this.BusyCounter = 0;
+            this.IsBusy = false;
         }
     }
 }

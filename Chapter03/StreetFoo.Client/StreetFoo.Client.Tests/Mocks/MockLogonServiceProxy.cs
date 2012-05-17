@@ -8,7 +8,8 @@ namespace StreetFoo.Client.Tests
 {
     public class MockLogonServiceProxy : ILogonServiceProxy
     {
-        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure)
+        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure, 
+            Action complete = null)
         {
             // create a task that simulates a call up to the server...
             return Task.Factory.StartNew(() =>
@@ -18,6 +19,10 @@ namespace StreetFoo.Client.Tests
                 // raise a success result...
                 LogonResult result = new LogonResult(Guid.NewGuid().ToString());
                 success(result);
+
+                // complete?
+                if (complete != null)
+                    complete();
 
             });
         }

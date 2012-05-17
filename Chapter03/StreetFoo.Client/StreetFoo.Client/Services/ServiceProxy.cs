@@ -29,7 +29,7 @@ namespace StreetFoo.Client
             data.Add("apiKey", ApiKey);
         }
 
-        public Task Execute(JsonObject input, Action<JsonObject> processor, FailureHandler failure)
+        public Task Execute(JsonObject input, Action<JsonObject> processor, FailureHandler failure, Action complete = null)
         {
             // set the api key...
             ConfigureInputArgs(input);
@@ -87,9 +87,12 @@ namespace StreetFoo.Client
                         failure(this, bucket);
                     }
 
-                }).ChainFailureHandler(failure);
+                    // complete?
+                    complete();
 
-            }).ChainFailureHandler(failure);
+                }).ChainFailureHandler(failure, complete);
+                
+            }).ChainFailureHandler(failure, complete);
 
             // return...
             return grsTask;

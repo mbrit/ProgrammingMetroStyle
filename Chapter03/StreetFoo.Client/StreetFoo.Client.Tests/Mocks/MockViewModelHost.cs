@@ -14,23 +14,12 @@ namespace StreetFoo.Client.Tests
         internal int NumMessages { get; private set; }
         internal int NumErrorBucketMessages { get; private set; }
         internal string LastMessage { get; private set; }
-        internal Exception Fatal { get; private set; }
-        internal List<Type> PageChanges { get; private set; }
 
-        // single instance field...
-        private static MockViewModelHost _current = new MockViewModelHost();
+        internal List<Type> PageChanges { get; private set; }
 
         public MockViewModelHost()
         {
             this.Reset();
-        }
-
-        internal static MockViewModelHost Current
-        {
-            get
-            {
-                return _current;
-            }
         }
 
         internal void Reset()
@@ -39,7 +28,7 @@ namespace StreetFoo.Client.Tests
             this.NumMessages = 0;
             this.NumErrorBucketMessages = 0;
             this.LastMessage = null;
-            this.Fatal = null;
+
             this.PageChanges = new List<Type>();
         }
 
@@ -111,22 +100,6 @@ namespace StreetFoo.Client.Tests
             }
         }
 
-        public FailureHandler GetFailureHandler()
-        {
-            // return the default handler...
-            return DefaultFailureHandler;
-        }
-
-        private void DefaultFailureHandler(object sender, ErrorBucket errors)
-        {
-            // our assumption is that if we get here, we have fatal errors...
-            if (!(errors.HasFatal))
-                throw new InvalidOperationException("The error bucket did not have a fatal error.");
-
-            // get...
-            this.Fatal = errors.Fatal;
-        }
-
         public void ShowView(Type viewModelInterfaceType)
         {
             this.PageChanges.Add(viewModelInterfaceType);
@@ -149,6 +122,12 @@ namespace StreetFoo.Client.Tests
                 else
                     return null;
             }
+        }
+
+        public void InvokeOnUiThread(Action action)
+        {
+            // just call it...
+            action();
         }
     }
 }

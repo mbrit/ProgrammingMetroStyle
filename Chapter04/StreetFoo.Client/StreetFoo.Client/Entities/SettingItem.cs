@@ -14,45 +14,44 @@ namespace StreetFoo.Client
         public int Id { get; set; }
 
         // other fields...
+		[Unique]
         public string Name { get; set; }
         public string Value { get; set; }
 
-        internal static void SetValueAsync(string name, string value, Action success, FailureHandler failure, Action complete = null)
+        internal static void SetValueAsync(string name, string value, Action success, FailureHandler failure, Action complete)
         {
             Task.Factory.StartNew(async () =>
             {
-                var conn = StreetFooRuntime.GetSystemDatabase();
+				var conn = StreetFooRuntime.GetSystemDatabase();
 
-                // load and existing value...
-                var setting = (await conn.Table<SettingItem>().Where(v => v.Name == name).ToListAsync()).FirstOrDefault();
-                if (setting != null)
-                {
-                    // change and update...
-                    setting.Value = value;
-                    await conn.UpdateAsync(setting);
-                }
-                else
-                {
-                    setting = new SettingItem()
-                    {
-                        Name = name,
-                        Value = value
-                    };
+				// load an existing value...
+				var setting = await conn.Table<SettingItem>().Where(v => v.Name == name).FirstOrDefaultAsync();
+				if (setting != null)
+				{
+					// change and update...
+					setting.Value = value;
+					await conn.UpdateAsync(setting);
+				}
+				else
+				{
+					setting = new SettingItem()
+					{
+						Name = name,
+						Value = value
+					};
 
-                    // save...
-                    await conn.InsertAsync(setting);
-                }
+					// save...
+					await conn.InsertAsync(setting);
+				}
 
-                // ok...
-                if(success != null)
-                    success();
-                if (complete != null)
-                    complete();
+				// ok...
+				success();
+				complete();
 
             }).ChainFailureHandler(failure, complete);
         }
 
-        internal static void GetValueAsync(string name, Action<string> success, FailureHandler failure, Action complete = null)
+        internal static void GetValueAsync(string name, Action<string> success, FailureHandler failure, Action complete)
         {
             Task.Factory.StartNew(async () =>
             {
@@ -65,9 +64,8 @@ namespace StreetFoo.Client
                 else
                     success(null);
 
-                // ok...
-                if (complete != null)
-                    complete();
+                // finished...
+                complete();
 
             }).ChainFailureHandler(failure, complete);
         }

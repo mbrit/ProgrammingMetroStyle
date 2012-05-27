@@ -16,8 +16,8 @@ namespace StreetFoo.Client
         internal static string LogonToken { get; private set; }
 
         // holds a refrence to the database connections...
-        internal static SQLiteConnectionSpecification SystemDatabaseSpecification = null;
-        internal static SQLiteConnectionSpecification UserDatabaseSpecification = null;
+        internal const string SystemDatabaseConnectionString = "StreetFoo-system.db";
+        internal static string UserDatabaseConnectionString = null;
 
         // defines the base URL of our services...
         internal const string ServiceUrlBase = "http://streetfoo.apphb.com/handlers/";
@@ -38,9 +38,6 @@ namespace StreetFoo.Client
             ServiceProxyFactory.Current.SetHandler(typeof(IEnsureTestReportsServiceProxy), typeof(EnsureTestReportsServiceProxy));
             ServiceProxyFactory.Current.SetHandler(typeof(IGetReportsByUserServiceProxy), typeof(GetReportsByUserServiceProxy));
 
-            // set the system database...
-            SystemDatabaseSpecification = SQLiteConnectionSpecification.CreateForAsync("StreetFoo-system.db");
-
             // initialize the system database... a rare move to do this synchronously as we're booting up...
             var conn = GetSystemDatabase();
             await conn.CreateTableAsync<SettingItem>();
@@ -58,7 +55,7 @@ namespace StreetFoo.Client
         {
             // set the database to be a user specific one... (assumes the username doesn't have evil chars in it
             // - for production you may prefer to use a hash)...
-            UserDatabaseSpecification = SQLiteConnectionSpecification.CreateForAsync(string.Format("StreetFoo-user-{0}.db", username));
+            UserDatabaseConnectionString = string.Format("StreetFoo-user-{0}.db", username);
 
             // store the logon token...
             LogonToken = token;
@@ -68,7 +65,7 @@ namespace StreetFoo.Client
             conn.CreateTableAsync<ReportItem>().ContinueWith((result) =>
             {
                 if(success != null)
-                    success();
+                    success();	
                 if (complete != null)
                     complete();
 
@@ -77,12 +74,12 @@ namespace StreetFoo.Client
 
         internal static SQLiteAsyncConnection GetSystemDatabase()
         {
-            return new SQLiteAsyncConnection(SystemDatabaseSpecification);
+            return new SQLiteAsyncConnection(SystemDatabaseConnectionString);
         }
 
         internal static SQLiteAsyncConnection GetUserDatabase()
         {
-            return new SQLiteAsyncConnection(UserDatabaseSpecification);
+            return new SQLiteAsyncConnection(UserDatabaseConnectionString);
         }
     }
 }

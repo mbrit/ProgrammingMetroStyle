@@ -111,7 +111,7 @@ namespace StreetFoo.Client
                 // set the loaded value...
                 this.Username = value;
 
-            }, this.GetFailureHandler());
+            }, this.GetFailureHandler(), this.GetCompleteHandler());
         }
     }
 }

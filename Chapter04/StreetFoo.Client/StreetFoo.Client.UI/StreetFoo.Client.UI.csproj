@@ -157,6 +157,7 @@
     <Content Include="Assets\StoreLogo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="sqlite3.dll" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -189,14 +190,6 @@
       <Project>{b1af742b-cafa-47b4-881c-09e2a3d2fc83}</Project>
       <Name>StreetFoo.Client</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="SQLite">
-      <HintPath>..\..\..\..\Code\sqlite-net-metrostyle\sqlite-net-metrostyle\SQLite\bin\x86\Release\SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="sqlite3">
-      <HintPath>..\..\..\..\Code\sqlite-net-metrostyle\sqlite-net-metrostyle\Release\SQLiteMetro\sqlite3.winmd</HintPath>
-    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

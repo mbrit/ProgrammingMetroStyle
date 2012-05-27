@@ -82,7 +82,7 @@ namespace StreetFoo.Client.UI
         void OnSuspending(object sender, SuspendingEventArgs e)
         {
             // shut down the SQLite connection pool...
-            SQLiteConnectionPool.Current.ApplicationSuspended();
+            SQLiteAsyncConnection.ApplicationSuspended();
         }
     }
 }

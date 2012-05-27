@@ -111,6 +111,8 @@
     <Compile Include="Data\JsonMapperFactory.cs" />
     <Compile Include="Data\JsonMapperField.cs" />
     <Compile Include="Data\JsonMappingAttribute.cs" />
+    <Compile Include="Data\SQLite.cs" />
+    <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
     <Compile Include="Ioc\IocBase.cs" />
@@ -148,14 +150,7 @@
     <Compile Include="Services\ServiceProxy.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="SQLite, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Code\sqlite-net-metrostyle\sqlite-net-metrostyle\SQLite\bin\x86\Release\SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="sqlite3, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Code\sqlite-net-metrostyle\sqlite-net-metrostyle\Release\SQLiteMetro\sqlite3.winmd</HintPath>
-    </Reference>
+    <Content Include="sqlite3.dll" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

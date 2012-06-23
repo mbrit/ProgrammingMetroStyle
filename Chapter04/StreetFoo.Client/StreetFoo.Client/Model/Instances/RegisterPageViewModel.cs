@@ -73,7 +73,7 @@ namespace StreetFoo.Client
             }
         }
 
-        private void DoRegistration(CommandExecutionContext context)
+        private async void DoRegistration(CommandExecutionContext context)
         {
             // if we don't have a context, create one...
             if (context == null)
@@ -90,32 +90,31 @@ namespace StreetFoo.Client
                 IRegisterServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IRegisterServiceProxy>();
 
                 // call...
-                var failure = this.GetFailureHandler();
-                var complete = this.GetCompleteHandler();
-                this.EnterBusy();
-                var task = proxy.Register(this.Username, this.Email, this.Password, this.Confirm, async (result) =>
+                using (this.EnterBusy())
                 {
-                    // show a message to say that a user has been created... (this isn't a helpful message, 
-                    // included for illustration...)
-                    await this.Host.ShowAlertAsync(string.Format("The new user has been created.\r\n\r\nUser ID: {0}", result.UserId));
+                    var result = await proxy.RegisterAsync(this.Username, this.Email, this.Password, this.Confirm);
 
-                    // save the username as the last used...
-                    SettingItem.SetValueAsync(LogonPageViewModel.LastUsernameKey, this.Username, () =>
+                    // ok?
+                    if (!(result.HasErrors))
                     {
+                        // show a message to say that a user has been created... (this isn't a helpful message, 
+                        // included for illustration...)
+                        await this.Host.ShowAlertAsync(string.Format("The new user has been created.\r\n\r\nUser ID: {0}", result.UserId));
+
+                        // save the username as the last used...
+                        await SettingItem.SetValueAsync(LogonPageViewModel.LastUsernameKey, this.Username);
+
                         // show the reports page...
                         this.Host.ShowView(typeof(ILogonPageViewModel));
-
-                    }, failure, complete);
-
-                }, failure, complete);
-
-                // add...
-                context.AddTask(task);
+                    }
+                    else
+                        errors.CopyFrom(result);
+                }
             }
 
             // errors?
             if(errors.HasErrors)
-                this.Host.ShowAlertAsync(errors);
+                await this.Host.ShowAlertAsync(errors);
         }
 
         private void Validate(ErrorBucket errors)

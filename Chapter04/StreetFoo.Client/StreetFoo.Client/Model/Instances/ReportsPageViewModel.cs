@@ -15,7 +15,7 @@ namespace StreetFoo.Client
     /// </summary>
     public class ReportsPageViewModel : ViewModel, IReportsPageViewModel
     {
-        public ObservableCollection<ReportItem> Reports { get; private set; }
+        public ObservableCollection<ReportItem> Items { get; private set; }
 
         public ICommand CreateTestReportsCommand { get; private set; }
         public ICommand RefreshCommand { get; private set; }
@@ -24,67 +24,69 @@ namespace StreetFoo.Client
             : base(host)
         {
             // setup...
-            this.Reports = new ObservableCollection<ReportItem>();
+            this.Items = new ObservableCollection<ReportItem>();
 
             // commands...
-            this.CreateTestReportsCommand = new DelegateCommand((args) => DoCreateTestReports(args as CommandExecutionContext));
-            this.RefreshCommand = new DelegateCommand((args) => DoRefresh(args as CommandExecutionContext));
+            this.RefreshCommand = new DelegateCommand(async (e) => await this.DoRefresh(true));
         }
 
-        private void DoCreateTestReports(CommandExecutionContext context)
+        private void DoMagic()
+        {
+            // commands...
+            this.CreateTestReportsCommand = new DelegateCommand((args) => DoCreateTestReports(args as CommandExecutionContext));
+            this.RefreshCommand = new DelegateCommand(async (args) => await DoRefresh(true));
+        }
+
+        private async void DoCreateTestReports(CommandExecutionContext context)
         {
             if (context == null)
                 context = new CommandExecutionContext();
 
             // run...
-            this.EnterBusy();
-            IEnsureTestReportsServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IEnsureTestReportsServiceProxy>();
-            proxy.EnsureTestReports(async () => {
-
-                await this.Host.ShowAlertAsync("The test reports have been created.");
+            using(this.EnterBusy())
+            {
+                IEnsureTestReportsServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IEnsureTestReportsServiceProxy>();
+                await proxy.EnsureTestReportsAsync();
 
                 // refresh the local cache and update the ui...
-                this.DoRefresh(null);
+                await this.DoRefresh(true);
 
-            }, this.GetFailureHandler(), this.GetCompleteHandler());
+                // be explicit about what we tell the user...
+                await this.Host.ShowAlertAsync("The test reports have been created.");
+            }
         }
 
-        private void DoRefresh(CommandExecutionContext context)
+        private async Task DoRefresh(bool force)
         {
-            if (context == null)
-                context = new CommandExecutionContext();
-
             // run...
-            this.EnterBusy();
-            ReportItem.UpdateCache(() =>
+            using (this.EnterBusy())
             {
-                // reload the items...
-                this.ReloadReportsFromCache();
+                // update the local cache...
+                if (force || await ReportItem.IsCacheEmpty())
+                    await ReportItem.UpdateCacheFromServerAsync();
 
-            }, this.GetFailureHandler(), this.GetCompleteHandler());
+                // reload the items...
+                await this.ReloadReportsFromCache();
+            }
         }
 
-        private void ReloadReportsFromCache()
+        private async Task ReloadReportsFromCache()
         {
             // setup a load operation to populate the collection from the cache...
-            this.EnterBusy();
-            ReportItem.ReadCache((reports) =>
+            using (this.EnterBusy())
             {
-                // patch them in...
-                this.Host.InvokeOnUiThread(() =>
-                {
-                    this.Reports.Clear();
-                    foreach (ReportItem report in reports)
-                        this.Reports.Add(report);
+                var reports = await ReportItem.GetAllFromCacheAsync();
 
-                });
-
-            }, this.GetFailureHandler(), this.GetCompleteHandler());
+                // update the model...
+                this.Items.Clear();
+                foreach (ReportItem report in reports)
+                    this.Items.Add(report);
+            }
         }
 
-        public override void Activated()
+        public override async void Activated()
         {
-            this.ReloadReportsFromCache();
+            await DoRefresh(false);
         }
     }
 }

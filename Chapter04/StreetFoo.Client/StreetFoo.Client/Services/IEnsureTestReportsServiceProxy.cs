@@ -8,6 +8,6 @@ namespace StreetFoo.Client
 {
     public interface IEnsureTestReportsServiceProxy : IServiceProxy
     {
-        Task EnsureTestReports(Action success, FailureHandler failure, Action complete = null);
+        Task EnsureTestReportsAsync();
     }
 }

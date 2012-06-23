@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 using Windows.Data.Json;
 
 namespace StreetFoo.Client.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class TestJsonMapper
     {
-        [TestMethod()]
+        [TestMethod]
         public void TestLoad()
         {
             // data...
@@ -25,7 +25,7 @@ namespace StreetFoo.Client.Tests
             Assert.AreEqual("Remove damaged light", item.Title);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestLoadArray()
         {
             // data...

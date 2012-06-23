@@ -12,7 +12,6 @@ namespace StreetFoo.Client
         where T : new()
     {
         private Dictionary<string, JsonMapperField> Fields { get; set; }
-        private object _lock = new object();
 
         internal JsonMapper()
         {
@@ -20,14 +19,22 @@ namespace StreetFoo.Client
             this.Fields = new Dictionary<string, JsonMapperField>();
 
             // walk the properties on the type...
-            foreach (PropertyInfo prop in typeof(T).GetTypeInfo().DeclaredProperties)
+            foreach (var prop in typeof(T).GetRuntimeProperties())
             {
                 // find the json mapping attribute...
                 var attr = prop.GetCustomAttributes<JsonMappingAttribute>().FirstOrDefault();
                 if (attr != null)
                 {
+                    // do we have a name?
+                    string name = attr.JsonName;
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        // create a name by camel-casing the member name...
+                        name = prop.Name.Substring(0, 1).ToLower() + prop.Name.Substring(1);
+                    }
+
                     // create the bidirectional mapping...
-                    this.Fields[attr.JsonName] = new JsonMapperField(prop);
+                    this.Fields[name] = new JsonMapperField(prop);
                 }
             }
         }

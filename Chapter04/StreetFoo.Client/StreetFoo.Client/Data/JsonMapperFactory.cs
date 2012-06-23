@@ -21,7 +21,7 @@ namespace StreetFoo.Client
         {
             lock (_mappersLock)
             {
-                Type type = typeof(T);
+                var type = typeof(T);
                 if (!(Mappers.ContainsKey(type)))
                     Mappers[type] = new JsonMapper<T>();
 

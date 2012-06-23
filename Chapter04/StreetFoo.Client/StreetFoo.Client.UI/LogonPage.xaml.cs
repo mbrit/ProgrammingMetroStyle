@@ -12,43 +12,47 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
+// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
 
 namespace StreetFoo.Client.UI
 {
     /// <summary>
-    /// A page that displays details for a single item within a group while allowing gestures to
-    /// flip through other items belonging to the same group.
+    /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class LogonPage : StreetFoo.Client.UI.Common.LayoutAwarePage, IViewModelSource
+    public sealed partial class LogonPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
-        // hold the model...
         private ILogonPageViewModel Model { get; set; }
 
         public LogonPage()
         {
             this.InitializeComponent();
 
-            // obtain a real instance of a model... 
+            // get...
             this.Model = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(this);
             this.InitializeModel(this.Model);
         }
 
         /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
-        /// property provides the initial item to be displayed.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="navigationParameter">The parameter value passed to
+        /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
+        /// </param>
+        /// <param name="pageState">A dictionary of state preserved by this page during an earlier
+        /// session.  This will be null the first time a page is visited.</param>
+        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
         }
 
-        IViewModel IViewModelSource.Model
+        /// <summary>
+        /// Preserves state associated with this page in case the application is suspended or the
+        /// page is discarded from the navigation cache.  Values must conform to the serialization
+        /// requirements of <see cref="SuspensionManager.SessionState"/>.
+        /// </summary>
+        /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
+        protected override void SaveState(Dictionary<String, Object> pageState)
         {
-            get
-            {
-                return this.Model;
-            }
         }
     }
 }

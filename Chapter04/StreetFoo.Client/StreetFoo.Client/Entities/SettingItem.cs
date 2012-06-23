@@ -18,56 +18,41 @@ namespace StreetFoo.Client
         public string Name { get; set; }
         public string Value { get; set; }
 
-        internal static void SetValueAsync(string name, string value, Action success, FailureHandler failure, Action complete)
+        internal static async Task SetValueAsync(string name, string value)
         {
-            Task.Factory.StartNew(async () =>
-            {
-				var conn = StreetFooRuntime.GetSystemDatabase();
+			var conn = StreetFooRuntime.GetSystemDatabase();
 
-				// load an existing value...
-				var setting = await conn.Table<SettingItem>().Where(v => v.Name == name).FirstOrDefaultAsync();
-				if (setting != null)
+			// load an existing value...
+			var setting = await conn.Table<SettingItem>().Where(v => v.Name == name).FirstOrDefaultAsync();
+			if (setting != null)
+			{
+				// change and update...
+				setting.Value = value;
+				await conn.UpdateAsync(setting);
+			}
+			else
+			{
+				setting = new SettingItem()
 				{
-					// change and update...
-					setting.Value = value;
-					await conn.UpdateAsync(setting);
-				}
-				else
-				{
-					setting = new SettingItem()
-					{
-						Name = name,
-						Value = value
-					};
+					Name = name,
+					Value = value
+				};
 
-					// save...
-					await conn.InsertAsync(setting);
-				}
-
-				// ok...
-				success();
-				complete();
-
-            }).ChainFailureHandler(failure, complete);
+				// save...
+				await conn.InsertAsync(setting);
+			}
         }
 
-        internal static void GetValueAsync(string name, Action<string> success, FailureHandler failure, Action complete)
+        internal static async Task<string> GetValueAsync(string name)
         {
-            Task.Factory.StartNew(async () =>
-            {
-                var conn = StreetFooRuntime.GetSystemDatabase();
+            var conn = StreetFooRuntime.GetSystemDatabase();
 
-                // load any existing value...
-                var setting = (await conn.Table<SettingItem>().Where(v => v.Name == name).ToListAsync()).FirstOrDefault();
-                if (setting != null)
-                    success(setting.Value);
-                else
-                    success(null);
-
-                // finished...
-                complete();
-
-            }).ChainFailureHandler(failure, complete);
+            // load any existing value...
+            var setting = (await conn.Table<SettingItem>().Where(v => v.Name == name).ToListAsync()).FirstOrDefault();
+            if (setting != null)
+                return setting.Value;
+            else
+                return null;
         }
     }
 }

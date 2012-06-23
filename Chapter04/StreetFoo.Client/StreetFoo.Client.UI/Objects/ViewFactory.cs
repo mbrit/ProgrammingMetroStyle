@@ -11,24 +11,24 @@ namespace StreetFoo.Client.UI
     internal class ViewFactory : IocBase<LayoutAwarePage>
     {
         // holds a singleton instance...
-		private static ViewFactory _current = new ViewFactory();
-				
-		private ViewFactory()
-		{
+        private static ViewFactory _current = new ViewFactory();
+
+        private ViewFactory()
+        {
             // setup the default mappings...
             this.SetHandler(typeof(IRegisterPageViewModel), typeof(RegisterPage));
             this.SetHandler(typeof(ILogonPageViewModel), typeof(LogonPage));
             this.SetHandler(typeof(IReportsPageViewModel), typeof(ReportsPage));
-		}
-						
-		internal static ViewFactory Current
-		{
-			get
-			{
-				if(_current == null)
-					throw new ObjectDisposedException("ViewFactory");
-				return _current;
-			}
-		}
+        }
+
+        internal static ViewFactory Current
+        {
+            get
+            {
+                if (_current == null)
+                    throw new ObjectDisposedException("ViewFactory");
+                return _current;
+            }
+        }
     }
 }

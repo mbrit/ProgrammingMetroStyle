@@ -19,19 +19,6 @@ namespace StreetFoo.Client.UI
 
         internal static IAsyncOperation<IUICommand> ShowAlertAsync(this Page page, string message)
         {
-            // do we need to flip threads?
-            if (!(page.Dispatcher.HasThreadAccess))
-            {
-                IAsyncOperation<IUICommand> result = null;
-                page.Dispatcher.Invoke(Windows.UI.Core.CoreDispatcherPriority.Normal, (sender, e) =>
-                {
-                    result = ShowAlertAsync(page, message);
-                }, page, null);
-
-                // return...
-                return result;
-            }
-
             // show...
             MessageDialog dialog = new MessageDialog(message != null ? message : string.Empty);
             return dialog.ShowAsync();
@@ -41,6 +28,11 @@ namespace StreetFoo.Client.UI
         {
             // setup the data context...
             page.DataContext = model;
+        }
+
+        internal static IViewModel GetModel(this Page page)
+        {
+            return page.DataContext as IViewModel;
         }
     }
 }

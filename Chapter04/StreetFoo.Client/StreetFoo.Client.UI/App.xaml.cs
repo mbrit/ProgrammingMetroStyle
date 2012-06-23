@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using SQLite;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -29,7 +27,7 @@ namespace StreetFoo.Client.UI
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
         /// </summary>
-       public App()
+        public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
@@ -43,33 +41,32 @@ namespace StreetFoo.Client.UI
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+            // Do not repeat app initialization when already running, just ensure that
+            // the window is active
+            if (args.PreviousExecutionState == ApplicationExecutionState.Running)
+            {
+                Window.Current.Activate();
+                return;
+            }
+
             if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
                 //TODO: Load state from previously suspended application
             }
 
-            // start...
+            // start up our runtime...
             StreetFooRuntime.Start("Client");
 
             // Create a Frame to act navigation context and navigate to the first page
             var rootFrame = new Frame();
-            rootFrame.Navigated += rootFrame_Navigated;
-            rootFrame.Navigate(typeof(LogonPage));
+            if (!rootFrame.Navigate(typeof(LogonPage)))
+            {
+                throw new Exception("Failed to create initial page");
+            }
 
             // Place the frame in the current Window and ensure that it is active
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
-        }
-
-        void rootFrame_Navigated(object sender, NavigationEventArgs e)
-        {
-            // find the model...
-            if (e.Content is IViewModelSource)
-            {
-                //  get and activate the model...
-                IViewModel model = ((IViewModelSource)e.Content).Model;
-                model.Activated();
-            }
         }
 
         /// <summary>
@@ -79,10 +76,11 @@ namespace StreetFoo.Client.UI
         /// </summary>
         /// <param name="sender">The source of the suspend request.</param>
         /// <param name="e">Details about the suspend request.</param>
-        void OnSuspending(object sender, SuspendingEventArgs e)
+        private void OnSuspending(object sender, SuspendingEventArgs e)
         {
-            // shut down the SQLite connection pool...
-            SQLiteAsyncConnection.ApplicationSuspended();
+            var deferral = e.SuspendingOperation.GetDeferral();
+            //TODO: Save application state and stop any background activity
+            deferral.Complete();
         }
     }
 }

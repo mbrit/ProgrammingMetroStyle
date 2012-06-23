@@ -20,7 +20,7 @@ namespace StreetFoo.Client
             get;
         }
 
-        ObservableCollection<ReportItem> Reports
+        ObservableCollection<ReportItem> Items
         {
             get;
         }

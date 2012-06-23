@@ -8,23 +8,25 @@ namespace StreetFoo.Client.Tests
 {
     public class MockLogonServiceProxy : ILogonServiceProxy
     {
-        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure, Action complete = null)
+        public Task<LogonResult> LogonAsync(string username, string password)
         {
-            // create a task that simulates a call up to the server...
-            return Task.Factory.StartNew(() =>
-            {
-                // raise a success result...
-                if (success != null)
-                {
-                    LogonResult result = new LogonResult(Guid.NewGuid().ToString());
-                    success(result);
-                }
+            //// create a task that simulates a call up to the server...
+            //return Task.Factory.StartNew(() =>
+            //{
+            //    // raise a success result...
+            //    if (success != null)
+            //    {
+            //        LogonResult result = new LogonResult(Guid.NewGuid().ToString());
+            //        success(result);
+            //    }
 
-                // complete...
-                if (complete != null)
-                    complete();
+            //    // complete...
+            //    if (complete != null)
+            //        complete();
 
-            });
+            //});
+
+            throw new NotImplementedException("This operation has not been implemented.");
         }
     }
 }

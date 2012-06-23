@@ -12,41 +12,41 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// The Basic Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234237
+
 namespace StreetFoo.Client.UI
 {
+    /// <summary>
+    /// A basic page that provides characteristics common to most applications.
+    /// </summary>
     public sealed partial class RegisterPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
-        // hold the model...
-        private IRegisterPageViewModel Model { get; set; }
-
         public RegisterPage()
         {
             this.InitializeComponent();
-
-            // obtain a real instance of a model... now done by dependency injection...
-            this.Model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(this);
-            this.InitializeModel(this.Model);
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <summary>
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
+        /// </summary>
+        /// <param name="navigationParameter">The parameter value passed to
+        /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
+        /// </param>
+        /// <param name="pageState">A dictionary of state preserved by this page during an earlier
+        /// session.  This will be null the first time a page is visited.</param>
+        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
         }
 
-        //private void HandleRegisterClick(object sender, RoutedEventArgs e)
-        //{
-        //    // ask the model to handle this... pass in callbacks for success, and a general callback for
-        //    // failure...
-        //    this.Model.DoRegistration((result) =>
-        //    {
-        //        this.ShowAlertAsync("Great - we got a result back.");  
-
-        //    }, this.FailureSink);
-        //}
-
-        //private void FailureSink(ErrorBucket bucket, object callbackArgs)
-        //{
-        //    this.ShowAlertAsync(bucket);
-        //}
-
+        /// <summary>
+        /// Preserves state associated with this page in case the application is suspended or the
+        /// page is discarded from the navigation cache.  Values must conform to the serialization
+        /// requirements of <see cref="SuspensionManager.SessionState"/>.
+        /// </summary>
+        /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
+        protected override void SaveState(Dictionary<String, Object> pageState)
+        {
+        }
     }
 }

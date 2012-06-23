@@ -14,8 +14,7 @@ namespace StreetFoo.Client
         {
         }
 
-        public Task Register(string username, string email, string password, string confirm, Action<RegisterResult> success, 
-            FailureHandler failure, Action complete = null)
+        public async Task<RegisterResult> RegisterAsync(string username, string email, string password, string confirm)
         {
             // package up the request...
             JsonObject input = new JsonObject();
@@ -25,19 +24,16 @@ namespace StreetFoo.Client
             input.Add("confirm", confirm);
 
             // call...
-            return this.Execute(input, (output) =>
+            var executeResult = await this.Execute(input);
+
+            // get the user ID from the server result...
+            if (!(executeResult.HasErrors))
             {
-                // get the user ID from the server result...
-                string userId = output.GetNamedString("userId");
-
-                // return...
-                if (success != null)
-                {
-                    RegisterResult result = new RegisterResult(userId);
-                    success(result);
-                }
-
-            }, failure, complete);
+                string userId = executeResult.Output.GetNamedString("userId");
+                return new RegisterResult(userId);
+            }
+            else
+                return new RegisterResult(executeResult);
         }
     }
 }

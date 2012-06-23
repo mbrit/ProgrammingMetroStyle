@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -106,11 +106,21 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data\IJsonMapper.cs" />
-    <Compile Include="Data\JsonMapper.cs" />
-    <Compile Include="Data\JsonMapperFactory.cs" />
-    <Compile Include="Data\JsonMapperField.cs" />
-    <Compile Include="Data\JsonMappingAttribute.cs" />
+    <Compile Include="Data\IJsonMapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\JsonMapper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\JsonMapperFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\JsonMapperField.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Data\JsonMappingAttribute.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\SQLite.cs" />
     <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ReportItem.cs" />
@@ -147,10 +157,19 @@
     <Compile Include="Services\LogonServiceProxy.cs" />
     <Compile Include="Services\RegisterResult.cs" />
     <Compile Include="Services\RegisterServiceProxy.cs" />
+    <Compile Include="Services\ServiceExecuteResult.cs" />
     <Compile Include="Services\ServiceProxy.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="sqlite3.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

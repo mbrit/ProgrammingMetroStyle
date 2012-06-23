@@ -11,7 +11,7 @@ namespace StreetFoo.Client
     {
         public string JsonName { get; private set; }
 
-        public JsonMappingAttribute(string jsonName)
+        public JsonMappingAttribute(string jsonName = null)
         {
             this.JsonName = jsonName;
         }

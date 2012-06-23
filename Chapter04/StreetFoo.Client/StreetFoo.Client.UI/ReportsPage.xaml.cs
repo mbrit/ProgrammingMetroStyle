@@ -12,15 +12,15 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// The Item Detail Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234232
+// The Items Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234233
 
 namespace StreetFoo.Client.UI
 {
     /// <summary>
-    /// A page that displays details for a single item within a group while allowing gestures to
-    /// flip through other items belonging to the same group.
+    /// A page that displays a collection of item previews.  In the Split Application this page
+    /// is used to display and select one of the available groups.
     /// </summary>
-    public sealed partial class ReportsPage : StreetFoo.Client.UI.Common.LayoutAwarePage, IViewModelSource
+    public sealed partial class ReportsPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
         private IReportsPageViewModel Model { get; set; }
 
@@ -28,26 +28,23 @@ namespace StreetFoo.Client.UI
         {
             this.InitializeComponent();
 
-            // set...
+            // setup model...
             this.Model = ViewModelFactory.Current.GetHandler<IReportsPageViewModel>(this);
             this.InitializeModel(this.Model);
         }
 
         /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
+        /// Populates the page with content passed during navigation.  Any saved state is also
+        /// provided when recreating a page from a prior session.
         /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.  The Parameter
-        /// property provides the initial item to be displayed.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        /// <param name="navigationParameter">The parameter value passed to
+        /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested.
+        /// </param>
+        /// <param name="pageState">A dictionary of state preserved by this page during an earlier
+        /// session.  This will be null the first time a page is visited.</param>
+        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
-        }
-
-        IViewModel IViewModelSource.Model
-        {
-            get
-            {
-                return this.Model;
-            }
+            // TODO: Assign a bindable collection of items to this.DefaultViewModel["Items"]
         }
     }
 }

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace StreetFoo.Client.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class TestRegisterViewModel : TestBase
     {
-        [TestMethod()]
+        [TestMethod]
         public void TestMessageShowOnFailure()
         {
             // get the view model, passing in our mock host...
@@ -25,7 +25,7 @@ namespace StreetFoo.Client.Tests
             Assert.AreEqual(1, host.NumErrorBucketMessages);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestNoNavigationOnFailure()
         {
             // get the view model, passing in our mock host...
@@ -40,7 +40,7 @@ namespace StreetFoo.Client.Tests
             Assert.IsNull(host.LastPageChange);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestMessageShowOnValidationPass()
         {
             // get the view model, passing in our mock host...
@@ -60,7 +60,7 @@ namespace StreetFoo.Client.Tests
             Assert.AreEqual(0, host.NumErrorBucketMessages);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestNavigateToLogonOnSuccess()
         {
             // get the view model, passing in our mock host...

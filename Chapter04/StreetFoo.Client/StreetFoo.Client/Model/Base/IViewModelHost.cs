@@ -17,10 +17,5 @@ namespace StreetFoo.Client
 
         // shows a view from a given view-model...
         void ShowView(Type viewModelInterfaceType);
-
-        // gives the host a chance to marshal a call over to the UI thread if it needs it...
-        // *** WHEN SHOWING THIS - SHOW THE TOTAL LACK OF ERRORS AND GO
-        // THROUGH TROUBLESHOOTING ***
-        void InvokeOnUiThread(Action operation);
     }
 }

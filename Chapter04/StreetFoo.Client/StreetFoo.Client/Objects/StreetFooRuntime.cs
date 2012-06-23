@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace StreetFoo.Client
             // initialize the system database... a rare move to do this synchronously as we're booting up...
             var conn = GetSystemDatabase();
             await conn.CreateTableAsync<SettingItem>();
-        }
+		}
 
         internal static bool HasLogonToken
         {
@@ -51,7 +52,7 @@ namespace StreetFoo.Client
             }
         }
 
-        internal static void Logon(string username, string token, Action success, FailureHandler failure, Action complete = null)
+        internal static async Task LogonAsync(string username, string token)
         {
             // set the database to be a user specific one... (assumes the username doesn't have evil chars in it
             // - for production you may prefer to use a hash)...
@@ -62,14 +63,7 @@ namespace StreetFoo.Client
 
             // initialize the database - has to be done async...
             var conn = GetUserDatabase();
-            conn.CreateTableAsync<ReportItem>().ContinueWith((result) =>
-            {
-                if(success != null)
-                    success();	
-                if (complete != null)
-                    complete();
-
-            }).ChainFailureHandler(failure, complete);
+            await conn.CreateTableAsync<ReportItem>();
         }
 
         internal static SQLiteAsyncConnection GetSystemDatabase()

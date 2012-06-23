@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
 
 namespace StreetFoo.Client.Tests
 {
     public abstract class TestBase
     {
-        [TestInitialize()]
+        [TestInitialize]
         public void TestInitialize()
         {
             StreetFooRuntime.Start("Tests");

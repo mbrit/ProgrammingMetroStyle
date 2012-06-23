@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
-    public class LogonResult
+    public class LogonResult : ErrorBucket
     {
         public string Token { get; private set; }
 
-        public LogonResult(string token)
+        internal LogonResult(string token)
         {
             this.Token = token;
+        }
+
+        internal LogonResult(ErrorBucket errors)
+            : base(errors)
+        {
         }
     }
 }

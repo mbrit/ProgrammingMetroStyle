@@ -38,13 +38,31 @@ namespace StreetFoo.Client
             private set { this.SetValue(value); }
         }
 
-        public void EnterBusy()
+        public IDisposable EnterBusy()
         {
             this.BusyCount++;
 
             // trigger a UI change?
             if (this.BusyCount == 1)
                 this.IsBusy = true;
+
+            // return an object we can use to roll this back...
+            return new BusyExiter(this);
+        }
+
+        private class BusyExiter : IDisposable
+        {
+            private ViewModel Owner { get; set; }
+
+            internal BusyExiter(ViewModel owner)
+            {
+                this.Owner = owner;
+            }
+
+            public void Dispose()
+            {
+                this.Owner.ExitBusy();
+            }
         }
 
         public void ExitBusy()
@@ -89,19 +107,7 @@ namespace StreetFoo.Client
         public virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (this.PropertyChanged != null)
-                this.Host.InvokeOnUiThread(() => this.PropertyChanged(this, e));
-        }
-
-        // gets a delegate that can be told about fatal errors...
-        protected virtual FailureHandler GetFailureHandler()
-        {
-            return (sender, errors) => this.Host.ShowAlertAsync(errors);
-        }
-
-        // gets a delegate that can be told when an operation is complete...
-        protected virtual Action GetCompleteHandler()
-        {
-            return () => this.ExitBusy();
+                this.PropertyChanged(this, e);
         }
 
         // called when the view is activated.

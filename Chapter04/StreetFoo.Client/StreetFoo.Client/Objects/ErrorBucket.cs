@@ -30,6 +30,23 @@ namespace StreetFoo.Client
             this.Fatal = ex;
         }
 
+        // special constructor for cloning another error bucket...
+        protected ErrorBucket(ErrorBucket donor)
+            : this()
+        {
+            CopyFrom(donor);
+        }
+
+        public void CopyFrom(ErrorBucket donor)
+        {
+            // copy the normal errors...
+            this.Errors.Clear();
+            this.Errors.AddRange(donor.Errors);
+
+            // copy the fatal error...
+            this.Fatal = donor.Fatal;
+        }
+
         public void AddError(string error)
         {
             this.Errors.Add(error);
@@ -101,6 +118,12 @@ namespace StreetFoo.Client
         internal static ErrorBucket CreateFatalBucket(Exception ex)
         {
             return new ErrorBucket(ex);
+        }
+
+        public void AssertNoErrors()
+        {
+            if (this.HasErrors)
+                throw new InvalidOperationException(string.Format("Errors have occurred:\r\n{0}", this.GetErrorsAsString()));
         }
     }
 }

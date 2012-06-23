@@ -16,19 +16,19 @@ namespace StreetFoo.Client
         public int Id { get; set; }
 
         // other fields...
-        [JsonMapping("_id")]
+        [Unique, JsonMapping("_id")]
         public string NativeId { get; set; }
 
-        [JsonMapping("title")]
+        [JsonMapping]
         public string Title { get; set; }
 
-        [JsonMapping("description")]
+        [JsonMapping]
         public string Description { get; set; }
 
-        [JsonMapping("latitude")]
+        [JsonMapping]
         public decimal Latitude { get; set; }
 
-        [JsonMapping("longitude")]
+        [JsonMapping]
         public decimal Longitude { get; set; }
 
         public ReportItem()
@@ -36,41 +36,41 @@ namespace StreetFoo.Client
         }
 
         // updates the local cache of the reports...
-        public static void UpdateCache(Action success, FailureHandler failure, Action completed = null)
+        public static async Task UpdateCacheFromServerAsync()
         {
             // create a service proxy to call up to the server...
             IGetReportsByUserServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
-            proxy.GetReportsByUser((results) =>
+            var result = await proxy.GetReportsByUserAsync();
+
+            // did it actually work?
+            result.AssertNoErrors();
+
+            // update...
+            var conn = StreetFooRuntime.GetUserDatabase();
+            foreach (var report in result.Reports)
             {
-                // call the success handler...
-                if(success != null)
-                    success();
+                // load the existing one, deleting it if we find it...
+                var existing = await conn.Table<ReportItem>().Where(v => v.NativeId == report.NativeId).FirstOrDefaultAsync();
+                if (existing != null)
+                    await conn.DeleteAsync(existing);
 
-            }, failure, completed);
+                // create...
+                await conn.InsertAsync(report);
+            }
         }
 
-        internal static ReportItem CreateFromJson(JsonObject json)
-        {
-            // creates a new report item... a more sophisticated version of 
-            // this would use a mapper...
-            var mapper = JsonMapperFactory.GetMapper<ReportItem>();
-            return mapper.Load(json);
-        }
-
-        // reads the local cache and populates the observable collection...
-        internal static void ReadCache(Action<List<ReportItem>> success, FailureHandler failure, Action complete = null)
+        // reads the local cache and populates a collection...
+        internal static async Task<IEnumerable<ReportItem>> GetAllFromCacheAsync()
         {
             var conn = StreetFooRuntime.GetUserDatabase();
-            var query = conn.Table<ReportItem>().ToListAsync().ContinueWith((tQuery) =>
-            {
-                // pass the items back to the handler...
-                success(tQuery.Result);
+            return await conn.Table<ReportItem>().ToListAsync();
+        }
 
-                // ok...
-                if (complete != null)
-                    complete();
-
-            }).ChainFailureHandler(failure, complete);
+        // indicates whether the cache is empty...
+        internal static async Task<bool> IsCacheEmpty()
+        {
+            var conn = StreetFooRuntime.GetUserDatabase();
+            return (await conn.Table<ReportItem>().FirstOrDefaultAsync()) == null;
         }
     }
 }

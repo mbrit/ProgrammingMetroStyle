@@ -33,7 +33,7 @@ namespace StreetFoo.Client
                 data.Add("logonToken", StreetFooRuntime.LogonToken);
         }
 
-        public Task Execute(JsonObject input, Action<JsonObject> processor, FailureHandler failure, Action complete = null)
+        public async Task<ServiceExecuteResult> Execute(JsonObject input)
         {
             // set the api key...
             ConfigureInputArgs(input);
@@ -43,64 +43,41 @@ namespace StreetFoo.Client
             request.Method = "POST";
 
             // make a request for a stream to post the data up...
-            var grsTask = request.GetRequestStreamAsync();
-            grsTask.ContinueWith((grsResult) => {
-
-                // the result holds the stream...
-                using (Stream stream = grsResult.Result)
-                {
-                    // get the data to send...
-                    string json = input.Stringify();
-                    byte[] bs = Encoding.UTF8.GetBytes(json);
+            using (var stream = await request.GetRequestStreamAsync())
+            {
+                // get the data to send...
+                string outboundJson = input.Stringify();
+                byte[] bs = Encoding.UTF8.GetBytes(outboundJson);
                     
-                    // send it...
-                    stream.Write(bs, 0, bs.Length);
-                }
+                // send it...
+                stream.Write(bs, 0, bs.Length);
+            }
 
-                // now, the response...
-                var grTask = request.GetResponseAsync();
-                grTask.ContinueWith((grResult) =>
-                {
-                    // unpack...
-                    string json = null;
-                    using (Stream stream = grResult.Result.GetResponseStream())
-                    {
-                        // unpack the json...
-                        StreamReader reader = new StreamReader(stream);
-                        json = reader.ReadToEnd();
-                    }
+            // now, the response...
+            var response = await request.GetResponseAsync();
 
-                    // load it up...
-                    JsonObject output = JsonObject.Parse(json);
+            // unpack...
+            string inboundJson = null;
+            using (Stream stream = response.GetResponseStream())
+            {
+                // unpack the json...
+                StreamReader reader = new StreamReader(stream);
+                inboundJson = reader.ReadToEnd();
+            }
 
-                    // did the server return an error?
-                    bool isOk = output.GetNamedBoolean("isOk");
-                    if (isOk)
-                    {
-                        // run the delegate that processes the results...
-                        processor(output);
-                    }
-                    else
-                    {
-                        // we have an error returned from the server...
-                        string error = output.GetNamedString("error");
+            // load it up...
+            JsonObject output = JsonObject.Parse(inboundJson);
 
-                        // create a bucket and pass it through...
-                        ErrorBucket bucket = new ErrorBucket();
-                        bucket.AddError(error);
-                        failure(this, bucket);
-                    }
-
-                    // completed?
-                    if (complete != null)
-                        complete();
-
-                }).ChainFailureHandler(failure, complete);
-
-            }).ChainFailureHandler(failure, complete);
-
-            // return...
-            return grsTask;
+            // did the server return an error?
+            bool isOk = output.GetNamedBoolean("isOk");
+            if (isOk)
+                return new ServiceExecuteResult(output);
+            else
+            {
+                // we have an error returned from the server, so return that...
+                string error = output.GetNamedString("error");
+                return new ServiceExecuteResult(output, error);
+            }
         }
     }
 }

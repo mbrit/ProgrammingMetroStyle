@@ -14,38 +14,26 @@ namespace StreetFoo.Client
         {
         }
 
-        public void GetReportsByUser(Action<GetReportsByUserResult> success, FailureHandler failure, Action completed = null)
+        public async Task<GetReportsByUserResult> GetReportsByUserAsync()
         {
-            this.Execute(new JsonObject(), async (output) =>
+            var input = new JsonObject();
+            var executeResult = await this.Execute(input); 
+
+            // did it work?
+            if (!(executeResult.HasErrors))
             {
                 // get the reports...
-                string asString = output.GetNamedString("reports");
-
-                // somewhere to put the results...
-                GetReportsByUserResult result = new GetReportsByUserResult();
+                string asString = executeResult.Output.GetNamedString("reports");
 
                 // create some objects...
                 var mapper = JsonMapperFactory.GetMapper<ReportItem>();
                 List<ReportItem> reports = mapper.LoadArray(asString);
 
-                // dump the reports in the database...
-                var conn = StreetFooRuntime.GetUserDatabase();
-                foreach (ReportItem report in reports)
-                {
-                    // load the existing one...
-                    ReportItem existing = (await conn.Table<ReportItem>().Where(v => v.NativeId == report.NativeId).ToListAsync()).FirstOrDefault();
-                    if (existing != null)
-                        await conn.DeleteAsync(existing);
-
-                    // create...
-                    await conn.InsertAsync(report);
-                }
-
-                // success...
-                if (success != null)
-                    success(result);
-
-            }, failure, completed);
+                // return...
+                return new GetReportsByUserResult(reports);
+            }
+            else
+                return new GetReportsByUserResult(executeResult);
         }
     }
 }

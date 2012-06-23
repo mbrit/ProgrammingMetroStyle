@@ -53,7 +53,7 @@ namespace StreetFoo.Client
 
         }
 
-        private void DoLogon(CommandExecutionContext context)
+        private async void DoLogon(CommandExecutionContext context)
         {
             // validate...
             ErrorBucket errors = new ErrorBucket();
@@ -66,30 +66,28 @@ namespace StreetFoo.Client
                 ILogonServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<ILogonServiceProxy>();
 
                 // call...
-                var failure = this.GetFailureHandler();
-                var complete = this.GetCompleteHandler();
-                this.EnterBusy();
-                proxy.Logon(this.Username, this.Password, (result) =>
+                using(this.EnterBusy())
                 {
-                    // logon... pass through the username as each user gets their own database...
-                    StreetFooRuntime.Logon(this.Username, result.Token, () =>
+                    var result = await proxy.LogonAsync(this.Username, this.Password);
+                    if (!(result.HasErrors))
                     {
+                        // logon... pass through the username as each user gets their own database...
+                        await StreetFooRuntime.LogonAsync(this.Username, result.Token);
+
                         // while we're here - store a setting containing the logon name of the user...
-                        SettingItem.SetValueAsync(LastUsernameKey, this.Username, () =>
-                        {
-                            // show the reports page...
-                            this.Host.ShowView(typeof(IReportsPageViewModel));
+                        await SettingItem.SetValueAsync(LastUsernameKey, this.Username);
 
-                        }, failure, complete);
-
-                    }, failure, complete);
-
-                }, failure, complete).AddToContext(context);
+                        // show the reports page...
+                        this.Host.ShowView(typeof(IReportsPageViewModel));
+                    }
+                    else
+                        errors.CopyFrom(result);
+                }
             }
 
             // errors?
             if (errors.HasErrors)
-                this.Host.ShowAlertAsync(errors);
+                await this.Host.ShowAlertAsync(errors);
         }
 
         private void Validate(ErrorBucket errors)
@@ -101,17 +99,12 @@ namespace StreetFoo.Client
                 errors.AddError("Password is required.");
         }
 
-        public override void Activated()
+        public override async void Activated()
         {
             base.Activated();
 
             // restore the setting...
-            SettingItem.GetValueAsync(LastUsernameKey, (value) =>
-            {
-                // set the loaded value...
-                this.Username = value;
-
-            }, this.GetFailureHandler(), this.GetCompleteHandler());
+            this.Username = await SettingItem.GetValueAsync(LastUsernameKey);
         }
     }
 }

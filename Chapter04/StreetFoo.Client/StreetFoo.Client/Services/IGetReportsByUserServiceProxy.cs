@@ -8,6 +8,6 @@ namespace StreetFoo.Client
 {
     public interface IGetReportsByUserServiceProxy : IServiceProxy
     {
-        void GetReportsByUser(Action<GetReportsByUserResult> success, FailureHandler failure, Action completed = null);
+        Task<GetReportsByUserResult> GetReportsByUserAsync();
     }
 }

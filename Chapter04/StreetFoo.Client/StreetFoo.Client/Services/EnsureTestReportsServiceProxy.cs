@@ -14,19 +14,11 @@ namespace StreetFoo.Client
         {
         }
 
-        public Task EnsureTestReports(Action success, FailureHandler failure, Action complete = null)
+        public async Task EnsureTestReportsAsync()
         {
-            // input...
+            // run... don't need to tell it anything, or get anything back...
             JsonObject input = new JsonObject();
-
-            // run...
-            return this.Execute(input, (output) =>
-            {
-                // nothing to do but just call it...
-                if(success != null)
-                    success();
-
-            }, failure, complete);
+            await this.Execute(input);
         }
     }
 }

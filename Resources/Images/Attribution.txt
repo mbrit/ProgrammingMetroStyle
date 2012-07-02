@@ -1,0 +1,29 @@
+Grafitti images used in the book "Programming Metro-style Apps with C#" and
+associated code download were sourced from Flickr's Creative Commons archive.
+
+This file provides attribution for those images.
+
+Graffiti01.jpg
+http://www.flickr.com/photos/zigazou76/5242174528/
+http://creativecommons.org/licenses/by/2.0/deed.en_GB
+Frédéric BISSON - zigazou76
+
+Graffiti02.jpg
+http://www.flickr.com/photos/10295270@N05/868407725/
+http://creativecommons.org/licenses/by/2.0/deed.en_GB
+erokism
+
+Graffiti03.jpg
+http://www.flickr.com/photos/wwarby/4790992757/
+http://creativecommons.org/licenses/by/2.0/deed.en_GB
+William Warby - wwarby
+
+Graffiti04.jpg
+http://www.flickr.com/photos/mistermoss/1298410763/
+http://creativecommons.org/licenses/by/2.0/deed.en_GB
+Pete Bakke - mistermoss
+
+Graffiti05.jpg
+http://www.flickr.com/photos/dominicspics/821478784/
+http://creativecommons.org/licenses/by/2.0/deed.en_GB
+Dominic Alves - dominicspics

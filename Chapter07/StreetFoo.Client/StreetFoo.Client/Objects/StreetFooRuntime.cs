@@ -40,7 +40,7 @@ namespace StreetFoo.Client
             ServiceProxyFactory.Current.SetHandler(typeof(IGetReportsByUserServiceProxy), typeof(GetReportsByUserServiceProxy));
             ServiceProxyFactory.Current.SetHandler(typeof(IGetReportImageServiceProxy), typeof(GetReportImageServiceProxy));
 
-            // initialize the system database... a rare move to do this synchronously as we're booting up...
+            // initialize the system database... 
             var conn = GetSystemDatabase();
             await conn.CreateTableAsync<SettingItem>();
 		}

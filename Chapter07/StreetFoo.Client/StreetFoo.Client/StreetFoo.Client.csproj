@@ -124,7 +124,7 @@
     <Compile Include="Data\SQLite.cs" />
     <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ModelItem.cs" />
-    <Compile Include="Entities\ModelItemT.cs" />
+    <Compile Include="Entities\WrappingModelItem.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
     <Compile Include="Ioc\IocBase.cs" />

@@ -19,16 +19,16 @@ namespace StreetFoo.Client.UI
     /// <summary>
     /// A basic page that provides characteristics common to most applications.
     /// </summary>
-    public sealed partial class RegisterPage : StreetFoo.Client.UI.Common.LayoutAwarePage
+    public sealed partial class LogonPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
-        private IRegisterPageViewModel Model { get; set; }
+        private ILogonPageViewModel Model { get; set; }
 
-        public RegisterPage()
+        public LogonPage()
         {
             this.InitializeComponent();
 
-            // model...
-            this.Model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(this);
+            // get...
+            this.Model = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(this);
             this.InitializeModel(this.Model);
         }
 

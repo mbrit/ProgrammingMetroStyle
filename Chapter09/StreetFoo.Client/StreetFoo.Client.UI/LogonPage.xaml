@@ -1,6 +1,6 @@
 ﻿<common:LayoutAwarePage
     x:Name="pageRoot"
-    x:Class="StreetFoo.Client.UI.RegisterPage"
+    x:Class="StreetFoo.Client.UI.LogonPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     IsTabStop="false"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -9,20 +9,15 @@
     xmlns:common="using:StreetFoo.Client.UI.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Margin="0,-1,0,1">
 
     <Page.Resources>
         <common:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
         <common:BooleanNegationConverter x:Key="NegationConverter" />
     </Page.Resources>
 
-    <!--
-        This grid acts as a root panel for the page that defines two rows:
-        * Row 0 contains the back button and page title
-        * Row 1 contains the rest of the page layout
-    -->
-    <Grid Style="{StaticResource LayoutRootStyle}">
-        
+    <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
@@ -37,27 +32,26 @@
 
         <!-- Back button and page title -->
         <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-        <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Register" Style="{StaticResource PageHeaderTextStyle}"/>
-        
+        <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Logon" Style="{StaticResource PageHeaderTextStyle}"/>
+
         <!-- Registration form -->
         <StackPanel Grid.Row="1" Grid.Column="1">
 
             <TextBlock Text="Username"></TextBlock>
             <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Username, Mode=TwoWay}"/>
 
-            <TextBlock Text="Email"></TextBlock>
-            <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Email, Mode=TwoWay}"/>
-
             <TextBlock Text="Password"></TextBlock>
             <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}"/>
 
-            <TextBlock Text="Confirm password"></TextBlock>
-            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Confirm, Mode=TwoWay}"/>
-
-            <Button Content="Register" Command="{Binding RegisterCommand}"></Button>
+            <CheckBox Content="Remember me" IsChecked="{Binding RememberMe, Mode=TwoWay}"></CheckBox>
+            
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Logon" Command="{Binding LogonCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>
+                <Button Content="Register" Command="{Binding RegisterCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>
+            </StackPanel>
 
         </StackPanel>
-        
+
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->

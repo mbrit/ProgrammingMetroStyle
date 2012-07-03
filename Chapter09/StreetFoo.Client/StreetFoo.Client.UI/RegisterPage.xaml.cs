@@ -21,15 +21,9 @@ namespace StreetFoo.Client.UI
     /// </summary>
     public sealed partial class RegisterPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
-        private IRegisterPageViewModel Model { get; set; }
-
         public RegisterPage()
         {
             this.InitializeComponent();
-
-            // model...
-            this.Model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(this);
-            this.InitializeModel(this.Model);
         }
 
         /// <summary>

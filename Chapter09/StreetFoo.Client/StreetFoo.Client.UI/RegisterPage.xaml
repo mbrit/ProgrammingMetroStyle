@@ -12,8 +12,9 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <common:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
-        <common:BooleanNegationConverter x:Key="NegationConverter" />
+
+        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <x:String x:Key="AppName">My Application</x:String>
     </Page.Resources>
 
     <!--
@@ -22,42 +23,21 @@
         * Row 1 contains the rest of the page layout
     -->
     <Grid Style="{StaticResource LayoutRootStyle}">
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="140"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-
-        <ProgressBar Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="true" 
-                     Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"></ProgressBar>
 
         <!-- Back button and page title -->
-        <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-        <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Register" Style="{StaticResource PageHeaderTextStyle}"/>
-        
-        <!-- Registration form -->
-        <StackPanel Grid.Row="1" Grid.Column="1">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{StaticResource AppName}" Style="{StaticResource PageHeaderTextStyle}"/>
+        </Grid>
 
-            <TextBlock Text="Username"></TextBlock>
-            <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Username, Mode=TwoWay}"/>
-
-            <TextBlock Text="Email"></TextBlock>
-            <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Email, Mode=TwoWay}"/>
-
-            <TextBlock Text="Password"></TextBlock>
-            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}"/>
-
-            <TextBlock Text="Confirm password"></TextBlock>
-            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Confirm, Mode=TwoWay}"/>
-
-            <Button Content="Register" Command="{Binding RegisterCommand}"></Button>
-
-        </StackPanel>
-        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->

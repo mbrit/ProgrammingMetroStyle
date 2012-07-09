@@ -22,7 +22,12 @@
       <Extensions>
         <Extension Category="windows.shareTarget">
           <ShareTarget>
+            <SupportedFileTypes>
+              <FileType>.jpg</FileType>
+            </SupportedFileTypes>
             <DataFormat>text</DataFormat>
+            <DataFormat>storageitems</DataFormat>
+            <DataFormat>bitmap</DataFormat>
           </ShareTarget>
         </Extension>
       </Extensions>

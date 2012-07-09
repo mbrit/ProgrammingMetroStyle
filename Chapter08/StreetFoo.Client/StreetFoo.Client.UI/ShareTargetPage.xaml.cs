@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -43,10 +44,10 @@ namespace StreetFoo.Client.UI
         /// Invoked when another application wants to share content through this application.
         /// </summary>
         /// <param name="args">Activation data used to coordinate the process with Windows.</param>
-        public void Activate(ShareTargetActivatedEventArgs args)
+        public async void Activate(ShareTargetActivatedEventArgs args)
         {
             // give it to the view-model...
-            this.Model.SetupShareData(args.ShareOperation);
+            await this.Model.SetupShareDataAsync(args.ShareOperation);
 
             // show...
             Window.Current.Content = this;

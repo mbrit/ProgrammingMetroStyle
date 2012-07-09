@@ -26,7 +26,7 @@
     <Grid Style="{StaticResource LayoutRootStyle}">
         <Grid Margin="40,20,40,60">
             <Grid.RowDefinitions>
-                <RowDefinition Height="180"/>
+                <RowDefinition Height="100"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
@@ -60,18 +60,16 @@
                     Style="{StaticResource BodyTextStyle}"/>
             </StackPanel>
 
-            <Grid Grid.Row="1" Grid.ColumnSpan="2">
-                <!-- TODO: Add application scenario-specific sharing UI -->
-            </Grid>
-
-            <TextBox
-                Grid.Row="1"
-                Grid.ColumnSpan="2"
-                Margin="0,0,0,27"
-                Text="{Binding Comment}"
-                Visibility="{Binding SupportsComment, Converter={StaticResource BooleanToVisibilityConverter}}"
-                IsEnabled="{Binding Sharing, Converter={StaticResource BooleanNegationConverter}}"/>
-            
+            <StackPanel Grid.Row="1" Grid.ColumnSpan="2">
+                <TextBlock Text="{Binding SharedText}" Style="{StaticResource BodyTextStyle}"
+                    Margin="0,0,0,15"></TextBlock>
+                <Image Source="{Binding SharedImage}" Margin="0,0,0,15"
+                    Visibility="{Binding ShowImage, Converter={StaticResource BooleanToVisibilityConverter}}"></Image>
+                <TextBox Margin="0,0,0,27" Text="{Binding Comment}"
+                    Visibility="{Binding SupportsComment, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    IsEnabled="{Binding Sharing, Converter={StaticResource BooleanNegationConverter}}"/>
+            </StackPanel>
+                        
             <!-- Standard share target footer -->
             <Grid Grid.Row="2" Grid.ColumnSpan="2">
                 <ProgressRing

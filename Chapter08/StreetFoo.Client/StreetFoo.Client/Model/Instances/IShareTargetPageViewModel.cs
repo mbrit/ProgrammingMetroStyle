@@ -13,16 +13,19 @@ namespace StreetFoo.Client
 {
     public interface IShareTargetPageViewModel : IViewModel
     {
-        string Title { get; set; }
-        string Description { get; set; }
+        string Title { get; }
+        string Description { get; }
         string Comment { get; set; }
 
-        bool ShowImage { get; set; }
-        bool SupportsComment { get; set; }
-        bool Sharing { get; set; }
+        string SharedText { get; }
+        BitmapImage SharedImage { get; }
+
+        bool ShowImage { get; }
+        bool SupportsComment { get; }
+        bool Sharing { get; }
 
         ICommand ShareCommand { get; }
 
-        void SetupShareData(ShareOperation operation);
+        Task SetupShareDataAsync(ShareOperation operation);
     }
 }

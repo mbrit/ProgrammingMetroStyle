@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="ImageShareScratch.MainPage"
+    IsTabStop="false"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ImageShareScratch"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+        <Button Content="Pick and Share an Image" HorizontalAlignment="Left" Margin="89,74,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+        <TextBlock HorizontalAlignment="Left" Margin="89,128,0,0" TextWrapping="Wrap" Text="Metro-style guidelines suggest that you don't open the Share UI programatically as this example does." VerticalAlignment="Top"/>
+
+    </Grid>
+</Page>

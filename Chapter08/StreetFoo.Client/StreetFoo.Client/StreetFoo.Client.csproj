@@ -173,6 +173,9 @@
     <Content Include="sqlite3.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MetroLog">
+      <HintPath>..\..\..\Chapter15\MetroLog\MetroLog\bin\Debug\MetroLog.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\winrt45\Newtonsoft.Json.dll</HintPath>
     </Reference>

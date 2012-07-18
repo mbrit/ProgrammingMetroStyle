@@ -23,7 +23,7 @@ namespace StreetFoo.Client
             Debug.WriteLine(string.Format("Enqueuing download for '{0}'...", viewItem.NativeId));
 
             // create a new task...
-            Task<Task<string>>.Factory.StartNew(async () =>
+            Task.Run<string>(async () =>
             {
                 Debug.WriteLine(string.Format("Requesting image for '{0}'...", viewItem.NativeId));
 
@@ -46,10 +46,10 @@ namespace StreetFoo.Client
                 Debug.WriteLine(string.Format("Image load for '{0}' finished.", viewItem.NativeId));
                 return url;
 
-            }).ContinueWith(async (t) =>
+            }).ContinueWith(t =>
             {
                 // send it back...
-                viewItem.ImageUrl = (await t).Result;
+                viewItem.ImageUrl = t.Result;
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }

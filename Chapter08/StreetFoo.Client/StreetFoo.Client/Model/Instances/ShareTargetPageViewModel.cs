@@ -104,6 +104,6 @@ namespace StreetFoo.Client
             
             // tell the OS that we have the data...
             share.ReportDataRetrieved();
-        }
+            }
     }
 }

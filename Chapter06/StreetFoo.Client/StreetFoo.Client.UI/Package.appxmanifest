@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
+  <Identity Name="BUILD.49ce95bb-66d6-4e78-85ec-4d4e72ca292d" Publisher="CN=Matthew" Version="1.6.0.0" />
+  <Properties>
+    <DisplayName>StreetFoo.Client.UI</DisplayName>
+    <PublisherDisplayName>@mbrit</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+  </Properties>
+  <Prerequisites>
+    <OSMinVersion>6.2.0</OSMinVersion>
+    <OSMaxVersionTested>6.2.0</OSMaxVersionTested>
+  </Prerequisites>
+  <Resources>
+    <Resource Language="x-generate" />
+  </Resources>
+  <Applications>
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="StreetFoo.Client.UI.App">
+      <VisualElements DisplayName="StreetFoo.Client.UI" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="StreetFoo.Client.UI" ForegroundText="light" BackgroundColor="#00A0D1" ToastCapable="true">
+        <DefaultTile ShowName="allLogos" />
+        <SplashScreen Image="Assets\SplashScreen.png" />
+      </VisualElements>
+    </Application>
+  </Applications>
+  <Capabilities>
+    <Capability Name="internetClient" />
+  </Capabilities>
+</Package>

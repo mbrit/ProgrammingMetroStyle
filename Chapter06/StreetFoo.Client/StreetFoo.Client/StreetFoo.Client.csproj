@@ -123,17 +123,11 @@
     </Compile>
     <Compile Include="Data\SQLite.cs" />
     <Compile Include="Data\SQLiteAsync.cs" />
-    <Compile Include="Entities\ModelItem.cs" />
-    <Compile Include="Entities\WrappingModelItem.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
     <Compile Include="Ioc\IocBase.cs" />
     <Compile Include="Ioc\ServiceProxyFactory.cs" />
     <Compile Include="Ioc\ViewModelFactory.cs" />
-    <Compile Include="Logging\DequeuedEventArgs.cs" />
-    <Compile Include="Logging\StreamingFileTarget.cs" />
-    <Compile Include="Logging\StreamingQueue.cs" />
-    <Compile Include="Logging\StreamingTarget.cs" />
     <Compile Include="Model\Base\CommandExecutionContext.cs" />
     <Compile Include="Model\Base\IViewModel.cs" />
     <Compile Include="Model\Base\IViewModelHost.cs" />
@@ -143,25 +137,18 @@
     <Compile Include="Model\Instances\ILogonPageViewModel.cs" />
     <Compile Include="Model\Instances\IRegisterPageViewModel.cs" />
     <Compile Include="Model\Instances\IReportsPageViewModel.cs" />
-    <Compile Include="Model\Instances\IShareTargetPageViewModel.cs" />
     <Compile Include="Model\Instances\LogonPageViewModel.cs" />
     <Compile Include="Model\Instances\RegisterPageViewModel.cs" />
-    <Compile Include="Model\Instances\ReportImageCacheManager.cs" />
     <Compile Include="Model\Instances\ReportsPageViewModel.cs" />
-    <Compile Include="Model\Instances\ReportViewItem.cs" />
-    <Compile Include="Model\Instances\ShareTargetPageViewModel.cs" />
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Objects\JsonObjectExtender.cs" />
     <Compile Include="Objects\StreetFooRuntime.cs" />
     <Compile Include="Objects\TaskExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\GetReportImageResult.cs" />
-    <Compile Include="Services\GetReportImageServiceProxy.cs" />
     <Compile Include="Services\EnsureTestReportsServiceProxy.cs" />
     <Compile Include="Services\GetReportsByUserResult.cs" />
     <Compile Include="Services\GetReportsByUserServiceProxy.cs" />
     <Compile Include="Services\IEnsureTestReportsServiceProxy.cs" />
-    <Compile Include="Services\IGetReportImageServiceProxy.cs" />
     <Compile Include="Services\IGetReportsByUserServiceProxy.cs" />
     <Compile Include="Services\ILogonServiceProxy.cs" />
     <Compile Include="Services\IRegisterServiceProxy.cs" />
@@ -177,12 +164,12 @@
     <Content Include="sqlite3.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="MetroLog">
-      <HintPath>..\..\MetroLog\MetroLog\bin\Debug\MetroLog.dll</HintPath>
-    </Reference>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

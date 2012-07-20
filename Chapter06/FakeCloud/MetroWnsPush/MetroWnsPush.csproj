@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{80830545-D386-477A-AB61-E63690B8CACF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MetroWnsPush</RootNamespace>
+    <AssemblyName>MetroWnsPush</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Authorization\WnsAuthorization.cs" />
+    <Compile Include="Authorization\WnsAuthorizer.cs" />
+    <Compile Include="Push\NotificationTemplate.cs" />
+    <Compile Include="Push\NotificationType.cs" />
+    <Compile Include="Push\WnsPusher.cs" />
+    <Compile Include="Push\WnsPushResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Templates\BadgeGlyph.xml" />
+    <EmbeddedResource Include="Templates\BadgeNumber.xml" />
+    <EmbeddedResource Include="Templates\TileSquareBlock.xml" />
+    <EmbeddedResource Include="Templates\TileSquareImage.xml" />
+    <EmbeddedResource Include="Templates\TileSquarePeekImageAndText01.xml" />
+    <EmbeddedResource Include="Templates\TileSquarePeekImageAndText02.xml" />
+    <EmbeddedResource Include="Templates\TileSquarePeekImageAndText03.xml" />
+    <EmbeddedResource Include="Templates\TileSquarePeekImageAndText04.xml" />
+    <EmbeddedResource Include="Templates\TileSquareText01.xml" />
+    <EmbeddedResource Include="Templates\TileSquareText02.xml" />
+    <EmbeddedResource Include="Templates\TileSquareText03.xml" />
+    <EmbeddedResource Include="Templates\TileSquareText04.xml" />
+    <EmbeddedResource Include="Templates\TileWideBlockAndText01.xml" />
+    <EmbeddedResource Include="Templates\TileWideBlockAndText02.xml" />
+    <EmbeddedResource Include="Templates\TileWideImage.xml" />
+    <EmbeddedResource Include="Templates\TileWideImageAndText01.xml" />
+    <EmbeddedResource Include="Templates\TileWideImageAndText02.xml" />
+    <EmbeddedResource Include="Templates\TileWideImageCollection.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImage01.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImage02.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImage03.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImage04.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImage05.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImage06.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageAndText01.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageAndText02.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageCollection01.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageCollection02.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageCollection03.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageCollection04.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageCollection05.xml" />
+    <EmbeddedResource Include="Templates\TileWidePeekImageCollection06.xml" />
+    <EmbeddedResource Include="Templates\TileWideSmallImageAndText01.xml" />
+    <EmbeddedResource Include="Templates\TileWideSmallImageAndText02.xml" />
+    <EmbeddedResource Include="Templates\TileWideSmallImageAndText03.xml" />
+    <EmbeddedResource Include="Templates\TileWideSmallImageAndText04.xml" />
+    <EmbeddedResource Include="Templates\TileWideSmallImageAndText05.xml" />
+    <EmbeddedResource Include="Templates\TileWideText01.xml" />
+    <EmbeddedResource Include="Templates\TileWideText02.xml" />
+    <EmbeddedResource Include="Templates\TileWideText03.xml" />
+    <EmbeddedResource Include="Templates\TileWideText04.xml" />
+    <EmbeddedResource Include="Templates\TileWideText05.xml" />
+    <EmbeddedResource Include="Templates\TileWideText06.xml" />
+    <EmbeddedResource Include="Templates\TileWideText07.xml" />
+    <EmbeddedResource Include="Templates\TileWideText08.xml" />
+    <EmbeddedResource Include="Templates\TileWideText09.xml" />
+    <EmbeddedResource Include="Templates\TileWideText10.xml" />
+    <EmbeddedResource Include="Templates\TileWideText11.xml" />
+    <EmbeddedResource Include="Templates\ToastImageAndText01.xml" />
+    <EmbeddedResource Include="Templates\ToastImageAndText02.xml" />
+    <EmbeddedResource Include="Templates\ToastImageAndText03.xml" />
+    <EmbeddedResource Include="Templates\ToastImageAndText04.xml" />
+    <EmbeddedResource Include="Templates\ToastText01.xml" />
+    <EmbeddedResource Include="Templates\ToastText02.xml" />
+    <EmbeddedResource Include="Templates\ToastText03.xml" />
+    <EmbeddedResource Include="Templates\ToastText04.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

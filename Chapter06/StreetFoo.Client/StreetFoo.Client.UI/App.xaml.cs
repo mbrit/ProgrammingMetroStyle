@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.Data.Xml.Dom;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Networking.PushNotifications;
@@ -34,7 +36,15 @@ namespace StreetFoo.Client.UI
         public App()
         {
             this.InitializeComponent();
+
             this.Suspending += OnSuspending;
+            this.Resuming += App_Resuming;
+        }
+
+        async void App_Resuming(object sender, object e)
+        {
+            if (StreetFooRuntime.HasLogonToken)
+                await StreetFooRuntime.SetupNotificationChannelAsync();
         }
 
         /// <summary>
@@ -61,9 +71,14 @@ namespace StreetFoo.Client.UI
             // start up our runtime...
             await StreetFooRuntime.Start("Client");
 
+            var logonViewModel = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(new NullViewModelHost());
+            var targetPage = typeof(LogonPage);
+            if (await logonViewModel.RestorePersistentLogonAsync())
+                targetPage = typeof(ReportsPage);
+
             // Create a Frame to act navigation context and navigate to the first page
             var rootFrame = new Frame();
-            if (!rootFrame.Navigate(typeof(LogonPage)))
+            if (!rootFrame.Navigate(targetPage))
             {
                 throw new Exception("Failed to create initial page");
             }
@@ -71,10 +86,27 @@ namespace StreetFoo.Client.UI
             // Place the frame in the current Window and ensure that it is active
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
+        }
 
-            // subscribe...
-            var manager = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
-            Debug.WriteLine(manager.Uri);
+        private class NullViewModelHost : IViewModelHost
+        {
+            public IAsyncOperation<Windows.UI.Popups.IUICommand> ShowAlertAsync(ErrorBucket errors)
+            {
+                return null;
+            }
+
+            public IAsyncOperation<Windows.UI.Popups.IUICommand> ShowAlertAsync(string message)
+            {
+                return null;
+            }
+
+            public void ShowView(Type viewModelInterfaceType)
+            {
+            }
+
+            public void HideAppBar()
+            {
+            }
         }
 
         /// <summary>
@@ -86,6 +118,8 @@ namespace StreetFoo.Client.UI
         /// <param name="e">Details about the suspend request.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
+            Debug.WriteLine("Suspending...");
+
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();

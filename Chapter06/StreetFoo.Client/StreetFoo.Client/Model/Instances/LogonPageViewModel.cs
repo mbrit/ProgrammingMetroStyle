@@ -16,6 +16,7 @@ namespace StreetFoo.Client
 
         // defines the username settings key...
         internal const string LastUsernameKey = "LastUsername";
+        internal const string LogonTokenKey = "LogonToken";
 
         public LogonPageViewModel(IViewModelHost host)
             : base(host)
@@ -23,6 +24,9 @@ namespace StreetFoo.Client
             // set RegisterCommand to defer to the DoRegistration method...
             this.LogonCommand = new DelegateCommand((args) => DoLogon(args as CommandExecutionContext));
             this.RegisterCommand = new NavigateCommand<IRegisterPageViewModel>(host);
+
+            // remember...
+            this.RememberMe = true;
         }
 
         public string Username
@@ -53,6 +57,18 @@ namespace StreetFoo.Client
 
         }
 
+        public bool RememberMe
+        {
+            get
+            {
+                return this.GetValue<bool>();
+            }
+            set
+            {
+                this.SetValue(value);
+            }
+        }
+
         private async void DoLogon(CommandExecutionContext context)
         {
             // validate...
@@ -76,6 +92,10 @@ namespace StreetFoo.Client
 
                         // while we're here - store a setting containing the logon name of the user...
                         await SettingItem.SetValueAsync(LastUsernameKey, this.Username);
+
+                        // remember the user?
+                        if (this.RememberMe)
+                            await SettingItem.SetValueAsync(LogonTokenKey, result.Token);
 
                         // show the reports page...
                         this.Host.ShowView(typeof(IReportsPageViewModel));
@@ -105,6 +125,25 @@ namespace StreetFoo.Client
 
             // restore the setting...
             this.Username = await SettingItem.GetValueAsync(LastUsernameKey);
+        }
+
+        public async Task<bool> RestorePersistentLogonAsync()
+        {
+            var token = await SettingItem.GetValueAsync(LogonTokenKey);
+            if (!(string.IsNullOrEmpty(token)))
+            {
+                var username = await SettingItem.GetValueAsync(LastUsernameKey);
+                if (!(string.IsNullOrEmpty(username)))
+                {
+                    // logon...
+                    await StreetFooRuntime.LogonAsync(username, token);
+                    return true;
+                }
+                else
+                    return false;
+            }
+            else
+                return false;
         }
     }
 }

@@ -43,6 +43,8 @@
             <TextBlock Text="Password"></TextBlock>
             <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}"/>
 
+            <CheckBox Content="Remember me" IsChecked="{Binding RememberMe, Mode=TwoWay}"></CheckBox>
+            
             <StackPanel Orientation="Horizontal">
                 <Button Content="Logon" Command="{Binding LogonCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>
                 <Button Content="Register" Command="{Binding RegisterCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>

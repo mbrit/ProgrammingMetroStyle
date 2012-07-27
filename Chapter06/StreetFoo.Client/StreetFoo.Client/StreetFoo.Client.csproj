@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -140,6 +140,9 @@
     <Compile Include="Model\Instances\LogonPageViewModel.cs" />
     <Compile Include="Model\Instances\RegisterPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportsPageViewModel.cs" />
+    <Compile Include="Notifications\BadgeNotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationBuilder.cs" />
+    <Compile Include="Notifications\ToastNotificationBuilder.cs" />
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Objects\JsonObjectExtender.cs" />
     <Compile Include="Objects\StreetFooRuntime.cs" />

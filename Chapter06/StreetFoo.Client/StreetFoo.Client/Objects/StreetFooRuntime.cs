@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
+using Windows.Networking.PushNotifications;
 
 namespace StreetFoo.Client
 {
@@ -44,7 +45,7 @@ namespace StreetFoo.Client
             await conn.CreateTableAsync<SettingItem>();
 		}
 
-        internal static bool HasLogonToken
+        public static bool HasLogonToken
         {
             get
             {
@@ -61,9 +62,35 @@ namespace StreetFoo.Client
             // store the logon token...
             LogonToken = token;
 
-            // initialize the database - has to be done async...
+            // initialize the database...
             var conn = GetUserDatabase();
             await conn.CreateTableAsync<ReportItem>();
+            await conn.CreateTableAsync<SettingItem>();
+
+            // redo our notification...
+            await SetupNotificationChannelAsync();
+        }
+
+        public static async Task SetupNotificationChannelAsync()
+        {
+            // get the notification channel...
+            var manager = await PushNotificationChannelManager.CreatePushNotificationChannelForApplicationAsync();
+            Debug.WriteLine("Channel: " + manager.Uri);
+
+            // if either the URI we sent or the username we sent has changed, resend it...
+            var lastUri = await SettingItem.GetValueAsync("NotificationUri");
+            var lastToken = await SettingItem.GetValueAsync("NotificationToken");
+            if (lastUri != manager.Uri || lastToken != LogonToken)
+            {
+                // send it...
+                Debug.WriteLine("*** This is where you asynchronously send it! ***");
+
+                // store it...
+                await SettingItem.SetValueAsync("NotificationUri", manager.Uri);
+                await SettingItem.SetValueAsync("NotificationToken", LogonToken);
+            }
+            else
+                Debug.WriteLine("URI not changed.");
         }
 
         internal static SQLiteAsyncConnection GetSystemDatabase()

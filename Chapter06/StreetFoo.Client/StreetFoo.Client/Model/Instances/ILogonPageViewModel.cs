@@ -31,5 +31,7 @@ namespace StreetFoo.Client
         {
             get;
         }
+
+        Task<bool> RestorePersistentLogonAsync();
     }
 }

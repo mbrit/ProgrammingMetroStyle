@@ -35,6 +35,11 @@ namespace StreetFoo.Client
             {
                 this.Host.HideAppBar();
                 await this.DoRefresh(true);
+
+                // toast...
+                var toast = new ToastNotificationBuilder(new string[] { "Reports refreshed.", string.Format("Count? {0}", this.Items.Count) }, 
+                    Windows.UI.Notifications.ToastTemplateType.ToastText02);
+                await toast.SendAsync();
             });
 
             // update any selection that we were given...
@@ -115,6 +120,10 @@ namespace StreetFoo.Client
                 this.Items.Clear();
                 foreach (ReportItem report in reports)
                     this.Items.Add(report);
+
+                // update the badge...
+                var builder = new BadgeNotificationBuilder(this.Items.Count);
+                await builder.SendAsync();
             }
         }
 

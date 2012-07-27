@@ -10,6 +10,7 @@ namespace MetroWnsPush
     {
         Toast = 0,
         Tile = 1,
-        Badge = 2
+        Badge = 2,
+        Raw = 3
     }
 }

@@ -18,9 +18,21 @@ namespace StreetFoo.Client
         public string Name { get; set; }
         public string Value { get; set; }
 
-        internal static async Task SetValueAsync(string name, string value)
+        public static async Task SetValueAsync(string name, string value)
         {
-			var conn = StreetFooRuntime.GetSystemDatabase();
+            await SetValueAsyncInternal(name, value, null);
+        }
+
+        public static async Task SetValueAsyncForUser(string name, string value)
+        {
+            await SetValueAsyncInternal(name, value, StreetFooRuntime.GetUserDatabase());
+        }
+        
+        private static async Task SetValueAsyncInternal(string name, string value, SQLiteAsyncConnection conn)
+        {
+            // if we don't have a connection, assume the system one...
+            if(conn == null)
+			    conn = StreetFooRuntime.GetSystemDatabase();
 
 			// load an existing value...
 			var setting = await conn.Table<SettingItem>().Where(v => v.Name == name).FirstOrDefaultAsync();
@@ -43,9 +55,20 @@ namespace StreetFoo.Client
 			}
         }
 
-        internal static async Task<string> GetValueAsync(string name)
+        public static async Task<string> GetValueAsync(string name)
         {
-            var conn = StreetFooRuntime.GetSystemDatabase();
+            return await GetValueAsyncInternal(name, null);
+        }
+
+        public static async Task<string> GetValueAsyncForUser(string name)
+        {
+            return await GetValueAsyncInternal(name, StreetFooRuntime.GetUserDatabase());
+        }
+
+        private static async Task<string> GetValueAsyncInternal(string name, SQLiteAsyncConnection conn)
+        {
+            if(conn == null)
+                conn = StreetFooRuntime.GetSystemDatabase();
 
             // load any existing value...
             var setting = (await conn.Table<SettingItem>().Where(v => v.Name == name).ToListAsync()).FirstOrDefault();

@@ -56,7 +56,6 @@
             this.textSecret.Name = "textSecret";
             this.textSecret.Size = new System.Drawing.Size(576, 20);
             this.textSecret.TabIndex = 0;
-            this.textSecret.Text = "Fn81wuzbAWY50fGfq1XwMrwFF-Ws0hgj";
             // 
             // label1
             // 
@@ -84,8 +83,6 @@
             this.textSid.Name = "textSid";
             this.textSid.Size = new System.Drawing.Size(576, 20);
             this.textSid.TabIndex = 2;
-            this.textSid.Text = "ms-app://s-1-15-2-3375133439-1258694814-3477248918-3992194227-966058094-324713288" +
-    "6-115840385";
             // 
             // buttonAuthenticate
             // 
@@ -157,9 +154,6 @@
             this.textUri.Name = "textUri";
             this.textUri.Size = new System.Drawing.Size(576, 52);
             this.textUri.TabIndex = 4;
-            this.textUri.Text = "https://db3.notify.windows.com/?token=AgUAAABLyXSUzcjMnBL1bfXr%2bM%2bMWteOKPQRm%2" +
-    "fxrtXFgrwRLOWqO9ZjmEoycpTLo4%2f%2bufG9R5WTQkhe2M8lcqHWlFaeWcgqZlBapRWRT23P%2fmDK" +
-    "PE9nhbJnf0WmX7MNjCDuycVY%3d";
             // 
             // label3
             // 

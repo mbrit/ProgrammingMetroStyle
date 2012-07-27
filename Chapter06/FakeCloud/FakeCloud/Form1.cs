@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -13,12 +14,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
 using MetroWnsPush;
+using Newtonsoft.Json;
 
 namespace StreetFoo.FakeCloud
 {
     public partial class Form1 : Form
     {
-        private WnsAuthorization Authentication { get; set; }
+        private WnsAuthentication Authentication { get; set; }
 
         public Form1()
         {
@@ -30,6 +32,8 @@ namespace StreetFoo.FakeCloud
             this.buttonAuthenticate.Enabled = false;
             try
             {
+                SaveSettings();
+
                 this.Authentication = null;
 
                 string sid = this.textSid.Text.Trim();
@@ -45,32 +49,8 @@ namespace StreetFoo.FakeCloud
                     return;
                 }
 
-                //var content = new StringContent(string.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com",
-                //    HttpUtility.UrlEncode(this.textSid.Text).Trim(), HttpUtility.UrlEncode(this.textSecret.Text).Trim()));
-                //content.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
-
-                //var client = new HttpClient();
-                //var result = await client.PostAsync("https://login.live.com/accesstoken.srf", content);
-
-                //string json = await result.Content.ReadAsStringAsync();
-                //var tokens = JObject.Parse(json);
-
-                //// then...
-                //// <toast><visual><binding template="ToastText01"><text id="1"></text></binding></visual></toast>
-                //content = new StringContent("<toast><visual><binding template=\"ToastText01\"><text id=\"1\">Hello, world.</text></binding></visual></toast>");
-                //content.Headers.ContentType.MediaType = "text/xml";
-                //content.Headers.Add("X-WNS-Type", "wns/toast");
-                //string token = (string)tokens["access_token"];
-
-                //client = new HttpClient(new OAuthHandler(token));
-                //var notifyUrl = "https://db3.notify.windows.com/?token=AgUAAAAG%2fwQVJ9PM6EMSDDMiin2IxCawutqNORruZSEiDBd552tc0xTG2i7RuZjiXdRECHh%2bFJvj7pwlq02A07VnbJcHnloxvZmNjSk4lx7gDo6vefMRv2%2fxv83m3rp%2b3dIsQH4%3d";
-                //result = await client.PostAsync(notifyUrl, content);
-
-                //// what?
-                //MessageBox.Show(this, string.Format("{0}: {1}", result.StatusCode, await result.Content.ReadAsStringAsync()));
-
                 // get the token...
-                var authenticator = new WnsAuthorizer();
+                var authenticator = new WnsAuthenticator();
                 this.Authentication = await authenticator.AuthenticateAsync(sid, secret);
 
                 // et...
@@ -86,29 +66,13 @@ namespace StreetFoo.FakeCloud
             }
         }
 
-        //private class OAuthHandler : DelegatingHandler
-        //{
-        //    private string Token { get; set; }
-
-        //    internal OAuthHandler(string token)
-        //        : base(new HttpClientHandler())
-        //    {
-        //        this.Token = token;
-        //    }
-
-        //    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        //    {
-        //        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", this.Token);
-        //        //request.Headers.Host = "cloud.notify.windows.com";
-        //        return base.SendAsync(request, cancellationToken);
-        //    }
-        //}
-
         private async void buttonSend_Click(object sender, EventArgs e)
         {
             this.buttonSend.Enabled = false;
             try
             {
+                SaveSettings();
+
                 string xml = this.textXml.Text.Trim();
                 if (string.IsNullOrEmpty(xml))
                 {
@@ -146,6 +110,53 @@ namespace StreetFoo.FakeCloud
             }
         }
 
+        private void LoadSettings()
+        {
+            var path = SettingsPath;
+            if (!(File.Exists(path)))
+                return;
+
+            // load...
+            string json = null;
+            using (var reader = new StreamReader(path))
+                json = reader.ReadToEnd();
+            var settings = JsonConvert.DeserializeObject<Settings>(json);
+
+            // set...
+            this.textSecret.Text = settings.Secret;
+            this.textSid.Text = settings.Sid;
+            this.textUri.Text = settings.Uri;
+        }
+
+        private void SaveSettings()
+        {
+            var settings = new Settings()
+            {
+                Secret = this.textSecret.Text.Trim(),
+                Sid = this.textSid.Text.Trim(),
+                Uri = this.textUri.Text.Trim()
+            };
+
+            // save...
+            var json = JsonConvert.SerializeObject(settings);
+            string path = SettingsPath;
+            using (var writer = new StreamWriter(path))
+                writer.Write(json);       
+        }
+
+        private string SettingsPath
+        {
+            get
+            {
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                path = Path.Combine(path, "MetroWnsPush");
+                if (!(Directory.Exists(path)))
+                    Directory.CreateDirectory(path);
+                path = Path.Combine(path, "Settings.json");
+                return path;
+            }
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             foreach (var template in NotificationTemplate.GetTemplates())
@@ -153,6 +164,8 @@ namespace StreetFoo.FakeCloud
 
             if (this.listContent.Items.Count > 0)
                 this.listContent.SelectedIndex = 0;
+
+            this.LoadSettings();
         }
 
         private void listContent_SelectedIndexChanged(object sender, EventArgs e)

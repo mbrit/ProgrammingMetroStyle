@@ -45,8 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Authorization\WnsAuthorization.cs" />
-    <Compile Include="Authorization\WnsAuthorizer.cs" />
+    <Compile Include="Authorization\WnsAuthentication.cs" />
+    <Compile Include="Authorization\WnsAuthenticator.cs" />
     <Compile Include="Push\NotificationTemplate.cs" />
     <Compile Include="Push\NotificationType.cs" />
     <Compile Include="Push\WnsPusher.cs" />

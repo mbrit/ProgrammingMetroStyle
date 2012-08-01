@@ -15,11 +15,21 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="StreetFoo.Client.UI.App">
-      <VisualElements DisplayName="StreetFoo.Client.UI" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="StreetFoo.Client.UI" ForegroundText="light" BackgroundColor="#00A0D1">
-        <DefaultTile ShowName="allLogos" />
+      <VisualElements DisplayName="StreetFoo.Client.UI" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="StreetFoo.Client.UI" ForegroundText="light" BackgroundColor="#00A0D1" ToastCapable="true">
+        <DefaultTile ShowName="allLogos" WideLogo="Assets\LogoWide.png" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
       <Extensions>
+        <Extension Category="windows.shareTarget">
+          <ShareTarget>
+            <SupportedFileTypes>
+              <FileType>.jpg</FileType>
+            </SupportedFileTypes>
+            <DataFormat>text</DataFormat>
+            <DataFormat>storageitems</DataFormat>
+            <DataFormat>bitmap</DataFormat>
+          </ShareTarget>
+        </Extension>
         <Extension Category="windows.search" />
       </Extensions>
     </Application>

@@ -6,12 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MetroLog;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 
 namespace StreetFoo.Client
 {
-    internal class ReportImageCacheManager
+    internal class ReportImageCacheManager : ILoggable
     {
         private const string LocalCacheFolderName = "ReportImages";
 
@@ -50,12 +52,13 @@ namespace StreetFoo.Client
             }).ContinueWith(async (t) =>
             {
                 // send it back...
-                viewItem.ImageUrl = (await t).Result;
+                Debug.WriteLine(string.Format("Setting image for '{0}'...", viewItem.NativeId));
+                viewItem.ImageUri = (await t).Result;
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private async Task<StorageFolder> GetCacheFolderAsync()
+        internal async Task<StorageFolder> GetCacheFolderAsync()
         {
             // find...
             StorageFolder cacheFolder = null;
@@ -118,17 +121,6 @@ namespace StreetFoo.Client
                 Debug.WriteLine(string.Format("Cache image for '{0}' was not found locally...", viewItem.NativeId));
                 return null;
             }
-        }
-
-        internal async Task<RandomAccessStreamReference> GetImageReferenceAsync(ReportViewItem viewItem)
-        {
-            // get...
-            var cacheFolder = await this.GetCacheFolderAsync();
-            var filename = GetCacheFilename(viewItem);
-            var cacheFile = await cacheFolder.GetFileAsync(filename);
-
-            // return..
-            return RandomAccessStreamReference.CreateFromFile(cacheFile);
         }
     }
 }

@@ -69,7 +69,7 @@
                     Visibility="{Binding SupportsComment, Converter={StaticResource BooleanToVisibilityConverter}}"
                     IsEnabled="{Binding Sharing, Converter={StaticResource BooleanNegationConverter}}"/>
             </StackPanel>
-                        
+
             <!-- Standard share target footer -->
             <Grid Grid.Row="2" Grid.ColumnSpan="2">
                 <ProgressRing
@@ -99,3 +99,4 @@
         </Grid>
     </Grid>
 </common:LayoutAwarePage>
+    

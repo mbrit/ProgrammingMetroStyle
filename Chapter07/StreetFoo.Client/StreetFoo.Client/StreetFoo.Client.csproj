@@ -144,6 +144,12 @@
     <Compile Include="Model\Instances\ReportImageCacheManager.cs" />
     <Compile Include="Model\Instances\ReportsPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportViewItem.cs" />
+    <Compile Include="Notifications\BadgeGlyph.cs" />
+    <Compile Include="Notifications\BadgeNotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationWithTextBuilder.cs" />
+    <Compile Include="Notifications\TileNotificationBuilder.cs" />
+    <Compile Include="Notifications\ToastNotificationBuilder.cs" />
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Objects\JsonObjectExtender.cs" />
     <Compile Include="Objects\StreetFooRuntime.cs" />

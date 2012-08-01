@@ -12,6 +12,7 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Notifications;
 
 namespace StreetFoo.Client
 {
@@ -40,6 +41,14 @@ namespace StreetFoo.Client
             {
                 this.Host.HideAppBar();
                 await this.DoRefresh(true);
+                
+                // toast...
+                string message = "I found 1 report.";
+                if (this.Items.Count != 1)
+                    message = string.Format("I found {0} reports.", this.Items.Count);
+                var toast = new ToastNotificationBuilder(new string[] { "Reports refreshed.", message });
+                toast.ImageUri = "ms-appx:///Assets/Toast.jpg";
+                toast.Update();
             });
 
             // update any selection that we were given...
@@ -105,11 +114,11 @@ namespace StreetFoo.Client
                     await ReportItem.UpdateCacheFromServerAsync();
 
                 // reload the items...
-                await this.ReloadReportsFromCache();
+                await this.ReloadReportsFromCacheAsync();
             }
         }
 
-        private async Task ReloadReportsFromCache()
+        private async Task ReloadReportsFromCacheAsync()
         {
             // setup a load operation to populate the collection from the cache...
             using (this.EnterBusy())
@@ -125,6 +134,21 @@ namespace StreetFoo.Client
                 var manager = new ReportImageCacheManager();
                 foreach (var item in this.Items)
                     await item.InitializeAsync(manager);
+
+                // update the badge...
+                var badge = new BadgeNotificationBuilder(this.Items.Count);
+                badge.Update();
+
+                // update the tile...
+                string message = "1 report";
+                if (this.Items.Count != 1)
+                    message = string.Format("{0} reports", this.Items.Count);
+                var tile = new TileNotificationBuilder(new string[] { "StreetFoo", message },
+                    TileTemplateType.TileWidePeekImage01);
+                tile.ImageUris.Add("ms-appx:///Assets/Toast.jpg");
+
+                // update...
+                tile.UpdateAndReplicate(TileTemplateType.TileSquarePeekImageAndText02);
             }
         }
 
@@ -162,7 +186,7 @@ namespace StreetFoo.Client
             // tell the caller that we'll get back to them...
             if (report.HasImage)
             {
-                var reference = RandomAccessStreamReference.CreateFromUri(new Uri(report.ImageUrl));
+                var reference = RandomAccessStreamReference.CreateFromUri(new Uri(report.ImageUri));
                 data.Properties.Thumbnail = reference;
                 data.SetBitmap(reference);
             }

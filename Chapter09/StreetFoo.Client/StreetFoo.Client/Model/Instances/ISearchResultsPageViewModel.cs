@@ -4,16 +4,21 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace StreetFoo.Client
 {
     public interface ISearchResultsPageViewModel : IViewModel
     {
-        ObservableCollection<ReportViewItem> Items
-        {
-            get;
-        }
+        string QueryText { get; }
+        string QueryNarrative { get; }
 
-        Task SearchAsync(string queryText);
+        ObservableCollection<ReportViewItem> Results { get; }
+        ObservableCollection<SearchFilter> Filters { get; }
+
+        bool ShowFilters { get; }
+        bool HasResults { get; }
+
+        ICommand SelectedCommand { get; }
     }
 }

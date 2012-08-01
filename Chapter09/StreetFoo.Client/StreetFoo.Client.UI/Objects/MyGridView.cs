@@ -17,6 +17,8 @@ namespace StreetFoo.Client.UI
     {
         public static readonly DependencyProperty SelectionCommandProperty =
             DependencyProperty.Register("SelectionCommand", typeof(ICommand), typeof(MyGridView), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemClickCommandProperty =
+            DependencyProperty.Register("ItemClickCommand", typeof(ICommand), typeof(MyGridView), new PropertyMetadata(null));
         public static readonly DependencyProperty OpenAppBarsOnMultipleSelectionProperty =
             DependencyProperty.Register("OpenAppBarsOnMultipleSelection", typeof(bool), typeof(MyGridView), new PropertyMetadata(true));
         public static readonly DependencyProperty OpenAppBarsOnRightClickProperty =
@@ -26,6 +28,7 @@ namespace StreetFoo.Client.UI
         {
             // wire up the selection changes...
             this.SelectionChanged += MyGridView_SelectionChanged;
+            this.ItemClick += MyGridView_ItemClick;
         }
 
         public bool OpenAppBarsOnRightClick
@@ -56,6 +59,12 @@ namespace StreetFoo.Client.UI
             set { SetValue(OpenAppBarsOnMultipleSelectionProperty, value); }
         }
 
+        public ICommand ItemClickCommand
+        {
+            get { return (ICommand)GetValue(ItemClickCommandProperty); }
+            set { SetValue(ItemClickCommandProperty, value); }
+        }
+
         void MyGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(this.SelectionCommand == null)
@@ -71,6 +80,17 @@ namespace StreetFoo.Client.UI
                 this.OpenAppBarsOnPage(true);
             else if (this.OpenAppBarsOnMultipleSelection && selected.Count == 0)
                 this.HideAppBarsOnPage();
+        }
+
+        void MyGridView_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (this.ItemClickCommand == null)
+                return;
+
+            // ok...
+            var clicked = e.ClickedItem;
+            if (this.ItemClickCommand.CanExecute(clicked))
+                this.ItemClickCommand.Execute(clicked);
         }
     }
 }

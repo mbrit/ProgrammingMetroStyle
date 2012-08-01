@@ -113,14 +113,17 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\BooleanToVisibilityNegationConverter.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="NotLoggedOnPage.xaml.cs">
+      <DependentUpon>NotLoggedOnPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LogonPage.xaml.cs">
       <DependentUpon>LogonPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Objects\AppBarButton.cs" />
-    <Compile Include="Objects\DataTransferEngine.cs" />
     <Compile Include="Objects\FrameworkElementExtender.cs" />
     <Compile Include="Objects\MyGridView.cs" />
     <Compile Include="Objects\PageExtender.cs" />
@@ -136,6 +139,9 @@
     <Compile Include="SearchResultsPage.xaml.cs">
       <DependentUpon>SearchResultsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ShareTargetPage.xaml.cs">
+      <DependentUpon>ShareTargetPage.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -148,9 +154,11 @@
     <Content Include="Assets\Foo1.png" />
     <Content Include="Assets\Foo2.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\LogoWide.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Toast.jpg" />
     <Content Include="Common\ReadMe.txt" />
     <Content Include="sqlite3.dll" />
   </ItemGroup>
@@ -164,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\StandardStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="NotLoggedOnPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -183,6 +195,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ShareTargetPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

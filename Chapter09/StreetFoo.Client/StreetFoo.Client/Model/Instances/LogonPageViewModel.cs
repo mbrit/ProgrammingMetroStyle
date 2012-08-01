@@ -119,9 +119,9 @@ namespace StreetFoo.Client
                 errors.AddError("Password is required.");
         }
 
-        public override async void Activated()
+        public override async void Activated(object args)
         {
-            base.Activated();
+            base.Activated(args);
 
             // restore the setting...
             this.Username = await SettingItem.GetValueAsync(LastUsernameKey);

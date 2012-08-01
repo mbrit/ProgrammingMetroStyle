@@ -41,7 +41,7 @@ namespace StreetFoo.Client
             this.OnPropertyChanged(new PropertyChangedEventArgs(name));
         }
         
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, e);

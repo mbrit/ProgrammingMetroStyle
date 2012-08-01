@@ -117,7 +117,7 @@ namespace StreetFoo.Client
         //}
 
         // called when the view is activated.
-        public virtual void Activated()
+        public virtual void Activated(object args)
         {
             // no-op by default...
         }

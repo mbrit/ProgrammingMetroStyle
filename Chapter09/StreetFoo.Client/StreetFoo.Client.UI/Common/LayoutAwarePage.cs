@@ -363,7 +363,7 @@ namespace StreetFoo.Client.UI.Common
             // activate...
             var model = this.DataContext as IViewModel;
             if(model != null)
-                model.Activated();
+                model.Activated(e.Parameter);
         }
 
         /// <summary>

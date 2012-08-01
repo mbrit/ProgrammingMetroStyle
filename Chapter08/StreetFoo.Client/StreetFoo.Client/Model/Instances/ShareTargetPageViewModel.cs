@@ -75,7 +75,7 @@ namespace StreetFoo.Client
             this.Description = props.Description;
 
             // now the text...
-            if(data.Contains(StandardDataFormats.Text))
+            if (data.Contains(StandardDataFormats.Text))
                 this.SharedText = await data.GetTextAsync();
 
             // do we have an image? if so, load it...
@@ -86,7 +86,7 @@ namespace StreetFoo.Client
                 // load the first one...
                 if (data.Contains(StandardDataFormats.StorageItems))
                 {
-                    var  file = (IStorageFile)(await data.GetStorageItemsAsync()).FirstOrDefault();
+                    var file = (IStorageFile)(await data.GetStorageItemsAsync()).FirstOrDefault();
                     reference = RandomAccessStreamReference.CreateFromFile(file);
                 }
                 else
@@ -94,16 +94,16 @@ namespace StreetFoo.Client
 
                 // load it into an image...
                 var image = new BitmapImage();
-                using(var stream = await reference.OpenReadAsync())
+                using (var stream = await reference.OpenReadAsync())
                     image.SetSource(stream);
 
                 // set...
                 this.SharedImage = image;
                 this.ShowImage = true;
             }
-            
+
             // tell the OS that we have the data...
             share.ReportDataRetrieved();
-            }
+        }
     }
 }

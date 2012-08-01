@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.ApplicationModel.Activation;
@@ -26,15 +27,15 @@ namespace StreetFoo.Client.UI
         private UIElement _previousContent;
         private ApplicationExecutionState _previousExecutionState;
 
-        private ISearchResultsPageViewModel Model { get; set; }
+        private ISearchResultsPageViewModel ViewModel { get; set; }
 
         public SearchResultsPage()
         {
             this.InitializeComponent();
 
             // set...
-            this.Model = ViewModelFactory.Current.GetHandler<ISearchResultsPageViewModel>(this);
-            this.InitializeModel(this.Model);
+            this.ViewModel = ViewModelFactory.Current.GetHandler<ISearchResultsPageViewModel>(this);
+            this.InitializeModel(this.ViewModel);
         }
 
         /// <summary>
@@ -74,32 +75,29 @@ namespace StreetFoo.Client.UI
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected async override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
-        {
-            var queryText = navigationParameter as String;
+        //protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        //{
+        //    var queryText = navigationParameter as String;
 
-            // TODO: Application-specific searching logic.  The search process is responsible for
-            //       creating a list of user-selectable result categories:
-            //
-            //       filterList.Add(new Filter("<filter name>", <result count>));
-            //
-            //       Only the first filter, typically "All", should pass true as a third argument in
-            //       order to start in an active state.  Results for the active filter are provided
-            //       in Filter_SelectionChanged below.
+        //    // TODO: Application-specific searching logic.  The search process is responsible for
+        //    //       creating a list of user-selectable result categories:
+        //    //
+        //    //       filterList.Add(new Filter("<filter name>", <result count>));
+        //    //
+        //    //       Only the first filter, typically "All", should pass true as a third argument in
+        //    //       order to start in an active state.  Results for the active filter are provided
+        //    //       in Filter_SelectionChanged below.
 
-            
-            var filterList = new List<Filter>();
-            filterList.Add(new Filter("All", 0, true));
+        //    var filterList = new List<Filter>();
+        //    filterList.Add(new Filter("All", 0, true));
+        //    filterList.Add(new Filter("Pavements", 0, true));
 
-            // Communicate results through the view model
-            this.DefaultViewModel["QueryText"] = '\u201c' + queryText + '\u201d';
-            this.DefaultViewModel["CanGoBack"] = this._previousContent != null;
-            this.DefaultViewModel["Filters"] = filterList;
-            this.DefaultViewModel["ShowFilters"] = filterList.Count > 1;
-
-            // load...
-            await this.Model.SearchAsync(queryText);
-        }
+        //    // Communicate results through the view model
+        //    this.DefaultViewModel["QueryText"] = '\u201c' + queryText + '\u201d';
+        //    this.DefaultViewModel["CanGoBack"] = this._previousContent != null;
+        //    this.DefaultViewModel["Filters"] = filterList;
+        //    this.DefaultViewModel["ShowFilters"] = filterList.Count > 1;
+        //}
 
         /// <summary>
         /// Invoked when the back button is pressed.
@@ -131,34 +129,34 @@ namespace StreetFoo.Client.UI
         /// </summary>
         /// <param name="sender">The ComboBox instance.</param>
         /// <param name="e">Event data describing how the selected filter was changed.</param>
-        void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            // Determine what filter was selected
-            var selectedFilter = e.AddedItems.FirstOrDefault() as Filter;
-            if (selectedFilter != null)
-            {
-                // Mirror the results into the corresponding Filter object to allow the
-                // RadioButton representation used when not snapped to reflect the change
-                selectedFilter.Active = true;
+        //void Filter_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        //{
+        //    // Determine what filter was selected
+        //    var selectedFilter = e.AddedItems.FirstOrDefault() as Filter;
+        //    if (selectedFilter != null)
+        //    {
+        //        // Mirror the results into the corresponding Filter object to allow the
+        //        // RadioButton representation used when not snapped to reflect the change
+        //        selectedFilter.Active = true;
 
-                // TODO: Respond to the change in active filter by setting this.DefaultViewModel["Results"]
-                //       to a collection of items with bindable Image, Title, Subtitle, and Description properties
+        //        // TODO: Respond to the change in active filter by setting this.DefaultViewModel["Results"]
+        //        //       to a collection of items with bindable Image, Title, Subtitle, and Description properties
 
-                // Ensure results are found
-                object results;
-                ICollection resultsCollection;
-                if (this.DefaultViewModel.TryGetValue("Results", out results) &&
-                    (resultsCollection = results as ICollection) != null &&
-                    resultsCollection.Count != 0)
-                {
-                    VisualStateManager.GoToState(this, "ResultsFound", true);
-                    return;
-                }
-            }
+        //        // Ensure results are found
+        //        object results;
+        //        ICollection resultsCollection;
+        //        if (this.DefaultViewModel.TryGetValue("Results", out results) &&
+        //            (resultsCollection = results as ICollection) != null &&
+        //            resultsCollection.Count != 0)
+        //        {
+        //            VisualStateManager.GoToState(this, "ResultsFound", true);
+        //            return;
+        //        }
+        //    }
 
-            // Display informational text when there are no search results.
-            VisualStateManager.GoToState(this, "NoResultsFound", true);
-        }
+        //    // Display informational text when there are no search results.
+        //    VisualStateManager.GoToState(this, "NoResultsFound", true);
+        //}
 
         /// <summary>
         /// Invoked when a filter is selected using a RadioButton when not snapped.
@@ -219,6 +217,11 @@ namespace StreetFoo.Client.UI
             {
                 get { return String.Format("{0} ({1})", _name, _count); }
             }
+        }
+
+        private void filtersItemsControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("Loaded.");
         }
     }
 }

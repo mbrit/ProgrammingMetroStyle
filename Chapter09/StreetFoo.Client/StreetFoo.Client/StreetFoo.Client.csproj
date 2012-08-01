@@ -140,12 +140,21 @@
     <Compile Include="Model\Instances\IRegisterPageViewModel.cs" />
     <Compile Include="Model\Instances\IReportsPageViewModel.cs" />
     <Compile Include="Model\Instances\ISearchResultsPageViewModel.cs" />
+    <Compile Include="Model\Instances\IShareTargetPageViewModel.cs" />
     <Compile Include="Model\Instances\LogonPageViewModel.cs" />
     <Compile Include="Model\Instances\RegisterPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportImageCacheManager.cs" />
     <Compile Include="Model\Instances\ReportsPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportViewItem.cs" />
+    <Compile Include="Model\Instances\SearchFilter.cs" />
     <Compile Include="Model\Instances\SearchResultsPageViewModel.cs" />
+    <Compile Include="Model\Instances\ShareTargetPageViewModel.cs" />
+    <Compile Include="Notifications\BadgeGlyph.cs" />
+    <Compile Include="Notifications\BadgeNotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationWithTextBuilder.cs" />
+    <Compile Include="Notifications\TileNotificationBuilder.cs" />
+    <Compile Include="Notifications\ToastNotificationBuilder.cs" />
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Objects\JsonObjectExtender.cs" />
     <Compile Include="Objects\StreetFooRuntime.cs" />
@@ -173,6 +182,9 @@
     <Content Include="sqlite3.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="MetroLog">
+      <HintPath>..\..\..\Chapter15\MetroLog\MetroLog\bin\Debug\MetroLog.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\winrt45\Newtonsoft.Json.dll</HintPath>
     </Reference>

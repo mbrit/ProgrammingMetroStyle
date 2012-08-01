@@ -49,7 +49,7 @@ namespace StreetFoo.Client
             }).ContinueWith(t =>
             {
                 // send it back...
-                viewItem.ImageUrl = t.Result;
+                viewItem.ImageUri = t.Result;
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }

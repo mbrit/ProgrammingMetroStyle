@@ -13,10 +13,10 @@
     d:ExtensionType="Search">
 
     <Page.Resources>
-        <CollectionViewSource x:Name="resultsViewSource" Source="{Binding Items}"/>
+        <CollectionViewSource x:Name="resultsViewSource" Source="{Binding Results}"/>
         <CollectionViewSource x:Name="filtersViewSource" Source="{Binding Filters}"/>
         <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        <!-- TODO: Delete this line if the key AppName is declared in App.xaml -->
+        <common:BooleanToVisibilityNegationConverter x:Key="BooleanToVisibilityNegationConverter"/>
     </Page.Resources>
 
     <!--
@@ -35,21 +35,25 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Grid.Column="0" Click="GoBack" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Search Results" Style="{StaticResource PageHeaderTextStyle}"  />
-            <TextBlock x:Name="resultText" Grid.Column="2" Text="Results for&#x00a0;" Style="{StaticResource PageSubheaderTextStyle}"/>
-            <TextBlock x:Name="queryText" Grid.Column="3" Text="{Binding QueryText}" Style="{StaticResource PageSubheaderTextStyle}"/>
+            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Search" Style="{StaticResource PageHeaderTextStyle}"  />
+            <TextBlock x:Name="resultText" Grid.Column="2" Text="{Binding QueryNarrative}" Style="{StaticResource PageSubheaderTextStyle}"/>
         </Grid>
 
-        <Grid x:Name="resultsPanel" Grid.Row="1">
+        <Grid x:Name="resultsPanel" Grid.Row="1"
+            Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityConverter}}"
+            >
         <!--
             The body of the page in most view states uses an items controls to create multiple radio buttons
             for filtering above a horizontal scrolling grid of search results
         -->
             <Grid x:Name="typicalPanel">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="115*"/>
+                    <ColumnDefinition Width="1251*"/>
+                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -59,7 +63,7 @@
                     x:Name="filtersItemsControl"
                     ItemsSource="{Binding Source={StaticResource filtersViewSource}}"
                     Visibility="{Binding ShowFilters, Converter={StaticResource BooleanToVisibilityConverter}}"
-                    Margin="120,-3,120,30">
+                    Margin="5,0,120,0" Grid.Column="1" Loaded="filtersItemsControl_Loaded">
 
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -71,14 +75,14 @@
                             <RadioButton
                                 Content="{Binding Description}"
                                 GroupName="Filters"
-                                IsChecked="{Binding Active, Mode=TwoWay}"
-                                Checked="Filter_Checked"
+                                Command="{Binding SelectedCommand}"
+                                IsChecked="{Binding Active}"
                                 Style="{StaticResource TextRadioButtonStyle}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <GridView
+                <local:MyGridView
                     x:Name="resultsGridView"
                     AutomationProperties.AutomationId="ResultsGridView"
                     AutomationProperties.Name="Search Results"
@@ -89,7 +93,8 @@
                     SelectionMode="None"
                     IsItemClickEnabled="True"
                     ItemsSource="{Binding Source={StaticResource resultsViewSource}}"
-                    ItemTemplate="{StaticResource StandardSmallIcon300x70ItemTemplate}">
+                    ItemTemplate="{StaticResource ReportItem300x70ItemTemplate}" Grid.ColumnSpan="2"
+                    ItemClickCommand="{Binding SelectedCommand}">
                     
                     <GridView.ItemContainerStyle>
                         <Style TargetType="Control">
@@ -97,7 +102,7 @@
                             <Setter Property="Margin" Value="0,0,38,8"/>
                        </Style>
                     </GridView.ItemContainerStyle>
-                </GridView>
+                </local:MyGridView>
             </Grid>
 
             <!--
@@ -114,7 +119,6 @@
                     ItemsSource="{Binding Source={StaticResource filtersViewSource}}"
                     Visibility="{Binding ShowFilters, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Margin="20,0,20,20"
-                    SelectionChanged="Filter_SelectionChanged"
                     HorizontalAlignment="Left"/>
 
                 <ListView
@@ -144,7 +148,7 @@
             x:Name="noResultsTextBlock"
             Grid.Row="1"
             Margin="120,50,0,0"
-            Visibility="Collapsed"
+            Visibility="{Binding HasResults, Converter={StaticResource BooleanToVisibilityNegationConverter}}"
             Style="{StaticResource SubheaderTextStyle}"
             Text="No results match your search." />
 

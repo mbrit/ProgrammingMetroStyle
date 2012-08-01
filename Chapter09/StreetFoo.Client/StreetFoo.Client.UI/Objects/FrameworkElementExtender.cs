@@ -10,28 +10,27 @@ namespace StreetFoo.Client.UI
 {
     internal static class FrameworkElementExtender
     {
+        internal static IViewModel GetViewModel(this Window window)
+        {
+            if (window.Content is FrameworkElement)
+                return ((FrameworkElement)window.Content).GetViewModel();
+            else
+                return null;
+        }
+
         internal static IViewModel GetViewModel(this FrameworkElement element)
         {
-            // if we're a frame, we need to go down to the page...
-            if (element is Frame)
-            {
-                var content = ((Frame)element).Content;
-                if (content is FrameworkElement)
-                    return ((FrameworkElement)content).GetViewModel();
-                else
-                    return null;
-            }
-
             // walk up...
-            var page = element.GetParentPage();
+            var page = element.GetRelatedPage();
             if (page != null)
                 return page.DataContext as IViewModel;
             else
                 return null;
         }
 
-        internal static Page GetParentPage(this FrameworkElement element)
+        internal static Page GetRelatedPage(this FrameworkElement element)
         {
+            // up...
             DependencyObject walk = element;
             while (walk != null)
             {
@@ -44,6 +43,19 @@ namespace StreetFoo.Client.UI
                     break;
             }
 
+            // down...
+            walk = element;
+            while (walk != null)
+            {
+                if(walk is Page)
+                    return (Page)walk;
+
+                if (walk is ContentControl)
+                    walk = ((ContentControl)walk).Content as FrameworkElement;
+                else
+                    break;
+            }
+
             // nothing...
             return null;
         }
@@ -51,7 +63,7 @@ namespace StreetFoo.Client.UI
         internal static void OpenAppBarsOnPage(this FrameworkElement element, bool sticky)
         {
             // get...
-            var page = element.GetParentPage();
+            var page = element.GetRelatedPage();
             if (page == null)
                 return;
 
@@ -69,7 +81,7 @@ namespace StreetFoo.Client.UI
 
         internal static void HideAppBarsOnPage(this FrameworkElement element)
         {
-            var page = element.GetParentPage();
+            var page = element.GetRelatedPage();
             if (page == null)
                 return;
 

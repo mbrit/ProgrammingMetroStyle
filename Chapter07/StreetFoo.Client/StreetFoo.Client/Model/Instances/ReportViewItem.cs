@@ -18,7 +18,7 @@ namespace StreetFoo.Client
         public string Title { get { return this.InnerItem.Title; } }
         public string Description { get { return this.InnerItem.Description; } }
 
-        public string ImageUrl { get { return GetValue<string>(); } set { SetValue(value); } }
+        public string ImageUri { get { return GetValue<string>(); } set { SetValue(value); } }
 
         internal async Task InitializeAsync(ReportImageCacheManager manager)
         {
@@ -27,7 +27,7 @@ namespace StreetFoo.Client
             if (!(string.IsNullOrEmpty(imageUrl)))
             {
                 // set it up...
-                this.ImageUrl = imageUrl;
+                this.ImageUri = imageUrl;
             }
             else
             {

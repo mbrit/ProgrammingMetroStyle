@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using MetroLog;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI.Xaml;
 
 namespace StreetFoo.Client
 {
@@ -22,12 +23,12 @@ namespace StreetFoo.Client
 
         internal void EnqueueImageDownload(ReportViewItem viewItem)
         {
-            this.Info("Enqueuing download for '{0}'...", viewItem.NativeId);
+            Debug.WriteLine(string.Format("Enqueuing download for '{0}'...", viewItem.NativeId));
 
             // create a new task...
             Task<Task<string>>.Factory.StartNew(async () =>
             {
-                this.Info("Requesting image for '{0}'...", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Requesting image for '{0}'...", viewItem.NativeId));
 
                 // load...
                 var proxy = ServiceProxyFactory.Current.GetHandler<IGetReportImageServiceProxy>();
@@ -45,14 +46,14 @@ namespace StreetFoo.Client
 
                 // get the URL...
                 string url = this.CalculateLocalImageUrl(viewItem);
-                this.Info("Image load for '{0}' finished.", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Image load for '{0}' finished.", viewItem.NativeId));
                 return url;
 
             }).ContinueWith(async (t) =>
             {
                 // send it back...
-                this.Info("Setting image for '{0}'...", viewItem.NativeId);
-                viewItem.ImageUrl = (await t).Result;
+                Debug.WriteLine(string.Format("Setting image for '{0}'...", viewItem.NativeId));
+                viewItem.ImageUri = (await t).Result;
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -112,12 +113,12 @@ namespace StreetFoo.Client
             // did we get one?
             if (cacheFile != null)
             {
-                this.Info("Cache image for '{0}' was found locally...", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Cache image for '{0}' was found locally...", viewItem.NativeId));
                 return CalculateLocalImageUrl(viewItem);
             }
             else
             {
-                this.Info("Cache image for '{0}' was not found locally...", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Cache image for '{0}' was not found locally...", viewItem.NativeId));
                 return null;
             }
         }

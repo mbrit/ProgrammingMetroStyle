@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.ApplicationModel;
@@ -78,8 +79,20 @@ namespace StreetFoo.Client.UI
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
 
-            // setup the data transfer engine...
-            DataTransferEngine.Initialize();
+            // register for data transfer...
+            var manager = DataTransferManager.GetForCurrentView();
+            manager.DataRequested += manager_DataRequested;
+        }
+
+        static void manager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            // find the view model and dereference...
+            if (Window.Current != null)
+            {
+                var viewModel = Window.Current.GetViewModel();
+                if (viewModel != null)
+                    viewModel.ShareDataRequested(sender, args);
+            }
         }
 
         private class NullViewModelHost : IViewModelHost
@@ -115,6 +128,37 @@ namespace StreetFoo.Client.UI
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        /// <summary>
+        /// Invoked when the application is activated as the target of a sharing operation.
+        /// </summary>
+        /// <param name="args">Details about the activation request.</param>
+        protected override async void OnShareTargetActivated(Windows.ApplicationModel.Activation.ShareTargetActivatedEventArgs args)
+        {
+            try
+            {
+                // start...
+                await StreetFooRuntime.Start("Client");
+
+                // logon?
+                var logon = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(new NullViewModelHost());
+                if (await logon.RestorePersistentLogonAsync())
+                {
+                    var shareTargetPage = new ShareTargetPage();
+                    shareTargetPage.Activate(args);
+                }
+                else
+                {
+                    var notLoggedOnPage = new NotLoggedOnPage();
+                    notLoggedOnPage.Activate(args);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                throw ex;
+            }
         }
 
         /// <summary>

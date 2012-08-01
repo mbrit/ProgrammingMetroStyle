@@ -150,9 +150,11 @@
     <Content Include="Assets\Foo1.png" />
     <Content Include="Assets\Foo2.png" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\LogoWide.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Toast.jpg" />
     <Content Include="Common\ReadMe.txt" />
     <Content Include="sqlite3.dll" />
   </ItemGroup>

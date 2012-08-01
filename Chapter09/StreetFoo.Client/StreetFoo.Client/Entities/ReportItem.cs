@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SQLite;
 using Windows.Data.Json;
@@ -75,9 +76,45 @@ namespace StreetFoo.Client
 
         internal static async Task<IEnumerable<ReportItem>> SearchCacheAsync(string queryText)
         {
-            // basic...
-            queryText = queryText.ToLower();
-            return (await GetAllFromCacheAsync()).Where(v => v.Title.ToLower().Contains(queryText));
+            // run a regex to extract out the words...
+            var words = new List<string>();
+            var regex = new Regex(@"\b\w+\b", RegexOptions.Singleline | RegexOptions.IgnoreCase);
+            foreach(Match match in regex.Matches(queryText))
+            {
+                var word = match.Value.ToLower();
+                if(!(words.Contains(word)))
+                    words.Add(word);
+            }
+
+            // do we have anything to find?
+            if(words.Count > 0)
+            {
+                // build up some sql...
+                var sql = new StringBuilder();
+                var parameters = new List<object>();
+                sql.Append("select * from reportitem where ");
+                bool first = true;
+                foreach(var word in words)
+                {
+                    if(first)
+                        first = false;
+                    else
+                        sql.Append(" and ");
+
+                    // add...
+                    sql.Append("title like ?");
+                    parameters.Add("%" + word + "%");
+                }
+
+                // run...
+                var conn = StreetFooRuntime.GetUserDatabase();
+                return await conn.QueryAsync<ReportItem>(sql.ToString(), parameters.ToArray());
+            }
+            else
+            {
+                // return the lot...
+                return await GetAllFromCacheAsync();
+            }
         }
     }
 }

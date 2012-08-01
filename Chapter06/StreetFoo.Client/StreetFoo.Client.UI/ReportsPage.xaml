@@ -34,7 +34,6 @@
                 <Button Content="Dump Selection" Command="{Binding DumpSelectionCommand}" />
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
-                <Button Style="{StaticResource FooAppBarButtonStyle}" Command="{Binding RefreshCommand}" />
                 <Button Style="{StaticResource RefreshAppBarButtonStyle}" Command="{Binding RefreshCommand}" />
             </StackPanel>
             </Grid>

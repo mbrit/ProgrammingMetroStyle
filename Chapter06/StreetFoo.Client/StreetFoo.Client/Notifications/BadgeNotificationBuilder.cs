@@ -10,7 +10,9 @@ namespace StreetFoo.Client
     public class BadgeNotificationBuilder : NotificationBuilder<BadgeNotification>
     {
         // what we're trying to show...
-        public int Number { get; set; }
+        public int Number { get; private set; }
+        public BadgeGlyph Glyph { get; private set; }
+        private bool HasGlyph { get; set; }
 
         // the engine used to update it...
         private static BadgeUpdater Updater { get; set; }
@@ -20,25 +22,40 @@ namespace StreetFoo.Client
             this.Number = number;
         }
 
+        public BadgeNotificationBuilder(BadgeGlyph glyph)
+        {
+            this.Glyph = glyph;
+            this.HasGlyph = true;
+        }
+
         static BadgeNotificationBuilder()
         {
             Updater = BadgeUpdateManager.CreateBadgeUpdaterForApplication();
         }
 
-        public override Task<BadgeNotification> SendAsync()
+        public override BadgeNotification Update()
         {
             // create the notification and send it...
             var badge = GetNotification();
             Updater.Update(badge);
 
             // return...
-            return Task.FromResult<BadgeNotification>(badge);
+            return badge;
         }
 
         protected override BadgeNotification GetNotification()
         {
             var xml = BadgeUpdateManager.GetTemplateContent(BadgeTemplateType.BadgeNumber);
-            xml.FirstChild.Attributes.GetNamedItem("value").NodeValue = this.Number.ToString();
+
+            // glyph?
+            var attr = xml.FirstChild.Attributes.GetNamedItem("value");
+            if (this.HasGlyph)
+            {
+                string asString = this.Glyph.ToString();
+                attr.NodeValue = asString.Substring(0, 1).ToString() + asString.Substring(1);
+            }
+            else
+                attr.NodeValue = this.Number.ToString();
 
             return new BadgeNotification(xml);
         }

@@ -6,9 +6,12 @@ using System.Linq;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Search;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -52,8 +55,6 @@ namespace StreetFoo.Client.UI
                 return;
             }
 
-            var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(Guid.NewGuid().ToString());
-
             if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
                 //TODO: Load state from previously suspended application
@@ -78,10 +79,36 @@ namespace StreetFoo.Client.UI
             // Place the frame in the current Window and ensure that it is active
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
-
+            
             // register for data transfer...
             var manager = DataTransferManager.GetForCurrentView();
             manager.DataRequested += manager_DataRequested;
+
+            // search...
+            var search = SearchPane.GetForCurrentView();
+            search.PlaceholderText = "Report title";
+            search.SuggestionsRequested += search_SuggestionsRequested;
+            search.ResultSuggestionChosen += search_ResultSuggestionChosen;
+        }
+
+        async void search_ResultSuggestionChosen(SearchPane sender, SearchPaneResultSuggestionChosenEventArgs args)
+        {
+            var dialog = new MessageDialog("Chosen: " + args.Tag);
+            await dialog.ShowAsync();
+        }
+
+        async void search_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
+        {
+            var deferral = args.Request.GetDeferral();
+            try
+            {
+                await SearchInteractionHelper.PopulateSuggestionsAsync(args.QueryText, 
+                    args.Request.SearchSuggestionCollection);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
         static void manager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)

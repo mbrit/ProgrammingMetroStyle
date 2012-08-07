@@ -94,7 +94,7 @@ namespace StreetFoo.Client
             return string.Format("ms-appdata:///local/{0}/{1}.jpg", LocalCacheFolderName, viewItem.NativeId);
         }
 
-        internal async Task<string> GetLocalImageUrlAsync(ReportViewItem viewItem)
+        internal async Task<string> GetLocalImageUriAsync(ReportViewItem viewItem)
         {
             var cacheFolder = await this.GetCacheFolderAsync();
 

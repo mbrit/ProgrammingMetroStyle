@@ -41,7 +41,7 @@
             <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Username, Mode=TwoWay}"/>
 
             <TextBlock Text="Password"></TextBlock>
-            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}"/>
+            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}" IsPasswordRevealButtonEnabled="True"/>
 
             <CheckBox Content="Remember me" IsChecked="{Binding RememberMe, Mode=TwoWay}"></CheckBox>
             

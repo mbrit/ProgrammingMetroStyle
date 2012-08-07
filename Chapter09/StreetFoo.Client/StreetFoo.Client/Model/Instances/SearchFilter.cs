@@ -4,38 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml;
 
 namespace StreetFoo.Client
 {
     public class SearchFilter : ModelItem
     {
+        // holds the keyword that we're bound to...
         private string Keyword { get; set; }
 
-        public ICommand SelectedCommand { get; private set; }
-
-        internal event EventHandler Selected;
+        // command to raise when we're selected...
+        public ICommand SelectionCommand { get; internal set; }
 
         public SearchFilter(string description, int numItems, string keyword, bool active = false)
         {
             this.Description = string.Format("{0} ({1})", description, numItems);
             this.Keyword = keyword;
             this.Active = active;
-
-            // selected...
-            this.SelectedCommand = new DelegateCommand((args) =>
-            {
-                this.OnSelected(EventArgs.Empty);
-            });
         }
 
+        // holds the description...
         public string Description { get { return this.GetValue<string>(); } private set { this.SetValue(value); } }
-        public bool Active { get { return this.GetValue<bool>(); } internal set { this.SetValue(value); } }
 
-        protected virtual void OnSelected(EventArgs e)
-        {
-            if (this.Selected != null)
-                this.Selected(this, e);
-        }
+        // holds a flag to indicate that we were active...
+        public bool Active { get { return this.GetValue<bool>(); } internal set { this.SetValue(value); } }
 
         internal bool MatchKeyword(ReportViewItem item)
         {

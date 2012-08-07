@@ -9,7 +9,7 @@ namespace StreetFoo.Client
 {
     public class ReportViewItem : WrappingModelItem<ReportItem>
     {
-        internal ReportViewItem(ReportItem item)
+        public ReportViewItem(ReportItem item)
             : base(item)
         {
         }
@@ -23,7 +23,7 @@ namespace StreetFoo.Client
         internal async Task InitializeAsync(ReportImageCacheManager manager)
         {
             // get...
-            var imageUrl = await manager.GetLocalImageUrlAsync(this);
+            var imageUrl = await manager.GetLocalImageUriAsync(this);
             if (!(string.IsNullOrEmpty(imageUrl)))
             {
                 // set it up...

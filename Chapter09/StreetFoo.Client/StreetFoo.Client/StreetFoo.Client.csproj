@@ -147,6 +147,7 @@
     <Compile Include="Model\Instances\ReportsPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportViewItem.cs" />
     <Compile Include="Model\Instances\SearchFilter.cs" />
+    <Compile Include="Objects\SearchInteractionHelper.cs" />
     <Compile Include="Model\Instances\SearchResultsPageViewModel.cs" />
     <Compile Include="Model\Instances\ShareTargetPageViewModel.cs" />
     <Compile Include="Notifications\BadgeGlyph.cs" />

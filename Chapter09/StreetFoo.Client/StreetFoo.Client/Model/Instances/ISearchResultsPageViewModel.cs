@@ -16,9 +16,9 @@ namespace StreetFoo.Client
         ObservableCollection<ReportViewItem> Results { get; }
         ObservableCollection<SearchFilter> Filters { get; }
 
-        bool ShowFilters { get; }
+ //       bool ShowFilters { get; }
         bool HasResults { get; }
 
-        ICommand SelectedCommand { get; }
+        ICommand SelectionCommand { get; }
     }
 }

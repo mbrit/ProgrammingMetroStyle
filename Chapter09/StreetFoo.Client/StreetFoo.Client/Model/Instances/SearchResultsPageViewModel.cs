@@ -19,7 +19,7 @@ namespace StreetFoo.Client
         public ObservableCollection<SearchFilter> Filters { get; private set; }
 
         // issued when an item is selected...
-        public ICommand SelectedCommand { get; private set; }
+        public ICommand SelectionCommand { get; private set; }
 
         // track whether we've done a search...
         private bool SearchDone { get; set; }
@@ -32,7 +32,7 @@ namespace StreetFoo.Client
             this.Filters = new ObservableCollection<SearchFilter>();
 
             // command...
-            this.SelectedCommand = new DelegateCommand(async (args) =>
+            this.SelectionCommand = new DelegateCommand(async (args) =>
             {
                 await this.Host.ShowAlertAsync("Selected: " + ((ReportViewItem)args).Title);
             });
@@ -40,14 +40,6 @@ namespace StreetFoo.Client
 
         public string QueryText { get { return this.GetValue<string>(); } private set { this.SetValue(value); } }
         public string QueryNarrative { get { return this.GetValue<string>(); } private set { this.SetValue(value); } }
-
-        public bool ShowFilters
-        {
-            get
-            {
-                return this.Filters.Count > 1;
-            }
-        }
 
         public bool HasResults
         {
@@ -66,7 +58,7 @@ namespace StreetFoo.Client
         {
             base.Activated(args);
 
-            // go...
+            // do the search...
             await SearchAsync((string)args);
         }
 
@@ -74,7 +66,7 @@ namespace StreetFoo.Client
         {
             // flag...
             this.SearchDone = true;
-
+                
             // set...
             this.QueryText = queryText;
 
@@ -96,9 +88,10 @@ namespace StreetFoo.Client
             {
                 // all filter...
                 var allFilter = new SearchFilter("all", this.MasterItems.Count, null, false);
-                allFilter.Selected += HandleFilterActivated;
+                allFilter.SelectionCommand = new DelegateCommand((args) => HandleFilterActivated(allFilter));
                 this.Filters.Add(allFilter);
 
+                // build up a list of nouns...
                 var nouns = new Dictionary<string, int>();
                 var regex = new Regex(@"\b\w+$", RegexOptions.Singleline | RegexOptions.IgnoreCase);
                 foreach (var report in reports)
@@ -112,11 +105,11 @@ namespace StreetFoo.Client
                     nouns[noun]++;
                 }
 
-                // add...
+                // add the filters...
                 foreach (var noun in nouns.Keys)
                 {
                     var filter = new SearchFilter(noun, nouns[noun], noun);
-                    filter.Selected += HandleFilterActivated;
+                    filter.SelectionCommand = new DelegateCommand((args) => HandleFilterActivated(filter));
                     this.Filters.Add(filter);
                 }
 
@@ -125,9 +118,6 @@ namespace StreetFoo.Client
                 foreach (var report in this.MasterItems)
                     await report.InitializeAsync(manager);
             }
-
-            // update...
-            this.OnPropertyChanged("ShowFilters");
 
             // apply the filter...
             this.ApplyFilter();
@@ -165,12 +155,12 @@ namespace StreetFoo.Client
             }
         }
 
-        void HandleFilterActivated(object sender, EventArgs e)
+        void HandleFilterActivated(object args)
         {
             // walk...
             foreach (var filter in this.Filters)
             {
-                if (filter == sender)
+                if (filter == args)
                     filter.Active = true;
                 else
                     filter.Active = false;

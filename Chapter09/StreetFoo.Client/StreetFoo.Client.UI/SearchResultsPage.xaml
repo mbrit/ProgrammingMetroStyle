@@ -62,7 +62,7 @@
                 <ItemsControl
                     x:Name="filtersItemsControl"
                     ItemsSource="{Binding Source={StaticResource filtersViewSource}}"
-                    Visibility="{Binding ShowFilters, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    Visibility="{Binding HasItems, Converter={StaticResource BooleanToVisibilityConverter}}"
                     Margin="5,0,120,0" Grid.Column="1" Loaded="filtersItemsControl_Loaded">
 
                     <ItemsControl.ItemsPanel>
@@ -75,7 +75,7 @@
                             <RadioButton
                                 Content="{Binding Description}"
                                 GroupName="Filters"
-                                Command="{Binding SelectedCommand}"
+                                Command="{Binding SelectionCommand}"
                                 IsChecked="{Binding Active}"
                                 Style="{StaticResource TextRadioButtonStyle}"/>
                         </DataTemplate>
@@ -94,7 +94,7 @@
                     IsItemClickEnabled="True"
                     ItemsSource="{Binding Source={StaticResource resultsViewSource}}"
                     ItemTemplate="{StaticResource ReportItem300x70ItemTemplate}" Grid.ColumnSpan="2"
-                    ItemClickCommand="{Binding SelectedCommand}">
+                    ItemClickedCommand="{Binding SelectionCommand}">
                     
                     <GridView.ItemContainerStyle>
                         <Style TargetType="Control">

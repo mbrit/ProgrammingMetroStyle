@@ -17,8 +17,8 @@ namespace StreetFoo.Client.UI
     {
         public static readonly DependencyProperty SelectionCommandProperty =
             DependencyProperty.Register("SelectionCommand", typeof(ICommand), typeof(MyGridView), new PropertyMetadata(null));
-        public static readonly DependencyProperty ItemClickCommandProperty =
-            DependencyProperty.Register("ItemClickCommand", typeof(ICommand), typeof(MyGridView), new PropertyMetadata(null));
+        public static readonly DependencyProperty ItemClickedCommandProperty =
+            DependencyProperty.Register("ItemClickedCommand", typeof(ICommand), typeof(MyGridView), new PropertyMetadata(null));
         public static readonly DependencyProperty OpenAppBarsOnMultipleSelectionProperty =
             DependencyProperty.Register("OpenAppBarsOnMultipleSelection", typeof(bool), typeof(MyGridView), new PropertyMetadata(true));
         public static readonly DependencyProperty OpenAppBarsOnRightClickProperty =
@@ -26,7 +26,7 @@ namespace StreetFoo.Client.UI
 
         public MyGridView()
         {
-            // wire up the selection changes...
+            // wire up the event to command mapping...
             this.SelectionChanged += MyGridView_SelectionChanged;
             this.ItemClick += MyGridView_ItemClick;
         }
@@ -59,10 +59,10 @@ namespace StreetFoo.Client.UI
             set { SetValue(OpenAppBarsOnMultipleSelectionProperty, value); }
         }
 
-        public ICommand ItemClickCommand
+        public ICommand ItemClickedCommand
         {
-            get { return (ICommand)GetValue(ItemClickCommandProperty); }
-            set { SetValue(ItemClickCommandProperty, value); }
+            get { return (ICommand)GetValue(ItemClickedCommandProperty); }
+            set { SetValue(ItemClickedCommandProperty, value); }
         }
 
         void MyGridView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -84,13 +84,13 @@ namespace StreetFoo.Client.UI
 
         void MyGridView_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if (this.ItemClickCommand == null)
+            if (this.ItemClickedCommand == null)
                 return;
 
             // ok...
             var clicked = e.ClickedItem;
-            if (this.ItemClickCommand.CanExecute(clicked))
-                this.ItemClickCommand.Execute(clicked);
+            if (this.ItemClickedCommand.CanExecute(clicked))
+                this.ItemClickedCommand.Execute(clicked);
         }
     }
 }

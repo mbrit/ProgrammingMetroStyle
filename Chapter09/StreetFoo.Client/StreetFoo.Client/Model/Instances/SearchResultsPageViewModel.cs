@@ -24,6 +24,10 @@ namespace StreetFoo.Client
         // track whether we've done a search...
         private bool SearchDone { get; set; }
 
+        // tracks the last used values...
+        private const string LastQueryKey = "LastQuery";
+        private const string LastFilterKey = "LastFilter";
+
         public SearchResultsPageViewModel(IViewModelHost host)
             : base(host)
         {
@@ -82,13 +86,21 @@ namespace StreetFoo.Client
             foreach (var report in reports)
                 this.MasterItems.Add(new ReportViewItem(report));
 
+            // what was our selected filter?
+            var current = this.ActiveFilter;
+            if (current != null)
+            {
+                var builder = new ToastNotificationBuilder(current.Description);
+                builder.Update();
+            }
+
             // do we have anything?
             this.Filters.Clear();
             if (this.MasterItems.Any())
             {
                 // all filter...
                 var allFilter = new SearchFilter("all", this.MasterItems.Count, null, false);
-                allFilter.SelectionCommand = new DelegateCommand((args) => HandleFilterActivated(allFilter));
+                allFilter.SelectionCommand = new DelegateCommand(async (args) => await HandleFilterActivatedAsync(allFilter));
                 this.Filters.Add(allFilter);
 
                 // build up a list of nouns...
@@ -109,7 +121,7 @@ namespace StreetFoo.Client
                 foreach (var noun in nouns.Keys)
                 {
                     var filter = new SearchFilter(noun, nouns[noun], noun);
-                    filter.SelectionCommand = new DelegateCommand((args) => HandleFilterActivated(filter));
+                    filter.SelectionCommand = new DelegateCommand(async (args) => await HandleFilterActivatedAsync(filter));
                     this.Filters.Add(filter);
                 }
 
@@ -119,8 +131,43 @@ namespace StreetFoo.Client
                     await report.InitializeAsync(manager);
             }
 
+            // do we need to select the filter?
+            var lastQuery = await SettingItem.GetValueAsync(LastQueryKey);
+            if (lastQuery == queryText)
+            {
+                // select the filter...
+                var lastFilterName = await SettingItem.GetValueAsync(LastFilterKey);
+                if (!(string.IsNullOrEmpty(lastFilterName)))
+                    ActivateFilter(lastFilterName);
+            }
+            else
+            {
+                // update...
+                await SettingItem.SetValueAsync(LastQueryKey, queryText);
+            }
+
             // apply the filter...
             this.ApplyFilter();
+        }
+
+        private void ActivateFilter(string keyword)
+        {
+            // walk and set...
+            bool found = false;
+            foreach (var filter in this.Filters)
+            {
+                if (filter.Keyword == keyword)
+                {
+                    filter.Active = true;
+                    found = true;
+                }
+                else
+                    filter.Active = false;
+            }
+
+            // did we do it? if not, activate the default one...
+            if (keyword != null && !(found))
+                this.ActivateFilter(null);
         }
 
         private void ApplyFilter()
@@ -155,19 +202,29 @@ namespace StreetFoo.Client
             }
         }
 
-        void HandleFilterActivated(object args)
+        private async Task HandleFilterActivatedAsync(object args)
         {
             // walk...
+            SearchFilter selected = null;
             foreach (var filter in this.Filters)
             {
                 if (filter == args)
+                {
                     filter.Active = true;
+                    selected = filter;
+                }
                 else
                     filter.Active = false;
             }
 
             // update...
             this.ApplyFilter();
+
+            // save...
+            if (selected != null)
+                await SettingItem.SetValueAsync(LastFilterKey, selected.Keyword);
+            else
+                await SettingItem.SetValueAsync(LastFilterKey, null);
         }
     }
 }

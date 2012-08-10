@@ -7,10 +7,8 @@ using System.Windows.Input;
 
 namespace StreetFoo.Client
 {
-    public interface IHelpPaneViewModel : IViewModel, IDismissCommand
+    public interface IDismissCommand
     {
-        ICommand WebHelpCommand { get; }
-
-        string Markup { get; }
+        ICommand DismissCommand { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace StreetFoo.Client
 {
-    public interface IMySettingsPaneViewModel : IViewModel, IDismissCommandSource
+    public interface IMySettingsPaneViewModel : IViewModel, IDismissCommand
     {
         string Foobar { get; set; }
     }

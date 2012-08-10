@@ -19,12 +19,7 @@ namespace StreetFoo.Client
         public HelpPaneViewModel(IViewModelHost host)
             : base(host)
         {
-            WebHelpCommand = new DelegateCommand(async (args) => {
-                await Launcher.LaunchUriAsync(new Uri("http://programmingwindows8apps.com/"));
-            });
-            DismissCommand = new DelegateCommand(async (args) => {
-                await this.Host.ShowAlertAsync("Uh?");
-            });
+            WebHelpCommand = new DelegateCommand(async (args) => await SettingsInteractionHelper.ShowWebHelpAsync());
         }
 
         // property for holding the markup...

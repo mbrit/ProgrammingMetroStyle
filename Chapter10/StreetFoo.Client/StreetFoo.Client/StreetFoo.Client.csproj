@@ -131,7 +131,7 @@
     <Compile Include="Ioc\ServiceProxyFactory.cs" />
     <Compile Include="Ioc\ViewModelFactory.cs" />
     <Compile Include="Model\Base\CommandExecutionContext.cs" />
-    <Compile Include="Model\Base\IDismissCommandSource.cs" />
+    <Compile Include="Model\Base\IDismissCommand.cs" />
     <Compile Include="Model\Base\IViewModel.cs" />
     <Compile Include="Model\Base\IViewModelHost.cs" />
     <Compile Include="Model\Base\NavigateCommand.cs" />

@@ -15,6 +15,7 @@ namespace StreetFoo.Client.UI
     {
         private BasicFlyoutWidth _width = BasicFlyoutWidth.Narrow;
         private Popup Popup { get; set; }
+        private bool IsActivated { get; set; }
 
         private const int NarrowWidthInPixels = 343;
         private const int WideWidthInPixels = 646;
@@ -39,8 +40,8 @@ namespace StreetFoo.Client.UI
             this.Popup.Closed += Popup_Closed;
 
             // bind dismiss?
-            if (this.ViewModel is IDismissCommandSource)
-                ((IDismissCommandSource)this.ViewModel).DismissCommand = new DelegateCommand((args) => this.Hide());
+            if (this.ViewModel is IDismissCommand)
+                ((IDismissCommand)this.ViewModel).DismissCommand = new DelegateCommand((args) => this.Hide());
         }
 
         void Popup_Closed(object sender, object e)
@@ -89,9 +90,12 @@ namespace StreetFoo.Client.UI
 
         void Popup_Loaded(object sender, RoutedEventArgs e)
         {
-            // activate it...
-            if (this.ViewModel != null)
+            // activate it (if we haven't already done so)... 
+            if (this.ViewModel != null && !(this.IsActivated))
+            {
+                this.IsActivated = true;
                 this.ViewModel.Activated(null);
+            }
         }
 
         private IViewModel ViewModel

@@ -12,7 +12,7 @@
     mc:Ignorable="d" Margin="0,-1,0,1">
 
     <Page.Resources>
-        <common:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
+        <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <common:BooleanNegationConverter x:Key="NegationConverter" />
     </Page.Resources>
 
@@ -28,7 +28,7 @@
         </Grid.ColumnDefinitions>
 
         <ProgressBar Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="true" 
-                     Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"></ProgressBar>
+                     Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"></ProgressBar>
 
         <!-- Back button and page title -->
         <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>

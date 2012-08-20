@@ -18,6 +18,11 @@ namespace StreetFoo.Client
         // shows a view from a given view-model...
         void ShowView(Type viewModelInterfaceType, object args = null);
 
+        // shows or hides the app bar...
+        void ShowAppBar();
         void HideAppBar();
+
+        // goes back in the navigation stack...
+        void GoBack();
     }
 }

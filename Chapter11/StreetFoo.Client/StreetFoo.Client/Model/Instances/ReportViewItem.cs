@@ -14,11 +14,12 @@ namespace StreetFoo.Client
         {
         }
 
+        public int Id { get { return this.InnerItem.Id; } }
         public string NativeId { get { return this.InnerItem.NativeId; } }
-        public string Title { get { return this.InnerItem.Title; } }
-        public string Description { get { return this.InnerItem.Description; } }
-        public decimal Latitude { get { return this.InnerItem.Latitude; } }
-        public decimal Longitude { get { return this.InnerItem.Longitude; } }
+        public string Title { get { return this.InnerItem.Title; } set { this.InnerItem.Title = value; } }
+        public string Description { get { return this.InnerItem.Description; } set { this.InnerItem.Title = value; } }
+        public decimal Latitude { get { return this.InnerItem.Latitude; } set { this.InnerItem.Latitude = value; } }
+        public decimal Longitude { get { return this.InnerItem.Longitude; } set { this.InnerItem.Longitude = value; } }
 
         public string ImageUri { get { return GetValue<string>(); } set { SetValue(value); } }
 
@@ -59,6 +60,25 @@ namespace StreetFoo.Client
             get
             {
                 return ((IMappablePoint)this.InnerItem).Name;
+            }
+        }
+
+        internal void SetLocation(IMappablePoint point)
+        {
+            this.InnerItem.SetLocation(point);
+
+            // update...
+            this.OnPropertyChanged("LocationNarrative");
+        }
+
+        public string LocationNarrative
+        {
+            get
+            {
+                if (this.Latitude != 0 && this.Longitude != 0)
+                    return string.Format("{0:n5},{1:n5}", this.Latitude, this.Longitude);
+                else
+                    return string.Empty;
             }
         }
     }

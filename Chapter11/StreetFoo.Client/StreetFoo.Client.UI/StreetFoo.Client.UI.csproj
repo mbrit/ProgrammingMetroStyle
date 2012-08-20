@@ -120,6 +120,9 @@
     <Compile Include="Common\IMappablePointConverter.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="EditReportPage.xaml.cs">
+      <DependentUpon>EditReportPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelpPane.xaml.cs">
       <DependentUpon>HelpPane.xaml</DependentUpon>
     </Compile>
@@ -190,6 +193,10 @@
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditReportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="HelpPane.xaml">
       <SubType>Designer</SubType>

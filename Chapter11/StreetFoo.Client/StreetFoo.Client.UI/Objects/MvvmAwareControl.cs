@@ -30,9 +30,19 @@ namespace StreetFoo.Client.UI
             throw new NotImplementedException();
         }
 
+        public void ShowAppBar()
+        {
+            throw new NotImplementedException();
+        }
+
         public void HideAppBar()
         {
             throw new NotImplementedException();
+        }
+
+        public void GoBack()
+        {
+            throw new NotImplementedException("This operation has not been implemented.");
         }
     }
 }

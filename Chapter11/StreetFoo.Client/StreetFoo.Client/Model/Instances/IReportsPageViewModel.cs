@@ -13,5 +13,6 @@ namespace StreetFoo.Client
         ICommand RefreshCommand { get; }
         ICommand SelectionCommand { get; }
         ICommand ShowLocationCommand { get; }
+        ICommand AddCommand { get; }
     }
 }

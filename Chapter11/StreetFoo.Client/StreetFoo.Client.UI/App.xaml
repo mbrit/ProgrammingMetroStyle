@@ -9,9 +9,9 @@
     <Application.Resources>
         <ResourceDictionary>
            
-            <common:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
-            <common:BooleanNegationConverter x:Key="NegationConverter" />
+            <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <common:BooleanToVisibilityNegationConverter x:Key="BooleanToVisibilityNegationConverter"/>
+            <common:BooleanNegationConverter x:Key="NegationConverter" />
             <common:IMappablePointConverter x:Key="IMappablePointConverter" />
 
             <ResourceDictionary.MergedDictionaries>

@@ -20,6 +20,7 @@ namespace StreetFoo.Client.UI
             this.SetHandler(typeof(ILogonPageViewModel), typeof(LogonPage));
             this.SetHandler(typeof(IReportsPageViewModel), typeof(ReportsPage));
             this.SetHandler(typeof(IReportPageViewModel), typeof(ReportPage));
+            this.SetHandler(typeof(IEditReportPageViewModel), typeof(EditReportPage));
         }
 
         internal static ViewFactory Current

@@ -37,6 +37,7 @@ namespace StreetFoo.Client
             ViewModelFactory.Current.SetHandler(typeof(IMySettingsPaneViewModel), typeof(MySettingsPaneViewModel));
             ViewModelFactory.Current.SetHandler(typeof(IHelpPaneViewModel), typeof(HelpPaneViewModel));
             ViewModelFactory.Current.SetHandler(typeof(IReportPageViewModel), typeof(ReportPageViewModel));
+            ViewModelFactory.Current.SetHandler(typeof(IEditReportPageViewModel), typeof(EditReportPageViewModel));
 
             // ...and then for the service proxies...
             ServiceProxyFactory.Current.SetHandler(typeof(IRegisterServiceProxy), typeof(RegisterServiceProxy));

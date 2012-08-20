@@ -565,6 +565,12 @@ namespace StreetFoo.Client.UI.Common
             return PageExtender.ShowAlertAsync(this, message);
         }
 
+        public void ShowAppBar()
+        {
+            if (this.BottomAppBar != null)
+                this.BottomAppBar.IsOpen = true;
+        }
+
         public void HideAppBar()
         {
             if (this.BottomAppBar != null)
@@ -577,6 +583,11 @@ namespace StreetFoo.Client.UI.Common
                 App.ShowHelp();
             else
                 base.OnKeyUp(e);
+        }
+
+        void IViewModelHost.GoBack()
+        {
+            this.GoBack(this, new RoutedEventArgs());
         }
     }
 }

@@ -170,7 +170,15 @@ namespace StreetFoo.Client.UI
             {
             }
 
+            public void ShowAppBar()
+            {
+            }
+
             public void HideAppBar()
+            {
+            }
+
+            public void GoBack()
             {
             }
         }

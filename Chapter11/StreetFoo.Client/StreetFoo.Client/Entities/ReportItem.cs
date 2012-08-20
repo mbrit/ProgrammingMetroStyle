@@ -197,5 +197,11 @@ namespace StreetFoo.Client
                 return this.Title;
             }
         }
+
+        internal void SetLocation(IMappablePoint point)
+        {
+            this.Latitude = point.Latitude;
+            this.Longitude = point.Longitude;
+        }
     }
 }

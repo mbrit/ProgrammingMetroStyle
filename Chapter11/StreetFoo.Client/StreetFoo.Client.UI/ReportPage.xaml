@@ -14,7 +14,7 @@
     <Page.Resources>
     </Page.Resources>
 
-<Page.BottomAppBar>
+    <Page.BottomAppBar>
         <AppBar>
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -71,7 +71,7 @@
                     <StackPanel>
                         <TextBlock Style="{StaticResource HeadingTextBlock}">Location</TextBlock>
                         <local:MyMap Width="780" Height="550" ShowTraffic="true" 
-                                PushpinPoint="{Binding Item, Converter={StaticResource IMappablePointConverter}}"></local:MyMap>
+                            PushpinPoint="{Binding Item, Converter={StaticResource IMappablePointConverter}}"></local:MyMap>
                     </StackPanel>
                 </ContentControl>
                         

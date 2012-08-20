@@ -27,9 +27,10 @@
                     <ColumnDefinition Width="50*"/>
                     <ColumnDefinition Width="50*"/>
                 </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding HasSelectedItems, Converter={StaticResource VisibilityConverter}}">
+                <StackPanel Orientation="Horizontal" Visibility="{Binding HasSelectedItems, Converter={StaticResource BooleanToVisibilityConverter}}">
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
+                <Button Style="{StaticResource AddAppBarButtonStyle}" Command="{Binding AddCommand}" />
                 <Button Style="{StaticResource ShowLocationAppBarButtonStyle}" Command="{Binding ShowLocationCommand}" />
                 <Button Style="{StaticResource RefreshAppBarButtonStyle}" Command="{Binding RefreshCommand}" />
                 <Button Style="{StaticResource LogoutAppBarButtonStyle}" Command="{Binding LogoutCommand}" />
@@ -45,7 +46,7 @@
         </Grid.RowDefinitions>
 
         <ProgressBar Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="true" 
-                     Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"></ProgressBar>
+                     Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"></ProgressBar>
 
         <!-- Back button and page title -->
         <Grid>

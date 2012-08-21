@@ -69,11 +69,11 @@
                 <TextBlock Text="Description"></TextBlock>
                 <TextBox Text="{Binding Item.Description, Mode=TwoWay}"></TextBox>
                 <TextBlock Text="Picture"></TextBlock>
-                <Border Width="320" Height="240" BorderThickness="2" BorderBrush="White" HorizontalAlignment="Left" 
+                <Border Width="640" Height="480" BorderThickness="2" BorderBrush="White" HorizontalAlignment="Left" 
                         Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityNegationConverter}}">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">(No picture)</TextBlock>
                 </Border>
-                <Image Width="320" Height="240" HorizontalAlignment="Left" Source="{Binding Image}"
+                <Image Width="640" Height="480" HorizontalAlignment="Left" Source="{Binding Image}"
                        Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityConverter}}">
                 </Image>
                 <TextBlock Text="Location"></TextBlock>

@@ -49,26 +49,22 @@ namespace StreetFoo.Client
 
         private async Task CaptureImageAsync()
         {
+            // get the image...
             var ui = new CameraCaptureUI();
             var file = await ui.CaptureFileAsync(CameraCaptureUIMode.Photo);
 
             // did we get one?
             if (file != null)
             {
-                try
-                {
-                    var newImage = new BitmapImage();
-                    using (var stream = await file.OpenReadAsync())
-                        newImage.SetSource(stream);
+                // set the image...
+                var newImage = new WriteableBitmap(1,1);
+                using (var stream = await file.OpenReadAsync())
+                    newImage.SetSource(stream);
 
-                    // set...
-                    this.Image = newImage;
-                }
-                finally
-                {
-                    // delete it...
-                    file.DeleteAsync();
-                }
+                // set...
+                this.Image = newImage;
+
+                // delete and set the image URL...
             }
         }
 
@@ -87,11 +83,11 @@ namespace StreetFoo.Client
             }
         }
 
-        public BitmapImage Image
+        public WriteableBitmap Image
         {
             get
             {
-                return this.GetValue<BitmapImage>();
+                return this.GetValue<WriteableBitmap>();
             }
             set
             {
@@ -101,6 +97,32 @@ namespace StreetFoo.Client
                 // update the flag...
                 this.OnPropertyChanged("HasImage");
             }
+        }
+
+        protected override async void Save()
+        {
+            // validate...
+            var bucket = new ErrorBucket();
+            Validate(bucket);
+            if (bucket.HasErrors)
+            {
+                await this.Host.ShowAlertAsync(bucket);
+                return;
+            }
+
+            // save...
+            await ReportItem.CreateReportItemAsync(this.Item.Title, this.Item.Description, this.Item, this.Image);
+
+            // return...
+            this.Host.GoBack();
+        }
+
+        private void Validate(ErrorBucket bucket)
+        {
+            if (string.IsNullOrEmpty(this.Item.Title))
+                bucket.AddError("Title is required.");
+            if (string.IsNullOrEmpty(this.Item.Description))
+                bucket.AddError("Description is required.");
         }
     }
 }

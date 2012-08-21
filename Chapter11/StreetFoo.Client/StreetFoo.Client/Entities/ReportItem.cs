@@ -6,7 +6,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SQLite;
+using System.IO;
 using Windows.Data.Json;
+using Windows.Graphics.Imaging;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
+using Windows.UI.Xaml.Shapes;
+using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.UI.Xaml.Media;
 
 namespace StreetFoo.Client
 {
@@ -202,6 +210,52 @@ namespace StreetFoo.Client
         {
             this.Latitude = point.Latitude;
             this.Longitude = point.Longitude;
+        }
+
+        internal static async Task<ReportItem> CreateReportItemAsync(string title, string description, 
+            IMappablePoint point, WriteableBitmap image)
+        {
+            var item = new ReportItem()
+            {
+                Title = title,
+                Description = description
+            };
+            item.SetLocation(point);
+
+            // save...
+            var conn = StreetFooRuntime.GetUserDatabase();
+            await conn.InsertAsync(item);
+
+            // stage the image...
+            if (image != null)
+            {
+                var stagingFolder = ApplicationData.Current.LocalFolder;
+                var stagingFilename = System.Guid.NewGuid() + ".jpg";
+                var stagingFile = await stagingFolder.CreateFileAsync(stagingFilename);
+
+                //// extract the bytes from the source image...
+                //using (var inStream = new MemoryStream())
+                //{
+                //    // copy it into the stream...
+                //    image.PixelBuffer.AsStream().CopyTo(inStream);
+
+                //    // write it...
+                //    using (var outStream = await stagingFile.OpenTransactedWriteAsync())
+                //    {
+                //        // encoder...
+                //        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, outStream.Stream);
+                //        encoder.SetPixelData(BitmapPixelFormat.Rgba8, BitmapAlphaMode.Ignore, (uint)image.PixelWidth, (uint)image.PixelHeight,
+                //            96, 96, inStream.ToArray());
+                //        await encoder.FlushAsync();
+                //    }
+                //}
+
+                // save...
+                await image.SaveAsAsync(BitmapEncoder.BmpEncoderId, stagingFile);
+            }
+
+            // return...
+            return item;
         }
     }
 }

@@ -14,6 +14,6 @@ namespace StreetFoo.Client
 
         string Caption { get; }
         bool HasImage { get; }
-        BitmapImage Image { get; }
+        WriteableBitmap Image { get; }
     }
 }

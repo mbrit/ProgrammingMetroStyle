@@ -609,18 +609,6 @@
         <Setter Property="Content" Value="&#xE128;"/>
     </Style>
 
-    <Style x:Key="CancelAppBarButtonStyle" TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="CancelAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Cancel"/>
-        <Setter Property="Content" Value="&#xE10A;"/>
-    </Style>
-
-    <Style x:Key="CaptureLocationAppBarButtonStyle" TargetType="Button" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="CaptureLocationAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Capture Location"/>
-        <Setter Property="Content" Value="&#xE128;"/>
-    </Style>
-
     <!-- Title area styles -->
 
     <Style x:Key="PageHeaderTextStyle" TargetType="TextBlock" BasedOn="{StaticResource HeaderTextStyle}">

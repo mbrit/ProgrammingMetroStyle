@@ -40,6 +40,9 @@ namespace StreetFoo.Client
         [JsonMapping]
         public decimal Longitude { get { return GetValue<decimal>(); } set { SetValue(value); } }
 
+        public ReportItemStatus Status { get { return GetValue<ReportItemStatus>(); } set { SetValue(value); } }
+        public bool ImageChanged { get { return GetValue<bool>(); } set { SetValue(value); } }
+
         public ReportItem()
         {
         }
@@ -213,12 +216,14 @@ namespace StreetFoo.Client
         }
 
         internal static async Task<ReportItem> CreateReportItemAsync(string title, string description, 
-            IMappablePoint point, WriteableBitmap image)
+            IMappablePoint point, IStorageFile image)
         {
             var item = new ReportItem()
             {
                 Title = title,
-                Description = description
+                Description = description,
+                NativeId = Guid.NewGuid().ToString(),
+                Status = ReportItemStatus.New
             };
             item.SetLocation(point);
 
@@ -229,29 +234,12 @@ namespace StreetFoo.Client
             // stage the image...
             if (image != null)
             {
-                var stagingFolder = ApplicationData.Current.LocalFolder;
-                var stagingFilename = System.Guid.NewGuid() + ".jpg";
-                var stagingFile = await stagingFolder.CreateFileAsync(stagingFilename);
+                // new path...
+                var manager = new ReportImageCacheManager();
+                var folder = await manager.GetCacheFolderAsync();
 
-                //// extract the bytes from the source image...
-                //using (var inStream = new MemoryStream())
-                //{
-                //    // copy it into the stream...
-                //    image.PixelBuffer.AsStream().CopyTo(inStream);
-
-                //    // write it...
-                //    using (var outStream = await stagingFile.OpenTransactedWriteAsync())
-                //    {
-                //        // encoder...
-                //        var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, outStream.Stream);
-                //        encoder.SetPixelData(BitmapPixelFormat.Rgba8, BitmapAlphaMode.Ignore, (uint)image.PixelWidth, (uint)image.PixelHeight,
-                //            96, 96, inStream.ToArray());
-                //        await encoder.FlushAsync();
-                //    }
-                //}
-
-                // save...
-                await image.SaveAsAsync(BitmapEncoder.BmpEncoderId, stagingFile);
+                // create...
+                await image.CopyAsync(folder, item.NativeId + ".jpg");
             }
 
             // return...

@@ -30,7 +30,6 @@
                 <StackPanel Orientation="Horizontal" Visibility="{Binding HasSelectedItems, Converter={StaticResource BooleanToVisibilityConverter}}">
             </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
-                <Button Style="{StaticResource AddAppBarButtonStyle}" Command="{Binding AddCommand}" />
                 <Button Style="{StaticResource ShowLocationAppBarButtonStyle}" Command="{Binding ShowLocationCommand}" />
                 <Button Style="{StaticResource RefreshAppBarButtonStyle}" Command="{Binding RefreshCommand}" />
                 <Button Style="{StaticResource LogoutAppBarButtonStyle}" Command="{Binding LogoutCommand}" />

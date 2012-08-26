@@ -124,6 +124,7 @@
     <Compile Include="Data\SQLite.cs" />
     <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ModelItem.cs" />
+    <Compile Include="Entities\ReportItemStatus.cs" />
     <Compile Include="Entities\WrappingModelItem.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
@@ -143,9 +144,7 @@
     <Compile Include="Model\Base\DelegateCommand.cs" />
     <Compile Include="Model\Base\ViewModelList.cs" />
     <Compile Include="Model\Base\ViewModelSingleton.cs" />
-    <Compile Include="Model\Instances\EditReportPageViewModel.cs" />
     <Compile Include="Model\Instances\HelpPaneViewModel.cs" />
-    <Compile Include="Model\Instances\IEditReportPageViewModel.cs" />
     <Compile Include="Model\Instances\IHelpPaneViewModel.cs" />
     <Compile Include="Model\Instances\ILogonPageViewModel.cs" />
     <Compile Include="Location\IMyMap.cs" />

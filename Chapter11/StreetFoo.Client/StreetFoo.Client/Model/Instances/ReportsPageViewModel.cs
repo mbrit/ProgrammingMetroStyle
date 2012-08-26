@@ -61,9 +61,6 @@ namespace StreetFoo.Client
                 else
                     await this.Host.ShowAlertAsync("Failed to get location: " + result.Code.ToString());
             });
-
-            // add...
-            this.AddCommand = new DelegateCommand((e) => this.Host.ShowView(typeof(IEditReportPageViewModel), new ReportViewItem(new ReportItem())));
         }
 
         private async void DoCreateTestReports(CommandExecutionContext context)

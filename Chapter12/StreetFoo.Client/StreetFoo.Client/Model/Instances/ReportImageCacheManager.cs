@@ -6,14 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MetroLog;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 
 namespace StreetFoo.Client
 {
-    internal class ReportImageCacheManager : ILoggable
+    internal class ReportImageCacheManager
     {
         private const string LocalCacheFolderName = "ReportImages";
 

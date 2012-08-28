@@ -22,13 +22,10 @@ namespace StreetFoo.Client
                 var decoder = await BitmapDecoder.CreateAsync(sourceStream);
 
                 // step two, create somewhere to put it...
-                using(var tempStream = new InMemoryRandomAccessStream())
+                using(var destinationStream = await destination.OpenAsync(FileAccessMode.ReadWrite))
                 {
-                    // copy...
-                    await RandomAccessStream.CopyAsync(sourceStream, tempStream);
-
                     // step three, create an encoder...
-                    var encoder = await BitmapEncoder.CreateForTranscodingAsync(tempStream, decoder);
+                    var encoder = await BitmapEncoder.CreateForTranscodingAsync(destinationStream, decoder);
 
                     // how big is it?
                     uint width = decoder.PixelWidth;
@@ -52,23 +49,6 @@ namespace StreetFoo.Client
 
                     // write it...
                     await encoder.FlushAsync();
-
-                    // copy it...
-                    tempStream.Seek(0);
-                    using (var destinationWriter = await destination.OpenTransactedWriteAsync())
-                    {
-                        // reload the image from the stream and copy over the data...
-                        decoder = await BitmapDecoder.CreateAsync(tempStream);
-                        encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, destinationWriter.Stream);
-
-                        // set...
-                        var pixels = await decoder.GetPixelDataAsync();
-                        var bs = pixels.DetachPixelData();
-                        encoder.SetPixelData(decoder.BitmapPixelFormat, decoder.BitmapAlphaMode,
-                            decoder.PixelWidth, decoder.PixelHeight, decoder.DpiX, decoder.DpiY, bs);
-
-                        await encoder.FlushAsync();
-                    }
                 }
             }
         }

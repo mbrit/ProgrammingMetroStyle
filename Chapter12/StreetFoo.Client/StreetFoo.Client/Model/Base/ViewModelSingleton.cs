@@ -70,17 +70,25 @@ namespace StreetFoo.Client
 
         protected async Task<bool> SaveAsync()
         {
-            // validate...
-            var result = await ValidateAsync();
-            if (result.HasErrors)
+            this.EnterBusy();
+            try
             {
-                await this.Host.ShowAlertAsync(result);
-                return false;
-            }
+                // validate...
+                var result = await ValidateAsync();
+                if (result.HasErrors)
+                {
+                    await this.Host.ShowAlertAsync(result);
+                    return false;
+                }
 
-            // ok...
-            await DoSaveAsync();
-            return true;
+                // ok...
+                await DoSaveAsync();
+                return true;
+            }
+            finally
+            {
+                this.ExitBusy();
+            }
         }
 
         protected virtual Task DoSaveAsync()

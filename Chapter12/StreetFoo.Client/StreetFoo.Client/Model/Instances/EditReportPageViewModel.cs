@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.Foundation;
 using Windows.Media.Capture;
 using Windows.Storage;
 using Windows.UI.Xaml.Media.Imaging;
@@ -74,6 +75,10 @@ namespace StreetFoo.Client
             {
                 // do we have an old one to delete...
                 await CleanupTempImageFileAsync();
+
+                // COPY - REMOVE THIS, faking for screenshots...
+                var placeholder = await ApplicationData.Current.TemporaryFolder.GetFileAsync("Graffiti-Photo.jpg");
+                await placeholder.CopyAndReplaceAsync(file);
 
                 // load the image for display...
                 var newImage = new BitmapImage();

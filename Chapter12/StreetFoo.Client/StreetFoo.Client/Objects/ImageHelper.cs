@@ -35,7 +35,7 @@ namespace StreetFoo.Client
                     // orientation?
                     bool portrait = width < height;
 
-                    // create the new size...
+                    // step four, configure it...
                     if (portrait)
                     {
                         encoder.BitmapTransform.ScaledHeight = (uint)targetDimension;
@@ -47,7 +47,7 @@ namespace StreetFoo.Client
                         encoder.BitmapTransform.ScaledHeight = (uint)((decimal)targetDimension / ratio);
                     }
 
-                    // write it...
+                    // step five, write it...
                     await encoder.FlushAsync();
                 }
             }

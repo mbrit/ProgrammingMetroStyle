@@ -66,9 +66,15 @@ namespace StreetFoo.Client
         internal void SetLocation(IMappablePoint point)
         {
             this.InnerItem.SetLocation(point);
+        }
 
-            // update...
-            this.OnPropertyChanged("LocationNarrative");
+        protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            // has the location changed? need to touch the narrative if so...
+            if(e.PropertyName == "Latitude" || e.PropertyName == "Longitude")
+                this.OnPropertyChanged("LocationNarrative");
         }
 
         public string LocationNarrative
@@ -80,11 +86,6 @@ namespace StreetFoo.Client
                 else
                     return string.Empty;
             }
-        }
-
-        internal Task SaveAsync()
-        {
-            throw new NotImplementedException();
         }
     }
 }

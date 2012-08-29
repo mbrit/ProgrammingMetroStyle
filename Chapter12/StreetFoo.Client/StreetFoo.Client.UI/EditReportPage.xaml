@@ -70,13 +70,18 @@
                 <TextBlock Text="Description"></TextBlock>
                 <TextBox Text="{Binding Item.Description, Mode=TwoWay}"></TextBox>
                 <TextBlock Text="Picture"></TextBlock>
+                
+                <!-- the placeholder -->
                 <Border Width="480" Height="360" BorderThickness="2" BorderBrush="White" HorizontalAlignment="Left" 
                         Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityNegationConverter}}">
                     <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">(No picture)</TextBlock>
                 </Border>
+                
+                <!-- the image -->
                 <Image Width="480" Height="360" HorizontalAlignment="Left" Source="{Binding Image}"
                        Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityConverter}}">
                 </Image>
+                
                 <TextBlock Text="Location"></TextBlock>
                 <TextBlock Text="{Binding Item.LocationNarrative}"></TextBlock>
             </StackPanel>

@@ -65,6 +65,7 @@ namespace StreetFoo.Client
 
         protected virtual Task<ErrorBucket> ValidateAsync()
         {
+            // return an empty error bucket (i.e. "success")...
             return Task.FromResult<ErrorBucket>(new ErrorBucket());
         }
 

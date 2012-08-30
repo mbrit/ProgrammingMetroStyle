@@ -23,7 +23,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="120"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -35,7 +35,7 @@
         <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Logon" Style="{StaticResource PageHeaderTextStyle}"/>
 
         <!-- Registration form -->
-        <StackPanel Grid.Row="1" Grid.Column="1">
+        <StackPanel Grid.Row="1" Grid.Column="1" x:Name="containerWide">
 
             <TextBlock Text="Username"></TextBlock>
             <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Username, Mode=TwoWay}"/>
@@ -52,6 +52,8 @@
 
         </StackPanel>
 
+        <local:UnsnapWidget x:Name="containerNarrow" Grid.Row="1" Grid.ColumnSpan="2"></local:UnsnapWidget>
+
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -65,21 +67,37 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Padding">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="96,0,86,56"/>
+                        </ObjectAnimationUsingKeyFrames>
                     </Storyboard>
                 </VisualState>
 
-                <!-- The back button and title have different styles when snapped -->
+                <!--
+                    The back button and title have different styles when snapped, and the list representation is substituted
+                    for the grid displayed in all other view states
+                -->
                 <VisualState x:Name="Snapped">
                     <Storyboard>
+
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>
         </VisualStateManager.VisualStateGroups>
+        
     </Grid>
 </common:LayoutAwarePage>

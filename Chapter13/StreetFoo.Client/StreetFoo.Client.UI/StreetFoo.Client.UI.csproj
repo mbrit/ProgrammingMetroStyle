@@ -164,6 +164,9 @@
     <Compile Include="ShareTargetPage.xaml.cs">
       <DependentUpon>ShareTargetPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UnsnapWidget.xaml.cs">
+      <DependentUpon>UnsnapWidget.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -232,6 +235,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ShareTargetPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UnsnapWidget.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

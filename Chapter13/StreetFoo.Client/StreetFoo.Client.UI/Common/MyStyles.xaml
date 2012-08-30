@@ -129,11 +129,16 @@
         <Setter Property="Margin" Value="0,0,20,0"></Setter>
     </Style>
 
-    <!--<Style x:Key="BingMap780x550" TargetType="bm:Map">
-        <Setter Property="Width" Value="750"></Setter>
-        <Setter Property="Height" Value="550"></Setter>
-        <Setter Property="Credentials" Value="AhzHhvjTrVlqP1bs9D53ZWcLv5RsHkh_3BEFtTSfVoTjPxDl_PfkpbyfIh0a_H0a"></Setter>
-    </Style>-->
+    <Style x:Key="SnappedContainerScrollViewer" TargetType="ScrollViewer">
+        <Setter Property="Margin" Value="20,0,0,0"></Setter>
+        <Setter Property="Visibility" Value="Collapsed"></Setter>
+        <Setter Property="VerticalScrollBarVisibility" Value="Auto"></Setter>
+        <Setter Property="HorizontalScrollMode" Value="Disabled"></Setter>
+    </Style>
+
+    <Style x:Key="SnappedContainerStackPanel" TargetType="StackPanel">
+        <Setter Property="Margin" Value="0,0,20,0"></Setter>
+    </Style>
     
 </ResourceDictionary>
     

@@ -15,7 +15,7 @@ namespace StreetFoo.Client.UI
         // as per the grid, but watch the 
         public static readonly DependencyProperty ItemClickedCommandProperty =
             DependencyProperty.Register("ItemClickedCommand", typeof(ICommand), typeof(MyListView),
-            new PropertyMetadata(null, (d, e) => ((MyListView)d).SelectionCommand = (ICommand)e.NewValue));
+            new PropertyMetadata(null, (d, e) => ((MyListView)d).ItemClickedCommand = (ICommand)e.NewValue));
 
         public MyListView()
         {
@@ -28,7 +28,9 @@ namespace StreetFoo.Client.UI
                 return;
 
             // ok...
-            Debug.WriteLine("hi");
+            var clicked = e.ClickedItem;
+            if (this.ItemClickedCommand.CanExecute(clicked))
+                this.ItemClickedCommand.Execute(clicked);
         }
 
         public ICommand ItemClickedCommand

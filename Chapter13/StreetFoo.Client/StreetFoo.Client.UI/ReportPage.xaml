@@ -15,20 +15,16 @@
     </Page.Resources>
 
     <Page.BottomAppBar>
+        
         <AppBar>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                </StackPanel>
-                <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
-                    <Button Style="{StaticResource EditAppBarButtonStyle}" Command="{Binding EditCommand}" />
-                    <Button Style="{StaticResource OpenMapAppBarButtonStyle}" Command="{Binding OpenMapCommand}" />
-                </StackPanel>
-            </Grid>
+            
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
+                <Button Style="{StaticResource EditAppBarButtonStyle}" Command="{Binding EditCommand}" />
+                <Button Style="{StaticResource OpenMapAppBarButtonStyle}" Command="{Binding OpenMapCommand}" />
+            </StackPanel>
+
         </AppBar>
+
     </Page.BottomAppBar>
     
     <!--
@@ -52,7 +48,7 @@
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{Binding Item.Title}" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
         
-        <ScrollViewer Style="{StaticResource HorizontalScrollViewerStyle}" Grid.Row="1">
+        <ScrollViewer x:Name="containerWide" Style="{StaticResource HorizontalScrollViewerStyle}" Grid.Row="1">
             <Grid>
 
                 <Grid.ColumnDefinitions>
@@ -81,6 +77,22 @@
             </Grid>
         </ScrollViewer>
 
+        <ScrollViewer x:Name="containerNarrow" Style="{StaticResource SnappedContainerScrollViewer}" Grid.Row="1">
+            
+            <StackPanel Style="{StaticResource SnappedContainerStackPanel}">
+                <TextBlock Style="{StaticResource HeadingTextBlock}">Details</TextBlock>
+                <Image Source="{Binding Item.ImageUri}" HorizontalAlignment="Left" Width="320" Height="240" Stretch="Uniform"
+                                    Margin="0,0,0,10"></Image>
+                <local:MarkupViewer Markup="{Binding Item.Description}"></local:MarkupViewer>
+
+                <TextBlock Style="{StaticResource HeadingTextBlock}" Padding="0,10,0,0">Map</TextBlock>
+                <local:MyMap Width="300" Height="300" ShowTraffic="true" 
+                            PushpinPoint="{Binding Item, Converter={StaticResource IMappablePointConverter}}"></local:MyMap>
+
+            </StackPanel>
+
+        </ScrollViewer>
+        
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -94,6 +106,14 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
+
+                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>-->
+
                     </Storyboard>
                 </VisualState>
 
@@ -106,6 +126,14 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

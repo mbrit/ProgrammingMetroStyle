@@ -21,14 +21,15 @@
         <AppBar IsSticky="true" IsOpen="true">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
+                    <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="50*"/>
                 </Grid.ColumnDefinitions>
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" x:Name="appbarPanelLeft">
                     <Button Style="{StaticResource TakePhotoAppBarButtonStyle}" Command="{Binding TakePhotoCommand}" />
                     <Button Style="{StaticResource CaptureLocationAppBarButtonStyle}" Command="{Binding CaptureLocationCommand}" />
                 </StackPanel>
                 <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="1" Margin="0,1,5,-1">
+                    <Button x:Name="appbarMore" Style="{StaticResource MoreAppBarButtonStyle}" Visibility="Collapsed" Click="HandleMoreButton" />
                     <Button Style="{StaticResource SaveAppBarButtonStyle}" Command="{Binding SaveCommand}" />
                     <Button Style="{StaticResource CancelAppBarButtonStyle}" Command="{Binding CancelCommand}" />
                 </StackPanel>
@@ -54,11 +55,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock Grid.Column="1" Text="New Report" Style="{StaticResource PageHeaderTextStyle}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-            <TextBlock Grid.Column="1" Text="Edit Report" Style="{StaticResource PageHeaderTextStyle}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityNegationConverter}}"/>
+            <TextBlock Grid.Column="1" x:Name="titleNew" Text="New Report" Style="{StaticResource PageHeaderTextStyle}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <TextBlock Grid.Column="1" x:Name="titleEdit" Text="Edit Report" Style="{StaticResource PageHeaderTextStyle}" Visibility="{Binding IsNew, Converter={StaticResource BooleanToVisibilityNegationConverter}}"/>
         </Grid>
         
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" x:Name="containerWide">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="120"/>
                 <ColumnDefinition Width="800"/>
@@ -88,6 +89,35 @@
             
         </Grid>
 
+        <ScrollViewer x:Name="containerNarrow" Style="{StaticResource SnappedContainerScrollViewer}" Grid.Row="1">
+
+            <StackPanel Style="{StaticResource SnappedContainerStackPanel}">
+
+                <TextBlock Text="Title"></TextBlock>
+                <TextBox Text="{Binding Item.Title, Mode=TwoWay}"></TextBox>
+                <TextBlock Text="Description"></TextBlock>
+                <TextBox Text="{Binding Item.Description, Mode=TwoWay}"></TextBox>
+
+                <TextBlock Text="Picture"></TextBlock>
+
+                <!-- the placeholder -->
+                <Border Width="280" Height="200" BorderThickness="2" BorderBrush="White" HorizontalAlignment="Left" 
+                        Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityNegationConverter}}">
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">(No picture)</TextBlock>
+                </Border>
+
+                <!-- the image -->
+                <Image Width="280" Height="200" HorizontalAlignment="Left" Source="{Binding Image}"
+                       Visibility="{Binding HasImage, Converter={StaticResource BooleanToVisibilityConverter}}">
+                </Image>
+
+                <TextBlock Text="Location"></TextBlock>
+                <TextBlock Text="{Binding Item.LocationNarrative}"></TextBlock>
+
+            </StackPanel>
+            
+        </ScrollViewer>
+
         <VisualStateManager.VisualStateGroups>
 
             <!-- Visual states reflect the application's view state -->
@@ -110,9 +140,27 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="backButton" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="pageTitle" Storyboard.TargetProperty="Style">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleNew" Storyboard.TargetProperty="Style">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="titleEdit" Storyboard.TargetProperty="Style">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
+                        </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="appbarPanelLeft" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="appbarMore" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+                        </ObjectAnimationUsingKeyFrames>
+
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -53,6 +55,22 @@ namespace StreetFoo.Client.UI
         /// <param name="pageState">An empty dictionary to be populated with serializable state.</param>
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
+        }
+
+        private async void HandleMoreButton(object sender, RoutedEventArgs e)
+        {
+            var popup = new PopupMenu();
+            popup.Commands.Add(new UICommand("Take Picture", (args) => {
+
+                // try and unsnap, then show...
+                if(ApplicationView.TryUnsnap())
+                    this.ViewModel.TakePhotoCommand.Execute(null);
+
+            }));
+            popup.Commands.Add(new UICommand("Capture Location", (args) =>  this.ViewModel.CaptureLocationCommand.Execute(null)));
+
+            // show...
+            await popup.ShowAsync(((FrameworkElement)sender).GetPointForContextMenu());
         }
     }
 }

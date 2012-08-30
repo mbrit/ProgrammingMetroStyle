@@ -43,7 +43,7 @@
       <ExternalWebsite>false</ExternalWebsite>
       <InteractionProfilingEnabled>false</InteractionProfilingEnabled>
       <IsLocalJavascript>false</IsLocalJavascript>
-      <IsMetro>true</IsMetro>
+      <IsWindowsStoreApp>true</IsWindowsStoreApp>
       <IsWWA>false</IsWWA>
       <LaunchProject>true</LaunchProject>
       <OverrideProjectSettings>false</OverrideProjectSettings>

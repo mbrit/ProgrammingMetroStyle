@@ -16,11 +16,16 @@ namespace StreetFoo.Client.UI
     public class MyGridView : GridView
     {
         public static readonly DependencyProperty SelectionCommandProperty =
-            DependencyProperty.Register("SelectionCommand", typeof(ICommand), typeof(MyGridView), new PropertyMetadata(null));
+            DependencyProperty.Register("SelectionCommand", typeof(ICommand), typeof(MyGridView),
+            new PropertyMetadata(null, (d, e) => ((MyGridView)d).SelectionCommand = (ICommand)e.NewValue));
+
         public static readonly DependencyProperty OpenAppBarsOnMultipleSelectionProperty =
-            DependencyProperty.Register("OpenAppBarsOnMultipleSelection", typeof(bool), typeof(MyGridView), new PropertyMetadata(true));
+            DependencyProperty.Register("OpenAppBarsOnMultipleSelection", typeof(bool), typeof(MyGridView),
+            new PropertyMetadata(true, (d, e) => ((MyGridView)d).OpenAppBarsOnMultipleSelection = (bool)e.NewValue));
+
         public static readonly DependencyProperty OpenAppBarsOnRightClickProperty =
-            DependencyProperty.Register("OpenAppBarsOnRightClick", typeof(bool), typeof(MyGridView), new PropertyMetadata(true));
+            DependencyProperty.Register("OpenAppBarsOnRightClick", typeof(bool), typeof(MyGridView),
+            new PropertyMetadata(true, (d, e) => ((MyGridView)d).OpenAppBarsOnRightClick = (bool)e.NewValue));
 
         public MyGridView()
         {

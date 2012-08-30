@@ -21,7 +21,7 @@ namespace StreetFoo.Client.UI
 
         public static readonly DependencyProperty ItemClickedCommandProperty =
             DependencyProperty.Register("ItemClickedCommand", typeof(ICommand), typeof(MyGridView), 
-            new PropertyMetadata(null, (d, e) => ((MyGridView)d).SelectionCommand = (ICommand)e.NewValue));
+            new PropertyMetadata(null, (d, e) => ((MyGridView)d).ItemClickedCommand = (ICommand)e.NewValue));
 
         public static readonly DependencyProperty OpenAppBarsOnMultipleSelectionProperty =
             DependencyProperty.Register("OpenAppBarsOnMultipleSelection", typeof(bool), typeof(MyGridView), 

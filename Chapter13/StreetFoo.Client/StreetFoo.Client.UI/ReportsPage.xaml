@@ -74,7 +74,7 @@
             />
 
         <!-- Vertical scrolling list only used when snapped -->
-        <ListView
+        <local:MyListView
             x:Name="itemListView"
             AutomationProperties.AutomationId="ItemsListView"
             AutomationProperties.Name="Items"
@@ -84,7 +84,9 @@
             Margin="0,-10,0,0"
             Padding="10,0,0,60"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard80ItemTemplate}"/>
+            ItemTemplate="{StaticResource ReportItem80SnappedItemTemplate}"
+            ItemClickedCommand="{Binding SelectionCommand}"
+            />
 
         <VisualStateManager.VisualStateGroups>
 

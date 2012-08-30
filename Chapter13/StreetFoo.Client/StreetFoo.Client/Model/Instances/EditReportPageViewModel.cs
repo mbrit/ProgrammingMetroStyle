@@ -31,8 +31,6 @@ namespace StreetFoo.Client
         {
             base.Activated(args);
 
-            // ** DON'T FORGET TO SET PERMISSIONS **
-
             // capture...
             await CaptureLocationAsync();
         }
@@ -56,11 +54,26 @@ namespace StreetFoo.Client
             }
         }
 
-        protected override void ItemChanged()
+        protected override async void ItemChanged()
         {
             base.ItemChanged();
 
-            // update the caption...
+            // if we're not new, load the image...
+            if (!(this.IsNew))
+            {
+                var manager = new ReportImageCacheManager();
+                await this.Item.InitializeAsync(manager);
+                
+                // initialie the image...
+                if(this.Item.HasImage)
+                {
+                    var image = new BitmapImage();
+                    image.UriSource = new Uri(this.Item.ImageUri);
+                    this.Image = image;
+                }
+            }
+
+            // raise the new regardless...
             this.OnPropertyChanged("IsNew");
         }
 
@@ -75,10 +88,6 @@ namespace StreetFoo.Client
             {
                 // do we have an old one to delete...
                 await CleanupTempImageFileAsync();
-
-                // COPY - REMOVE THIS, faking for screenshots...
-                var placeholder = await ApplicationData.Current.TemporaryFolder.GetFileAsync("Graffiti-Photo.jpg");
-                await placeholder.CopyAndReplaceAsync(file);
 
                 // load the image for display...
                 var newImage = new BitmapImage();
@@ -152,8 +161,8 @@ namespace StreetFoo.Client
             }
             else
             {
-                // update an existing one...
-                throw new InvalidOperationException("Implemented in the downloa, not the book...");
+                // update the existing data in SQLite...
+                await this.Item.InnerItem.Update(this.TempImageFile);
             }
 
             // cleanup...

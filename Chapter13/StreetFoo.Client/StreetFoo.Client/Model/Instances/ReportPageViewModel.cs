@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.ApplicationModel.DataTransfer;
+using Windows.Storage.Streams;
 
 namespace StreetFoo.Client
 {
@@ -28,6 +30,26 @@ namespace StreetFoo.Client
             // setup our image...
             var manager = new ReportImageCacheManager();
             await this.Item.InitializeAsync(manager);
+        }
+
+        public override void ShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
+        {
+            // set the basics...
+            var data = args.Request.Data;
+            data.Properties.Title = string.Format("StreetFoo report '{0}'", this.Item.Title);
+            data.Properties.Description = string.Format("Sharing problem report #{0}", this.Item.NativeId);
+
+            // set the basics...
+            data.SetText(string.Format("{0}: {1}", this.Item.Title, this.Item.Description));
+            data.SetUri(new Uri(this.Item.PublicUrl));
+
+            // tell the caller that we'll get back to them...
+            if (this.Item.HasImage)
+            {
+                var reference = RandomAccessStreamReference.CreateFromUri(new Uri(this.Item.ImageUri));
+                data.Properties.Thumbnail = reference;
+                data.SetBitmap(reference);
+            }
         }
     }
 }

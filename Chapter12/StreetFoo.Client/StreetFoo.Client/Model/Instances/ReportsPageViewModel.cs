@@ -140,32 +140,5 @@ namespace StreetFoo.Client
             // update...
             await DoRefresh(false);
         }
-
-        public override void ShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
-        {
-            // do we have a selection?
-            if (!(this.HasSelectedItems))
-                return;
-
-            // share the first item...
-            var report = this.SelectedItems.First();
-
-            // set the basics...
-            var data = args.Request.Data;
-            data.Properties.Title = string.Format("StreetFoo report '{0}'", report.Title);
-            data.Properties.Description = string.Format("Sharing problem report #{0}", report.NativeId);
-
-            // set the basics...
-            data.SetText(string.Format("{0}: {1}", report.Title, report.Description));
-            data.SetUri(new Uri(report.PublicUrl));
-
-            // tell the caller that we'll get back to them...
-            if (report.HasImage)
-            {
-                var reference = RandomAccessStreamReference.CreateFromUri(new Uri(report.ImageUri));
-                data.Properties.Thumbnail = reference;
-                data.SetBitmap(reference);
-            }
-        }
     }
 }

@@ -138,6 +138,7 @@
     <Compile Include="Objects\MarkupViewer.cs" />
     <Compile Include="Objects\MvvmAwareControl.cs" />
     <Compile Include="Objects\MyGridView.cs" />
+    <Compile Include="Objects\MyListView.cs" />
     <Compile Include="Objects\MyMap.cs" />
     <Compile Include="Objects\PageExtender.cs" />
     <Compile Include="Objects\BasicFlyout.cs" />

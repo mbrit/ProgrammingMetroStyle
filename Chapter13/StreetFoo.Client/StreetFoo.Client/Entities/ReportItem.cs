@@ -233,41 +233,18 @@ namespace StreetFoo.Client
 
             // stage the image...
             if (image != null)
-                await item.StageImageAsync(image);
+            {
+                // new path...
+                var manager = new ReportImageCacheManager();
+                var folder = await manager.GetCacheFolderAsync();
+
+                // save it as a file that's no longer than 640 pixels on its longest edge...
+                var newImage = await folder.CreateFileAsync(item.NativeId + ".jpg");
+                await ImageHelper.ResizeAndSaveAs(image, newImage, 640);
+            }
 
             // return...
             return item;
-        }
-
-        private async Task StageImageAsync(IStorageFile image)
-        {
-            // new path...
-            var manager = new ReportImageCacheManager();
-            var folder = await manager.GetCacheFolderAsync();
-
-            // save it as a file that's no longer than 640 pixels on its longest edge...
-            var newImage = await folder.CreateFileAsync(this.NativeId + ".jpg", CreationCollisionOption.ReplaceExisting);
-            await ImageHelper.ResizeAndSaveAs(image, newImage, 640);
-        }
-
-        internal async Task Update(IStorageFile newImage)
-        {
-            // set the flag...
-            this.Status = ReportItemStatus.Updated;
-
-            // do we have a new image?
-            if (newImage != null)
-            {
-                // set the flag...
-                this.ImageChanged = true;
-
-                // copy...
-                await this.StageImageAsync(newImage);
-            }
-
-            // update the database...
-            var conn = StreetFooRuntime.GetUserDatabase();
-            await conn.UpdateAsync(this);
         }
     }
 }

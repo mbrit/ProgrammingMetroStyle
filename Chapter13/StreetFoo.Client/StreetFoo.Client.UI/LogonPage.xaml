@@ -35,7 +35,7 @@
         <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Logon" Style="{StaticResource PageHeaderTextStyle}"/>
 
         <!-- Registration form -->
-        <StackPanel Grid.Row="1" Grid.Column="1" x:Name="containerWide">
+        <StackPanel Grid.Row="1" Grid.Column="1" x:Name="containerFill">
 
             <TextBlock Text="Username"></TextBlock>
             <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Username, Mode=TwoWay}"/>
@@ -52,7 +52,8 @@
 
         </StackPanel>
 
-        <local:UnsnapWidget x:Name="containerNarrow" Grid.Row="1" Grid.ColumnSpan="2"></local:UnsnapWidget>
+        <!-- Unsnap widget -->
+        <local:UnsnapWidget x:Name="containerSnapped" Grid.Row="1" Grid.ColumnSpan="2"></local:UnsnapWidget>
 
         <VisualStateManager.VisualStateGroups>
 
@@ -87,10 +88,10 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerSnapped" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerFill" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
 

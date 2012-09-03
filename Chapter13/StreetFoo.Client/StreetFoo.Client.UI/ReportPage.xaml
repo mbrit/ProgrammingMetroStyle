@@ -17,12 +17,10 @@
     <Page.BottomAppBar>
         
         <AppBar>
-            
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
                 <Button Style="{StaticResource EditAppBarButtonStyle}" Command="{Binding EditCommand}" />
                 <Button Style="{StaticResource OpenMapAppBarButtonStyle}" Command="{Binding OpenMapCommand}" />
             </StackPanel>
-
         </AppBar>
 
     </Page.BottomAppBar>
@@ -48,7 +46,7 @@
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="{Binding Item.Title}" Style="{StaticResource PageHeaderTextStyle}"/>
         </Grid>
         
-        <ScrollViewer x:Name="containerWide" Style="{StaticResource HorizontalScrollViewerStyle}" Grid.Row="1">
+        <ScrollViewer x:Name="containerFill" Style="{StaticResource HorizontalScrollViewerStyle}" Grid.Row="1">
             <Grid>
 
                 <Grid.ColumnDefinitions>
@@ -77,7 +75,7 @@
             </Grid>
         </ScrollViewer>
 
-        <ScrollViewer x:Name="containerNarrow" Style="{StaticResource SnappedContainerScrollViewer}" Grid.Row="1">
+        <ScrollViewer x:Name="containerSnapped" Style="{StaticResource SnappedContainerScrollViewer}" Grid.Row="1">
             
             <StackPanel Style="{StaticResource SnappedContainerStackPanel}">
                 <TextBlock Style="{StaticResource HeadingTextBlock}">Details</TextBlock>
@@ -107,10 +105,10 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource PortraitBackButtonStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
 
-                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                        <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerSnapped" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerFill" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>-->
 
@@ -127,10 +125,10 @@
                             <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource SnappedPageHeaderTextStyle}"/>
                         </ObjectAnimationUsingKeyFrames>
 
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerNarrow" Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerSnapped" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
                         </ObjectAnimationUsingKeyFrames>
-                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerWide" Storyboard.TargetProperty="Visibility">
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="containerFill" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
 

@@ -101,8 +101,8 @@ namespace StreetFoo.Client.UI
 
         internal static Point GetPointForContextMenu(this FrameworkElement element)
         {
-            GeneralTransform buttonTransform = element.TransformToVisual(null);
-            Point point = buttonTransform.TransformPoint(new Point());
+            GeneralTransform transform = element.TransformToVisual(null);
+            Point point = transform.TransformPoint(new Point());
             return point;
         }
     }

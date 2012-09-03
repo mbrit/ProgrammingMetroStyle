@@ -12,7 +12,7 @@ namespace StreetFoo.Client.UI
 {
     public class MyListView : ListView
     {
-        // as per the grid, but watch the 
+        // as per the grid...
         public static readonly DependencyProperty ItemClickedCommandProperty =
             DependencyProperty.Register("ItemClickedCommand", typeof(ICommand), typeof(MyListView),
             new PropertyMetadata(null, (d, e) => ((MyListView)d).ItemClickedCommand = (ICommand)e.NewValue));

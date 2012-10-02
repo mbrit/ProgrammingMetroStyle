@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Resources.Core;
+using Windows.ApplicationModel.Search;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.System;
+using Windows.UI.ApplicationSettings;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -52,8 +60,6 @@ namespace StreetFoo.Client.UI
                 return;
             }
 
-            var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(Guid.NewGuid().ToString());
-
             if (args.PreviousExecutionState == ApplicationExecutionState.Terminated)
             {
                 //TODO: Load state from previously suspended application
@@ -78,10 +84,68 @@ namespace StreetFoo.Client.UI
             // Place the frame in the current Window and ensure that it is active
             Window.Current.Content = rootFrame;
             Window.Current.Activate();
-
+            
             // register for data transfer...
             var manager = DataTransferManager.GetForCurrentView();
             manager.DataRequested += manager_DataRequested;
+
+            // search...
+            var search = SearchPane.GetForCurrentView();
+            search.PlaceholderText = "Report title";
+            search.SuggestionsRequested += search_SuggestionsRequested;
+            search.ResultSuggestionChosen += search_ResultSuggestionChosen;
+
+            // settings...
+            var settings = SettingsPane.GetForCurrentView();
+            settings.CommandsRequested += settings_CommandsRequested;
+
+            // signals...
+            SignalManager.Current.StartPolling();
+        }
+
+        void settings_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)
+        {
+            args.Request.ApplicationCommands.Add(new SettingsCommand("PrivacyStatement", "Privacy Statement",
+                async (e) => { await SettingsInteractionHelper.ShowPrivacyStatementAsync(); }));
+            args.Request.ApplicationCommands.Add(new SettingsCommand("MySettings", "My Settings",
+                (e) => {
+                    var flyout = new BasicFlyout(new MySettingsPane());
+                    flyout.Width = BasicFlyoutWidth.Wide;
+                    flyout.Show();
+                }));
+            args.Request.ApplicationCommands.Add(new SettingsCommand("Help", "Help", (e) => { ShowHelp(); }));
+        }
+
+        internal static void ShowHelp()
+        {
+            var flyout = new BasicFlyout(new HelpPane());
+            flyout.Width = BasicFlyoutWidth.Wide;
+            flyout.Show();
+        }
+
+        async void search_ResultSuggestionChosen(SearchPane sender, SearchPaneResultSuggestionChosenEventArgs args)
+        {
+            var item = await ReportItem.GetByIdAsync(int.Parse(args.Tag));
+            var viewItem = new ReportViewItem(item);
+         
+            // show...
+            var frame = (Frame)Window.Current.Content;
+            var handler = ViewFactory.Current.GetConcreteType<IReportPageViewModel>();
+            frame.Navigate(handler, viewItem);
+        }
+
+        async void search_SuggestionsRequested(SearchPane sender, SearchPaneSuggestionsRequestedEventArgs args)
+        {
+            var deferral = args.Request.GetDeferral();
+            try
+            {
+                await SearchInteractionHelper.PopulateSuggestionsAsync(args.QueryText, 
+                    args.Request.SearchSuggestionCollection);
+            }
+            finally
+            {
+                deferral.Complete();
+            }
         }
 
         static void manager_DataRequested(DataTransferManager sender, DataRequestedEventArgs args)
@@ -92,27 +156,6 @@ namespace StreetFoo.Client.UI
                 var viewModel = Window.Current.GetViewModel();
                 if (viewModel != null)
                     viewModel.ShareDataRequested(sender, args);
-            }
-        }
-
-        private class NullViewModelHost : IViewModelHost
-        {
-            public IAsyncOperation<Windows.UI.Popups.IUICommand> ShowAlertAsync(ErrorBucket errors)
-            {
-                return null;
-            }
-
-            public IAsyncOperation<Windows.UI.Popups.IUICommand> ShowAlertAsync(string message)
-            {
-                return null;
-            }
-
-            public void ShowView(Type viewModelInterfaceType)
-            {
-            }
-
-            public void HideAppBar()
-            {
             }
         }
 
@@ -128,14 +171,6 @@ namespace StreetFoo.Client.UI
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
-        }
-
-        /// <summary>
-        /// Invoked when the application is activated to display search results.
-        /// </summary>
-        /// <param name="args">Details about the activation request.</param>
-        protected override void OnSearchActivated(Windows.ApplicationModel.Activation.SearchActivatedEventArgs args)
-        {
         }
 
         /// <summary>
@@ -167,6 +202,15 @@ namespace StreetFoo.Client.UI
                 Debug.WriteLine(ex);
                 throw ex;
             }
+        }
+
+        /// <summary>
+        /// Invoked when the application is activated to display search results.
+        /// </summary>
+        /// <param name="args">Details about the activation request.</param>
+        protected override void OnSearchActivated(Windows.ApplicationModel.Activation.SearchActivatedEventArgs args)
+        {
+            StreetFoo.Client.UI.SearchResultsPage.Activate(args.QueryText, args.PreviousExecutionState);
         }
     }
 }

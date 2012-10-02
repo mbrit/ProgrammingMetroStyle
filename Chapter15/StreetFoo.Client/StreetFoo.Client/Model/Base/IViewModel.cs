@@ -18,7 +18,7 @@ namespace StreetFoo.Client
         }
 
         // called when the view is activated...
-        void Activated();
+        void Activated(object args);
 
         // called when the view-model might have some data to share...
         void ShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args);

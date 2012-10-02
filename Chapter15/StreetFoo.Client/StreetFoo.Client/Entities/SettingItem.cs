@@ -10,7 +10,7 @@ namespace StreetFoo.Client
     public class SettingItem
     {
         // key field...
-        [AutoIncrement(), PrimaryKey()]
+        [AutoIncrement, PrimaryKey]
         public int Id { get; set; }
 
         // other fields...

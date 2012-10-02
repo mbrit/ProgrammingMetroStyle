@@ -24,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,6 +33,8 @@
     <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -124,37 +127,76 @@
     <Compile Include="Data\SQLite.cs" />
     <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ModelItem.cs" />
+    <Compile Include="Entities\ReportItemStatus.cs" />
+    <Compile Include="Entities\SignalItem.cs" />
     <Compile Include="Entities\WrappingModelItem.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
     <Compile Include="Ioc\IocBase.cs" />
     <Compile Include="Ioc\ServiceProxyFactory.cs" />
     <Compile Include="Ioc\ViewModelFactory.cs" />
-    <Compile Include="Logging\DequeuedEventArgs.cs" />
-    <Compile Include="Logging\StreamingFileTarget.cs" />
-    <Compile Include="Logging\StreamingQueue.cs" />
-    <Compile Include="Logging\StreamingTarget.cs" />
+    <Compile Include="Location\IMappablePoint.cs" />
+    <Compile Include="Location\AdHocMappablePoint.cs" />
     <Compile Include="Model\Base\CommandExecutionContext.cs" />
+    <Compile Include="Model\Base\IDismissCommand.cs" />
     <Compile Include="Model\Base\IViewModel.cs" />
     <Compile Include="Model\Base\IViewModelHost.cs" />
+    <Compile Include="Model\Base\IViewModelList.cs" />
+    <Compile Include="Model\Base\IViewModelSingleton.cs" />
     <Compile Include="Model\Base\NavigateCommand.cs" />
+    <Compile Include="Model\Base\NullViewModelHost.cs" />
     <Compile Include="Model\Base\ViewModel.cs" />
     <Compile Include="Model\Base\DelegateCommand.cs" />
+    <Compile Include="Model\Base\ViewModelList.cs" />
+    <Compile Include="Model\Base\ViewModelSingleton.cs" />
+    <Compile Include="Model\Instances\EditReportPageViewModel.cs" />
+    <Compile Include="Model\Instances\HelpPaneViewModel.cs" />
+    <Compile Include="Model\Instances\IEditReportPageViewModel.cs" />
+    <Compile Include="Model\Instances\IHelpPaneViewModel.cs" />
     <Compile Include="Model\Instances\ILogonPageViewModel.cs" />
+    <Compile Include="Location\IMyMap.cs" />
     <Compile Include="Model\Instances\IRegisterPageViewModel.cs" />
+    <Compile Include="Model\Instances\IReportPageViewModel.cs" />
     <Compile Include="Model\Instances\IReportsPageViewModel.cs" />
+    <Compile Include="Model\Instances\ISearchResultsPageViewModel.cs" />
+    <Compile Include="Model\Instances\IMySettingsPaneViewModel.cs" />
     <Compile Include="Model\Instances\IShareTargetPageViewModel.cs" />
     <Compile Include="Model\Instances\LogonPageViewModel.cs" />
     <Compile Include="Model\Instances\RegisterPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportImageCacheManager.cs" />
+    <Compile Include="Model\Instances\ReportPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportsPageViewModel.cs" />
     <Compile Include="Model\Instances\ReportViewItem.cs" />
+    <Compile Include="Model\Instances\SearchFilter.cs" />
+    <Compile Include="Model\Instances\MySettingsPaneViewModel.cs" />
+    <Compile Include="Location\LocationResult.cs" />
+    <Compile Include="Location\LocationHelper.cs" />
+    <Compile Include="Location\LocationResultCode.cs" />
+    <Compile Include="Model\Signals\ISignalSink.cs" />
+    <Compile Include="Model\Signals\NewReportsSignal.cs" />
+    <Compile Include="Model\Signals\SignalBase.cs" />
+    <Compile Include="Model\Signals\SignalRegistration.cs" />
+    <Compile Include="Model\Signals\SignalManager.cs" />
+    <Compile Include="Objects\ImageHelper.cs" />
+    <Compile Include="Objects\StringHelper.cs" />
+    <Compile Include="Objects\WriteableBitmapExtender.cs" />
+    <Compile Include="Objects\SearchInteractionHelper.cs" />
+    <Compile Include="Model\Instances\SearchResultsPageViewModel.cs" />
     <Compile Include="Model\Instances\ShareTargetPageViewModel.cs" />
+    <Compile Include="Notifications\BadgeGlyph.cs" />
+    <Compile Include="Notifications\BadgeNotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationBuilder.cs" />
+    <Compile Include="Notifications\NotificationWithTextBuilder.cs" />
+    <Compile Include="Notifications\TileNotificationBuilder.cs" />
+    <Compile Include="Notifications\ToastNotificationBuilder.cs" />
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Objects\JsonObjectExtender.cs" />
+    <Compile Include="Objects\SettingsInteractionHelper.cs" />
     <Compile Include="Objects\StreetFooRuntime.cs" />
     <Compile Include="Objects\TaskExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\CreateReportProxy.cs" />
+    <Compile Include="Services\CreateResult.cs" />
     <Compile Include="Services\GetReportImageResult.cs" />
     <Compile Include="Services\GetReportImageServiceProxy.cs" />
     <Compile Include="Services\EnsureTestReportsServiceProxy.cs" />
@@ -172,17 +214,31 @@
     <Compile Include="Services\RegisterServiceProxy.cs" />
     <Compile Include="Services\ServiceExecuteResult.cs" />
     <Compile Include="Services\ServiceProxy.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="sqlite3.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
+    <Compile Include="Tasks\BackgroundTask.cs" />
+    <Compile Include="Tasks\SynchronizeReportsTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MetroLog">
-      <HintPath>..\..\MetroLog\MetroLog\bin\Debug\MetroLog.dll</HintPath>
+      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.dll</HintPath>
     </Reference>
+    <Reference Include="MetroLog.NetCore">
+      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.NetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=11.0">
+      <Name>Microsoft Visual C++ Runtime Package</Name>
+    </SDKReference>
+    <SDKReference Include="SQLite.WinRT, Version=3.7.14">
+      <Name>SQLite for Windows Runtime</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

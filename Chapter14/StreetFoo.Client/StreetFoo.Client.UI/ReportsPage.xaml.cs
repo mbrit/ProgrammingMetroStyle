@@ -36,11 +36,6 @@ namespace StreetFoo.Client.UI
             // setup model...
             this.Model = ViewModelFactory.Current.GetHandler<IReportsPageViewModel>(this);
             this.InitializeModel(this.Model);
-
-            //// ok...
-            //this.itemGridView.PointerPressed += itemGridView_PointerPressed;
-            //this.itemGridView.IsItemClickEnabled = true;
-            //this.itemGridView.ItemClick += itemListView_ItemClick;
         }
 
         void itemListView_ItemClick(object sender, ItemClickEventArgs e)

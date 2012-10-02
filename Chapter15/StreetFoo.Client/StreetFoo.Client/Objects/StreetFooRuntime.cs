@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MetroLog;
 using SQLite;
+using Windows.ApplicationModel.Background;
+using MetroLog;
+using MetroLog.Targets;
 
 namespace StreetFoo.Client
 {
@@ -24,20 +26,24 @@ namespace StreetFoo.Client
         // defines the base URL of our services...
         internal const string ServiceUrlBase = "http://streetfoo.apphb.com/handlers/";
 
+        // special module name for the task runner...
+        internal const string TasksModuleName = "Tasks";
+
         // starts the application/sets up state...
         public static async Task Start(string module)
         {
             Module = module;
-
-            // setup the logging...
-            LogManager.DefaultConfiguration.ClearTargets();
-            LogManager.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal, new StreamingFileTarget());
 
             // setup the default IoC handlers for the view models...
             ViewModelFactory.Current.SetHandler(typeof(IRegisterPageViewModel), typeof(RegisterPageViewModel));
             ViewModelFactory.Current.SetHandler(typeof(ILogonPageViewModel), typeof(LogonPageViewModel));
             ViewModelFactory.Current.SetHandler(typeof(IReportsPageViewModel), typeof(ReportsPageViewModel));
             ViewModelFactory.Current.SetHandler(typeof(IShareTargetPageViewModel), typeof(ShareTargetPageViewModel));
+            ViewModelFactory.Current.SetHandler(typeof(ISearchResultsPageViewModel), typeof(SearchResultsPageViewModel));
+            ViewModelFactory.Current.SetHandler(typeof(IMySettingsPaneViewModel), typeof(MySettingsPaneViewModel));
+            ViewModelFactory.Current.SetHandler(typeof(IHelpPaneViewModel), typeof(HelpPaneViewModel));
+            ViewModelFactory.Current.SetHandler(typeof(IReportPageViewModel), typeof(ReportPageViewModel));
+            ViewModelFactory.Current.SetHandler(typeof(IEditReportPageViewModel), typeof(EditReportPageViewModel));
 
             // ...and then for the service proxies...
             ServiceProxyFactory.Current.SetHandler(typeof(IRegisterServiceProxy), typeof(RegisterServiceProxy));
@@ -48,7 +54,23 @@ namespace StreetFoo.Client
 
             // initialize the system database... 
             var conn = GetSystemDatabase();
-            await conn.CreateTableAsync<SettingItem>();
+            await conn.CreateTablesAsync<SettingItem, SignalItem>();
+
+            // configure the logging to use the file streaming target (this has been
+            // included to keep track of tasks)...
+            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal,
+                new FileStreamingTarget());
+
+            // if we're not actually "Tasks", register taskss...
+            if (module != TasksModuleName)
+            {
+                BackgroundTask.RegisterTask<SynchronizeReportsTask>((builder) =>
+                {
+                    // set a 15 minute, recurring, maintenance trigger. doesn't
+                    // need to be on the lock screen, requires AC power...
+                    builder.SetTrigger(new MaintenanceTrigger(15, false));
+                });
+            }
 		}
 
         internal static bool HasLogonToken
@@ -81,6 +103,20 @@ namespace StreetFoo.Client
         internal static SQLiteAsyncConnection GetUserDatabase()
         {
             return new SQLiteAsyncConnection(UserDatabaseConnectionString);
+        }
+
+        // gets whether the Start method has been called...
+        public static bool IsStarted
+        {
+            get
+            {
+                return !(string.IsNullOrEmpty(Module));
+            }
+        }
+
+        internal static Task StartForTasks()
+        {
+            return Start(TasksModuleName);
         }
     }
 }

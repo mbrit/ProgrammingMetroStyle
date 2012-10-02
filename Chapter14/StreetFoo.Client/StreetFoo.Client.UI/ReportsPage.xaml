@@ -47,9 +47,17 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" x:Uid="/StreetFoo.Client.Resources/Resources/Reports_Caption" Text="Reports" Style="{StaticResource PageHeaderTextStyle}"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <TextBlock x:Name="pageTitle" x:Uid="/StreetFoo.Client.Resources/Resources/Reports_Caption" Text="Reports" Style="{StaticResource PageHeaderTextStyle}"/>
+                <Image Source="ms-appx:///StreetFoo.Client.Resources/Images/Flag.png" Width="25" Height="15" HorizontalAlignment="Left" Margin="0,30,0,0"></Image>
+            </StackPanel>
         </Grid>
-        
+
+        <StackPanel Grid.Row="1">
+            <Button Content="Test" VerticalAlignment="Top" x:Uid="/StreetFoo.Client.Resources/Resources/Reports_TestButton"
+                Height="100"></Button>
+        </StackPanel>
+
         <!-- Horizontal scrolling grid used in most view states -->
         <local:MyGridView
             x:Name="itemGridView"

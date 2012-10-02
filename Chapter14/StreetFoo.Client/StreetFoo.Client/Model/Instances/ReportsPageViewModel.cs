@@ -37,10 +37,10 @@ namespace StreetFoo.Client
                 await this.DoRefresh(true);
                 
                 // toast...
-                string message = StringHelper.Format("Reports_ReportsRefreshed1");
+                string message = StringHelper.Format("Reports_Toast_IFound1Report");
                 if (this.Items.Count != 1)
-                    message = StringHelper.Format("Reports_ReportsRefreshedN", this.Items.Count);
-                var toast = new ToastNotificationBuilder(new string[] { "Reports refreshed.", message });
+                    message = StringHelper.Format("Reports_Toast_IFoundNReports", this.Items.Count);
+                var toast = new ToastNotificationBuilder(new string[] { StringHelper.Format("Reports_Toast_ReportsRefreshed"), message });
                 toast.ImageUri = "ms-appx:///Assets/Toast.jpg";
                 toast.Update();
             });
@@ -140,10 +140,6 @@ namespace StreetFoo.Client
 
             // update...
             await DoRefresh(false);
-
-            // await...
-            await this.Host.ShowAlertAsync(string.Format("{0}\r\n{1}\r\n{2}\r\n{3}", CultureInfo.CurrentCulture,
-                CultureInfo.CurrentUICulture, CultureInfo.DefaultThreadCurrentCulture, CultureInfo.DefaultThreadCurrentUICulture));
         }
     }
 }

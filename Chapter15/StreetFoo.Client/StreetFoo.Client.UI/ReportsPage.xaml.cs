@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Windows.ApplicationModel.Resources;
+using Windows.ApplicationModel.Resources.Core;
 using Windows.Devices.Input;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -34,11 +36,6 @@ namespace StreetFoo.Client.UI
             // setup model...
             this.Model = ViewModelFactory.Current.GetHandler<IReportsPageViewModel>(this);
             this.InitializeModel(this.Model);
-
-            //// ok...
-            //this.itemGridView.PointerPressed += itemGridView_PointerPressed;
-            //this.itemGridView.IsItemClickEnabled = true;
-            //this.itemGridView.ItemClick += itemListView_ItemClick;
         }
 
         void itemListView_ItemClick(object sender, ItemClickEventArgs e)
@@ -70,11 +67,8 @@ namespace StreetFoo.Client.UI
         /// </param>
         /// <param name="pageState">A dictionary of state preserved by this page during an earlier
         /// session.  This will be null the first time a page is visited.</param>
-        protected async override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
+        protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
-            // TODO: Assign a bindable collection of items to this.DefaultViewModel["Items"]ef
-
-            var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(Guid.NewGuid().ToString());
         }
     }
 }

@@ -12,7 +12,7 @@ namespace StreetFoo.Client
     public class RegisterPageViewModel : ViewModel, IRegisterPageViewModel
     {
         // commands...
-        public ICommand RegisterCommand { get; private set; }
+        public ICommand RegisterCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
 
         public RegisterPageViewModel(IViewModelHost host)
             : base(host)

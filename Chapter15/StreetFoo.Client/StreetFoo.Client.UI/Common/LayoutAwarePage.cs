@@ -363,7 +363,7 @@ namespace StreetFoo.Client.UI.Common
             // activate...
             var model = this.DataContext as IViewModel;
             if(model != null)
-                model.Activated();
+                model.Activated(e.Parameter);
         }
 
         /// <summary>
@@ -547,12 +547,12 @@ namespace StreetFoo.Client.UI.Common
         }
 
         // shows a view from a given view-model...
-        public void ShowView(Type viewModelType)
+        public void ShowView(Type viewModelType, object args = null)
         {
             // get the concrete handler and as the frame to flip... (note we use the ViewFactory,
             // not the ViewModelFactory here...)
             Type handler = ViewFactory.Current.GetConcreteType(viewModelType);
-            this.Frame.Navigate(handler);
+            this.Frame.Navigate(handler, args);
         }
 
         IAsyncOperation<IUICommand> IViewModelHost.ShowAlertAsync(ErrorBucket errors)
@@ -565,10 +565,34 @@ namespace StreetFoo.Client.UI.Common
             return PageExtender.ShowAlertAsync(this, message);
         }
 
+        public void ShowAppBar()
+        {
+            if (this.BottomAppBar != null)
+                this.BottomAppBar.IsOpen = true;
+        }
+
         public void HideAppBar()
         {
             if (this.BottomAppBar != null)
                 this.BottomAppBar.IsOpen = false;
+        }
+
+        protected override void OnKeyUp(Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == VirtualKey.F1)
+                App.ShowHelp();
+            else
+                base.OnKeyUp(e);
+        }
+
+        void IViewModelHost.GoBack()
+        {
+            this.GoBack(this, new RoutedEventArgs());
+        }
+
+        public async void SafeInvoke(Action action)
+        {
+            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
     }
 }

@@ -12,68 +12,62 @@ using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI.Notifications;
+using System.Globalization;
 
 namespace StreetFoo.Client
 {
     /// <summary>
     /// Concrement implementation of the view-model for the Reports page.
     /// </summary>
-    public class ReportsPageViewModel : ViewModel, IReportsPageViewModel
+    public class ReportsPageViewModel : ViewModelList<ReportViewItem>, IReportsPageViewModel, ISignalSink
     {
-        public ObservableCollection<ReportViewItem> Items { get; private set; }
-        private List<ReportViewItem> SelectedItems { get; set; }
-
-        public ICommand CreateTestReportsCommand { get; private set; }
-        public ICommand RefreshCommand { get; private set; }
-        public ICommand DumpSelectionCommand { get; private set; }
-        public ICommand SelectionCommand { get; private set; }
+        public ICommand RefreshCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
+        public ICommand SelectionCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
+        public ICommand ShowLocationCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
+        public ICommand NewCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
 
         public ReportsPageViewModel(IViewModelHost host)
             : base(host)
         {
-            // setup...
-            this.Items = new ObservableCollection<ReportViewItem>();
-            this.SelectedItems = new List<ReportViewItem>();
-
             // commands...
             this.RefreshCommand = new DelegateCommand(async (e) =>
             {
                 this.Host.HideAppBar();
                 await this.DoRefresh(true);
+                
+                // toast...
+                string message = StringHelper.Format("Reports_Toast_IFound1Report");
+                if (this.Items.Count != 1)
+                    message = StringHelper.Format("Reports_Toast_IFoundNReports", this.Items.Count);
+                var toast = new ToastNotificationBuilder(new string[] { StringHelper.Format("Reports_Toast_ReportsRefreshed"), message });
+                toast.ImageUri = "ms-appx:///Assets/Toast.jpg";
+                toast.Update();
             });
 
-            // update any selection that we were given...
-            this.SelectionCommand = new DelegateCommand((args) =>
-            {
-                // update the selection...
-                this.SelectedItems.Clear();
-                foreach (ReportViewItem item in (IEnumerable<object>)args)
-                    this.SelectedItems.Add(item);
+            // open the singleton report view...
+            this.SelectionCommand = new NavigateCommand<IReportPageViewModel>(this.Host);
 
-                // raise...
-                this.OnPropertyChanged("SelectedItems");
-                this.OnPropertyChanged("HasSelectedItems");
-            });
-
-            // dump the state...
-            this.DumpSelectionCommand = new DelegateCommand(async (e) =>
+            // show the location...
+            this.ShowLocationCommand = new DelegateCommand(async (e) =>
             {
-                if (this.SelectedItems.Count > 0)
+                // get the location...
+                var result = await LocationHelper.GetCurrentLocationAsync();
+                if (result.Code == LocationResultCode.Ok)
                 {
-                    var builder = new StringBuilder();
-                    foreach (var item in this.SelectedItems)
-                    {
-                        if (builder.Length > 0)
-                            builder.Append("\r\n");
-                        builder.Append(item.Title);
-                    }
-
-                    // show...
-                    await this.Host.ShowAlertAsync(builder.ToString());
+                    await this.Host.ShowAlertAsync(string.Format("Lat: {0}, Long: {1}, Accuracy: {2}",
+                        result.Location.Coordinate.Latitude, result.Location.Coordinate.Longitude,
+                        result.Location.Coordinate.Accuracy));
                 }
                 else
-                    await this.Host.ShowAlertAsync("(No selection)");
+                    await this.Host.ShowAlertAsync("Failed to get location: " + result.Code.ToString());
             });
+
+            // add...
+            this.NewCommand = new DelegateCommand((e) => this.Host.ShowView(typeof(IEditReportPageViewModel), new ReportViewItem(new ReportItem())));
+
+            // register an interest...
+            SignalManager.Current.Register<NewReportsSignal>(this);
         }
 
         private async void DoCreateTestReports(CommandExecutionContext context)
@@ -105,11 +99,11 @@ namespace StreetFoo.Client
                     await ReportItem.UpdateCacheFromServerAsync();
 
                 // reload the items...
-                await this.ReloadReportsFromCache();
+                await this.ReloadReportsFromCacheAsync();
             }
         }
 
-        private async Task ReloadReportsFromCache()
+        private async Task ReloadReportsFromCacheAsync()
         {
             // setup a load operation to populate the collection from the cache...
             using (this.EnterBusy())
@@ -125,47 +119,39 @@ namespace StreetFoo.Client
                 var manager = new ReportImageCacheManager();
                 foreach (var item in this.Items)
                     await item.InitializeAsync(manager);
+
+                // update the badge...
+                var badge = new BadgeNotificationBuilder(this.Items.Count);
+                badge.Update();
+
+                // update the tile...
+                string message = "1 report";
+                if (this.Items.Count != 1)
+                    message = string.Format("{0} reports", this.Items.Count);
+                var tile = new TileNotificationBuilder(new string[] { "StreetFoo", message },
+                    TileTemplateType.TileWidePeekImage01);
+                tile.ImageUris.Add("ms-appx:///Assets/Toast.jpg");
+
+                // update...
+                tile.UpdateAndReplicate(TileTemplateType.TileSquarePeekImageAndText02);
             }
         }
 
-        public override async void Activated()
+        public override async void Activated(object args)
         {
+            base.Activated(args);
+
+            // update...
             await DoRefresh(false);
         }
 
-        public bool HasSelectedItems
+        public async Task HandleSignalAsync(SignalBase signal)
         {
-            get
-            {
-                return this.SelectedItems.Count > 0;
-            }
-        }
+            this.Logger.Info("Received signal '{0}'...", signal.Name);
 
-        public override void ShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args)
-        {
-            // do we have a selection?
-            if (!(this.HasSelectedItems))
-                return;
-
-            // share the first item...
-            var report = this.SelectedItems.First();
-
-            // set the basics...
-            var data = args.Request.Data;
-            data.Properties.Title = string.Format("StreetFoo report '{0}'", report.Title);
-            data.Properties.Description = string.Format("Sharing problem report #{0}", report.NativeId);
-
-            // set the basics...
-            data.SetText(string.Format("{0}: {1}", report.Title, report.Description));
-            data.SetUri(new Uri(report.PublicUrl));
-
-            // tell the caller that we'll get back to them...
-            if (report.HasImage)
-            {
-                var reference = RandomAccessStreamReference.CreateFromUri(new Uri(report.ImageUrl));
-                data.Properties.Thumbnail = reference;
-                data.SetBitmap(reference);
-            }
+            // update?
+            if(signal is NewReportsSignal)
+                this.Host.SafeInvoke(async () => await this.DoRefresh(true));
         }
     }
 }

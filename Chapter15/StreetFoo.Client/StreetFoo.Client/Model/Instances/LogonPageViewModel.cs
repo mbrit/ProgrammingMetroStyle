@@ -11,8 +11,8 @@ namespace StreetFoo.Client
     public class LogonPageViewModel : ViewModel, ILogonPageViewModel
     {
         // commands...
-        public ICommand LogonCommand { get; private set; }
-        public ICommand RegisterCommand { get; private set; }
+        public ICommand LogonCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
+        public ICommand RegisterCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
 
         // defines the username settings key...
         internal const string LastUsernameKey = "LastUsername";
@@ -119,9 +119,9 @@ namespace StreetFoo.Client
                 errors.AddError("Password is required.");
         }
 
-        public override async void Activated()
+        public override async void Activated(object args)
         {
-            base.Activated();
+            base.Activated(args);
 
             // restore the setting...
             this.Username = await SettingItem.GetValueAsync(LastUsernameKey);

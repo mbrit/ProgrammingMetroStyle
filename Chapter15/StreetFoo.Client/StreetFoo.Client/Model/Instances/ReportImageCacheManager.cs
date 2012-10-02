@@ -6,14 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MetroLog;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.System.Threading;
+using Windows.UI.Xaml;
 
 namespace StreetFoo.Client
 {
-    internal class ReportImageCacheManager : ILoggable
+    internal class ReportImageCacheManager
     {
         private const string LocalCacheFolderName = "ReportImages";
 
@@ -23,12 +22,12 @@ namespace StreetFoo.Client
 
         internal void EnqueueImageDownload(ReportViewItem viewItem)
         {
-            this.LogInfo("Enqueuing download for '{0}'...", viewItem.NativeId);
+            Debug.WriteLine(string.Format("Enqueuing download for '{0}'...", viewItem.NativeId));
 
             // create a new task...
             Task<Task<string>>.Factory.StartNew(async () =>
             {
-                this.LogInfo("Requesting image for '{0}'...", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Requesting image for '{0}'...", viewItem.NativeId));
 
                 // load...
                 var proxy = ServiceProxyFactory.Current.GetHandler<IGetReportImageServiceProxy>();
@@ -46,15 +45,14 @@ namespace StreetFoo.Client
 
                 // get the URL...
                 string url = this.CalculateLocalImageUrl(viewItem);
-                this.LogInfo("Image load for '{0}' finished.", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Image load for '{0}' finished.", viewItem.NativeId));
                 return url;
 
             }).ContinueWith(async (t) =>
             {
                 // send it back...
-                var url = (await t).Result;
-                this.LogInfo("Setting URL for '{0}'...", viewItem.NativeId);
-                viewItem.ImageUrl = url;
+                Debug.WriteLine(string.Format("Setting image for '{0}'...", viewItem.NativeId));
+                viewItem.ImageUri = (await t).Result;
 
             }, TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -95,7 +93,7 @@ namespace StreetFoo.Client
             return string.Format("ms-appdata:///local/{0}/{1}.jpg", LocalCacheFolderName, viewItem.NativeId);
         }
 
-        internal async Task<string> GetLocalImageUrlAsync(ReportViewItem viewItem)
+        internal async Task<string> GetLocalImageUriAsync(ReportViewItem viewItem)
         {
             var cacheFolder = await this.GetCacheFolderAsync();
 
@@ -114,12 +112,12 @@ namespace StreetFoo.Client
             // did we get one?
             if (cacheFile != null)
             {
-                this.LogInfo("Cache image for '{0}' was found locally...", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Cache image for '{0}' was found locally...", viewItem.NativeId));
                 return CalculateLocalImageUrl(viewItem);
             }
             else
             {
-                this.LogInfo("Cache image for '{0}' was not found locally...", viewItem.NativeId);
+                Debug.WriteLine(string.Format("Cache image for '{0}' was not found locally...", viewItem.NativeId));
                 return null;
             }
         }

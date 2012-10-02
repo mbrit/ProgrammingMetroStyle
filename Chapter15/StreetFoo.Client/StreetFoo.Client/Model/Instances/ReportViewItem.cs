@@ -7,27 +7,30 @@ using Windows.UI.Xaml.Controls;
 
 namespace StreetFoo.Client
 {
-    public class ReportViewItem : WrappingModelItem<ReportItem>
+    public class ReportViewItem : WrappingModelItem<ReportItem>, IMappablePoint
     {
-        internal ReportViewItem(ReportItem item)
+        public ReportViewItem(ReportItem item)
             : base(item)
         {
         }
 
+        public int Id { get { return this.InnerItem.Id; } }
         public string NativeId { get { return this.InnerItem.NativeId; } }
-        public string Title { get { return this.InnerItem.Title; } }
-        public string Description { get { return this.InnerItem.Description; } }
+        public string Title { get { return this.InnerItem.Title; } set { this.InnerItem.Title = value; } }
+        public string Description { get { return this.InnerItem.Description; } set { this.InnerItem.Description = value; } }
+        public decimal Latitude { get { return this.InnerItem.Latitude; } }
+        public decimal Longitude { get { return this.InnerItem.Longitude; } }
 
-        public string ImageUrl { get { return GetValue<string>(); } set { SetValue(value); } }
+        public string ImageUri { get { return GetValue<string>(); } set { SetValue(value); } }
 
         internal async Task InitializeAsync(ReportImageCacheManager manager)
         {
             // get...
-            var imageUrl = await manager.GetLocalImageUrlAsync(this);
+            var imageUrl = await manager.GetLocalImageUriAsync(this);
             if (!(string.IsNullOrEmpty(imageUrl)))
             {
                 // set it up...
-                this.ImageUrl = imageUrl;
+                this.ImageUri = imageUrl;
             }
             else
             {
@@ -48,7 +51,40 @@ namespace StreetFoo.Client
         {
             get
             {
-                return !(string.IsNullOrEmpty(this.ImageUrl));
+                return !(string.IsNullOrEmpty(this.ImageUri));
+            }
+        }
+
+        string IMappablePoint.Name
+        {
+            get
+            {
+                return ((IMappablePoint)this.InnerItem).Name;
+            }
+        }
+
+        internal void SetLocation(IMappablePoint point)
+        {
+            this.InnerItem.SetLocation(point);
+        }
+
+        protected override void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+
+            // has the location changed? need to touch the narrative if so...
+            if(e.PropertyName == "Latitude" || e.PropertyName == "Longitude")
+                this.OnPropertyChanged("LocationNarrative");
+        }
+
+        public string LocationNarrative
+        {
+            get
+            {
+                if (this.Latitude != 0 && this.Longitude != 0)
+                    return string.Format("{0:n5},{1:n5}", this.Latitude, this.Longitude);
+                else
+                    return string.Empty;
             }
         }
     }

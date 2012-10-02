@@ -28,7 +28,7 @@ namespace StreetFoo.Client
         public bool SupportsComment { get { return this.GetValue<bool>(); } private set { this.SetValue(value); } }
         public bool Sharing { get { return this.GetValue<bool>(); } private set { this.SetValue(value); } }
 
-        public ICommand ShareCommand { get; private set; }
+        public ICommand ShareCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
 
         public ShareTargetPageViewModel(IViewModelHost host)
             : base(host)

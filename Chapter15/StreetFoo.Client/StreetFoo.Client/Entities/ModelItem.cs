@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -10,7 +11,11 @@ namespace StreetFoo.Client
 {
     public abstract class ModelItem : INotifyPropertyChanged
     {
+        // holds the model item...
         private Dictionary<string, object> Values { get; set; }
+
+        // holds a demand created log item...
+        private ILogger _logger;
 
         protected ModelItem()
         {
@@ -41,10 +46,20 @@ namespace StreetFoo.Client
             this.OnPropertyChanged(new PropertyChangedEventArgs(name));
         }
         
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, e);
+        }
+
+        protected ILogger Logger
+        {
+            get
+            {
+                if (_logger == null)
+                    _logger = LogManagerFactory.DefaultLogManager.GetLogger(this.GetType());
+                return _logger;
+            }
         }
     }
 }

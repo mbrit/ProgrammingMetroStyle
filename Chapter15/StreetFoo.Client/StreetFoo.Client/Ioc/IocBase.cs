@@ -35,6 +35,11 @@ namespace StreetFoo.Client
             Handlers[interfaceType] = concreteType;
         }
 
+        public Type GetConcreteType<U>()
+        {
+            return GetConcreteType(typeof(U));
+        }
+
         // gets the concrete type for a given interface type...
         public Type GetConcreteType(Type interfaceType)
         {

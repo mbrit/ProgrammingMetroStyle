@@ -13,6 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>StreetFoo.Client.UI_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxPackageDir>c:\Deploy\StreetFoo-1.0</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -101,6 +103,14 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <ProjectReference Include="..\StreetFoo.Client.Resources\StreetFoo.Client.Resources.csproj">
+      <Project>{c27b1941-3db1-4f43-b913-36c8139a2ba6}</Project>
+      <Name>StreetFoo.Client.Resources</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\StreetFoo.Client.Tasks\StreetFoo.Client.Tasks.csproj">
+      <Project>{9490a7b6-b45a-4f62-b949-99cf24622669}</Project>
+      <Name>StreetFoo.Client.Tasks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\StreetFoo.Client\StreetFoo.Client.csproj">
       <Project>{b1af742b-cafa-47b4-881c-09e2a3d2fc83}</Project>
       <Name>StreetFoo.Client</Name>
@@ -113,9 +123,17 @@
     <Compile Include="Common\BindableBase.cs" />
     <Compile Include="Common\BooleanNegationConverter.cs" />
     <Compile Include="Common\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Common\BooleanToVisibilityNegationConverter.cs" />
     <Compile Include="Common\LayoutAwarePage.cs" />
+    <Compile Include="Common\IMappablePointConverter.cs" />
     <Compile Include="Common\RichTextColumns.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
+    <Compile Include="EditReportPage.xaml.cs">
+      <DependentUpon>EditReportPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="HelpPane.xaml.cs">
+      <DependentUpon>HelpPane.xaml</DependentUpon>
+    </Compile>
     <Compile Include="NotLoggedOnPage.xaml.cs">
       <DependentUpon>NotLoggedOnPage.xaml</DependentUpon>
     </Compile>
@@ -124,50 +142,81 @@
     </Compile>
     <Compile Include="Objects\AppBarButton.cs" />
     <Compile Include="Objects\FrameworkElementExtender.cs" />
+    <Compile Include="Objects\IMappablePointExtender.cs" />
+    <Compile Include="Objects\MarkupViewer.cs" />
+    <Compile Include="Objects\MvvmAwareControl.cs" />
     <Compile Include="Objects\MyGridView.cs" />
+    <Compile Include="Objects\MyListView.cs" />
+    <Compile Include="Objects\MyMap.cs" />
     <Compile Include="Objects\PageExtender.cs" />
+    <Compile Include="Objects\BasicFlyout.cs" />
+    <Compile Include="Objects\BasicFlyoutWidth.cs" />
     <Compile Include="Objects\ViewFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegisterPage.xaml.cs">
       <DependentUpon>RegisterPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ReportPage.xaml.cs">
+      <DependentUpon>ReportPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SearchResultsPage.xaml.cs">
+      <DependentUpon>SearchResultsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MySettingsPane.xaml.cs">
+      <DependentUpon>MySettingsPane.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShareTargetPage.xaml.cs">
       <DependentUpon>ShareTargetPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UnsnapWidget.xaml.cs">
+      <DependentUpon>UnsnapWidget.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="packages.config" />
     <None Include="StreetFoo.Client.UI_TemporaryKey.pfx" />
+    <PRIResource Include="Strings\de-DE\Resources.resw" />
+    <PRIResource Include="Strings\fr-FR\Resources.resw" />
+    <PRIResource Include="Strings\en-US\Resources.resw" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Foo.png" />
-    <Content Include="Assets\Foo1.png" />
-    <Content Include="Assets\Foo2.png" />
+    <Content Include="Assets\BadgeLogo.png" />
+    <Content Include="Assets\HelpText.txt" />
     <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\LogoWide.png" />
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Toast.jpg" />
     <Content Include="Common\ReadMe.txt" />
-    <Content Include="sqlite3.dll" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Common\MyStandardStyles.xaml">
+    <Page Include="Common\MyStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Common\StandardStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="EditReportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="HelpPane.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="NotLoggedOnPage.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -181,7 +230,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ReportPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ReportsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SearchResultsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MySettingsPane.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -189,9 +250,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UnsnapWidget.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Bing.Maps.Xaml, Version=1.0">
+      <Name>Bing Maps for C#, C++, or Visual Basic %28RP%29</Name>
+    </SDKReference>
+    <SDKReference Include="Microsoft.VCLibs, Version=11.0">
+      <Name>Microsoft Visual C++ Runtime Package</Name>
+    </SDKReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="MetroLog, Version=0.6.2.0, Culture=neutral, PublicKeyToken=ba4ace74c3b410f3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroLog.NetCore, Version=0.6.2.0, Culture=neutral, PublicKeyToken=ba4ace74c3b410f3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.NetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

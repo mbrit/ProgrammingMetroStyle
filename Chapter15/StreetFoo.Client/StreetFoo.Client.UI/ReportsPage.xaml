@@ -18,26 +18,16 @@
             x:Name="itemsViewSource"
             Source="{Binding Items}"/>
 
-        <common:BooleanToVisibilityConverter x:Key="VisibilityConverter" />
-        <common:BooleanNegationConverter x:Key="NegationConverter" />
-        
     </Page.Resources>
 
     <Page.BottomAppBar>
         <AppBar>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="50*"/>
-                    <ColumnDefinition Width="50*"/>
-                </Grid.ColumnDefinitions>
-            <StackPanel Orientation="Horizontal" Visibility="{Binding HasSelectedItems, Converter={StaticResource VisibilityConverter}}">
-                <Button Content="Dump Selection" Command="{Binding DumpSelectionCommand}" />
-            </StackPanel>
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal" Grid.Column="2">
+                <Button Style="{StaticResource NewAppBarButtonStyle}" Command="{Binding NewCommand}" />
+                <Button x:Name="appbarShowLocation" Style="{StaticResource ShowLocationAppBarButtonStyle}" Command="{Binding ShowLocationCommand}" />
                 <Button Style="{StaticResource RefreshAppBarButtonStyle}" Command="{Binding RefreshCommand}" />
                 <Button Style="{StaticResource LogoutAppBarButtonStyle}" Command="{Binding LogoutCommand}" />
             </StackPanel>
-            </Grid>
         </AppBar>
     </Page.BottomAppBar>    
     
@@ -48,7 +38,7 @@
         </Grid.RowDefinitions>
 
         <ProgressBar Grid.ColumnSpan="2" VerticalAlignment="Top" IsIndeterminate="true" 
-                     Visibility="{Binding IsBusy, Converter={StaticResource VisibilityConverter}}"></ProgressBar>
+                     Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"></ProgressBar>
 
         <!-- Back button and page title -->
         <Grid>
@@ -57,7 +47,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
-            <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Reports" Style="{StaticResource PageHeaderTextStyle}"/>
+            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                <TextBlock x:Name="pageTitle" x:Uid="/StreetFoo.Client.Resources/Resources/Reports_Caption" Text="Reports" Style="{StaticResource PageHeaderTextStyle}"/>
+                <Image Source="ms-appx:///StreetFoo.Client.Resources/Images/Flag.png" Width="25" Height="15" HorizontalAlignment="Left" Margin="0,30,0,0"></Image>
+            </StackPanel>
         </Grid>
 
         <!-- Horizontal scrolling grid used in most view states -->
@@ -70,12 +63,13 @@
             Padding="116,0,116,46"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
             ItemTemplate="{StaticResource ReportItem250x250Template}"
-            SelectionMode="Multiple"
-            SelectionCommand="{Binding SelectionCommand}" Grid.Row="1"
+            IsItemClickEnabled="true"
+            ItemClickedCommand="{Binding SelectionCommand}" 
+            Grid.Row="1"
             />
 
         <!-- Vertical scrolling list only used when snapped -->
-        <ListView
+        <local:MyListView
             x:Name="itemListView"
             AutomationProperties.AutomationId="ItemsListView"
             AutomationProperties.Name="Items"
@@ -85,7 +79,10 @@
             Margin="0,-10,0,0"
             Padding="10,0,0,60"
             ItemsSource="{Binding Source={StaticResource itemsViewSource}}"
-            ItemTemplate="{StaticResource Standard80ItemTemplate}"/>
+            ItemTemplate="{StaticResource ReportItem80SnappedItemTemplate}"
+            IsItemClickEnabled="true"
+            ItemClickedCommand="{Binding SelectionCommand}"
+            />
 
         <VisualStateManager.VisualStateGroups>
 
@@ -125,6 +122,11 @@
                         <ObjectAnimationUsingKeyFrames Storyboard.TargetName="itemGridView" Storyboard.TargetProperty="Visibility">
                             <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
                         </ObjectAnimationUsingKeyFrames>
+
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="appbarShowLocation" Storyboard.TargetProperty="Visibility">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+                        </ObjectAnimationUsingKeyFrames>
+
                     </Storyboard>
                 </VisualState>
             </VisualStateGroup>

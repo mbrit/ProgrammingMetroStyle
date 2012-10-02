@@ -8,21 +8,11 @@ using System.Windows.Input;
 
 namespace StreetFoo.Client
 {
-    public interface IReportsPageViewModel : IViewModel
+    public interface IReportsPageViewModel : IViewModelList<ReportViewItem>
     {
-        ICommand CreateTestReportsCommand { get; }
         ICommand RefreshCommand { get; }
-        ICommand DumpSelectionCommand { get; }
         ICommand SelectionCommand { get; }
-
-        ObservableCollection<ReportViewItem> Items
-        {
-            get;
-        }
-
-        bool HasSelectedItems
-        {
-            get;
-        }
+        ICommand ShowLocationCommand { get; }
+        ICommand NewCommand { get; }
     }
 }

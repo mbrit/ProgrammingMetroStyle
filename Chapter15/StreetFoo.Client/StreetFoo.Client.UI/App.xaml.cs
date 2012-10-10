@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Resources.Core;
@@ -99,8 +100,11 @@ namespace StreetFoo.Client.UI
             var settings = SettingsPane.GetForCurrentView();
             settings.CommandsRequested += settings_CommandsRequested;
 
-            // signals...
-            SignalManager.Current.StartPolling();
+            // configure tasks...
+            BackgroundSyncTask.Configure();
+
+            // ask about the lock screen...
+            await TaskHelper.RequestLockScreenAsync();
         }
 
         void settings_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)

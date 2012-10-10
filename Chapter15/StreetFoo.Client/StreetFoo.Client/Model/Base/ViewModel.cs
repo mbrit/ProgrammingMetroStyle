@@ -15,6 +15,9 @@ namespace StreetFoo.Client
         //  somewhere to hold the host...
         protected IViewModelHost Host { get; private set; }
 
+        //// somewhere to hold the values...
+        //private Dictionary<string, object> Values { get; set; }
+
         // holds a busy count...
         private int BusyCount { get; set; }
 
@@ -24,6 +27,7 @@ namespace StreetFoo.Client
         public ViewModel(IViewModelHost host)
         {
             this.Host = host;
+            //this.Values = new Dictionary<string, object>();
         }
 
         // indicates whether the model is busy...

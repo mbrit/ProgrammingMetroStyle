@@ -17,7 +17,7 @@ namespace StreetFoo.Client
         public async Task<RegisterResult> RegisterAsync(string username, string email, string password, string confirm)
         {
             // package up the request...
-            var input = new JsonObject();
+            JsonObject input = new JsonObject();
             input.Add("username", username);
             input.Add("email", email);
             input.Add("password", password);

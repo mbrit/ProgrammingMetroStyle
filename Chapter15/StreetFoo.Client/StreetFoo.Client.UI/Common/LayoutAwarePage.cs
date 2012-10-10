@@ -589,10 +589,5 @@ namespace StreetFoo.Client.UI.Common
         {
             this.GoBack(this, new RoutedEventArgs());
         }
-
-        public async void SafeInvoke(Action action)
-        {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
-        }
     }
 }

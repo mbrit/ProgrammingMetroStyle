@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
@@ -44,11 +43,6 @@ namespace StreetFoo.Client.UI
         public void GoBack()
         {
             throw new NotImplementedException("This operation has not been implemented.");
-        }
-
-        public async void SafeInvoke(Action action)
-        {
-            await this.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => action());
         }
     }
 }

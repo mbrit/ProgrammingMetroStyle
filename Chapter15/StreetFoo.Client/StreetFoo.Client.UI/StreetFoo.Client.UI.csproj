@@ -17,7 +17,7 @@
     <AppxPackageDir>c:\Deploy\StreetFoo-1.0</AppxPackageDir>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -108,7 +108,7 @@
       <Name>StreetFoo.Client.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\StreetFoo.Client.Tasks\StreetFoo.Client.Tasks.csproj">
-      <Project>{9490a7b6-b45a-4f62-b949-99cf24622669}</Project>
+      <Project>{6dac0bfd-9307-4681-91be-6cfe63839e1c}</Project>
       <Name>StreetFoo.Client.Tasks</Name>
     </ProjectReference>
     <ProjectReference Include="..\StreetFoo.Client\StreetFoo.Client.csproj">
@@ -180,7 +180,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="packages.config" />
     <None Include="StreetFoo.Client.UI_TemporaryKey.pfx" />
     <PRIResource Include="Strings\de-DE\Resources.resw" />
     <PRIResource Include="Strings\fr-FR\Resources.resw" />
@@ -265,20 +264,6 @@
     <SDKReference Include="Microsoft.VCLibs, Version=11.0">
       <Name>Microsoft Visual C++ Runtime Package</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="MetroLog, Version=0.6.2.0, Culture=neutral, PublicKeyToken=ba4ace74c3b410f3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.dll</HintPath>
-    </Reference>
-    <Reference Include="MetroLog.NetCore, Version=0.6.2.0, Culture=neutral, PublicKeyToken=ba4ace74c3b410f3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.NetCore.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\winrt45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '11.0' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

@@ -5,9 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
-using Windows.ApplicationModel.Background;
-using MetroLog;
-using MetroLog.Targets;
+using Windows.Networking.Connectivity;
 
 namespace StreetFoo.Client
 {
@@ -25,9 +23,6 @@ namespace StreetFoo.Client
 
         // defines the base URL of our services...
         internal const string ServiceUrlBase = "http://streetfoo.apphb.com/handlers/";
-
-        // special module name for the task runner...
-        internal const string TasksModuleName = "Tasks";
 
         // starts the application/sets up state...
         public static async Task Start(string module)
@@ -54,23 +49,7 @@ namespace StreetFoo.Client
 
             // initialize the system database... 
             var conn = GetSystemDatabase();
-            await conn.CreateTablesAsync<SettingItem, SignalItem>();
-
-            // configure the logging to use the file streaming target (this has been
-            // included to keep track of tasks)...
-            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal,
-                new FileStreamingTarget());
-
-            // if we're not actually "Tasks", register taskss...
-            if (module != TasksModuleName)
-            {
-                BackgroundTask.RegisterTask<SynchronizeReportsTask>((builder) =>
-                {
-                    // set a 15 minute, recurring, maintenance trigger. doesn't
-                    // need to be on the lock screen, requires AC power...
-                    builder.SetTrigger(new MaintenanceTrigger(15, false));
-                });
-            }
+            await conn.CreateTableAsync<SettingItem>();
 		}
 
         internal static bool HasLogonToken
@@ -105,18 +84,13 @@ namespace StreetFoo.Client
             return new SQLiteAsyncConnection(UserDatabaseConnectionString);
         }
 
-        // gets whether the Start method has been called...
-        public static bool IsStarted
+        internal static bool HasConnectivity
         {
             get
             {
-                return !(string.IsNullOrEmpty(Module));
+                var profile = NetworkInformation.GetInternetConnectionProfile();
+                return profile.GetNetworkConnectivityLevel() == NetworkConnectivityLevel.InternetAccess;
             }
-        }
-
-        internal static Task StartForTasks()
-        {
-            return Start(TasksModuleName);
         }
     }
 }

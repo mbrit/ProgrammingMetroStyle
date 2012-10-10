@@ -20,7 +20,7 @@ namespace StreetFoo.Client
     /// <summary>
     /// Concrement implementation of the view-model for the Reports page.
     /// </summary>
-    public class ReportsPageViewModel : ViewModelList<ReportViewItem>, IReportsPageViewModel, ISignalSink
+    public class ReportsPageViewModel : ViewModelList<ReportViewItem>, IReportsPageViewModel
     {
         public ICommand RefreshCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
         public ICommand SelectionCommand { get { return this.GetValue<ICommand>(); } private set { this.SetValue(value); } }
@@ -65,9 +65,6 @@ namespace StreetFoo.Client
 
             // add...
             this.NewCommand = new DelegateCommand((e) => this.Host.ShowView(typeof(IEditReportPageViewModel), new ReportViewItem(new ReportItem())));
-
-            // register an interest...
-            SignalManager.Current.Register<NewReportsSignal>(this);
         }
 
         private async void DoCreateTestReports(CommandExecutionContext context)
@@ -143,15 +140,6 @@ namespace StreetFoo.Client
 
             // update...
             await DoRefresh(false);
-        }
-
-        public async Task HandleSignalAsync(SignalBase signal)
-        {
-            this.Logger.Info("Received signal '{0}'...", signal.Name);
-
-            // update?
-            if(signal is NewReportsSignal)
-                this.Host.SafeInvoke(async () => await this.DoRefresh(true));
         }
     }
 }

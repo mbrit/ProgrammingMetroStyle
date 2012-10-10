@@ -24,7 +24,5 @@ namespace StreetFoo.Client
 
         // goes back in the navigation stack...
         void GoBack();
-
-        void SafeInvoke(Action action);
     }
 }

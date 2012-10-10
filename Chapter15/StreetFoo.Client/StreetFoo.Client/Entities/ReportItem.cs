@@ -49,11 +49,8 @@ namespace StreetFoo.Client
         }
 
         // updates the local cache of the reports...
-        public static async Task<bool> UpdateCacheFromServerAsync()
+        public static async Task UpdateCacheFromServerAsync()
         {
-            var logger = LogManagerFactory.DefaultLogManager.GetLogger<ReportItem>();
-            logger.Info("Downloading reports...");
-
             // create a service proxy to call up to the server...
             IGetReportsByUserServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
             var result = await proxy.GetReportsByUserAsync();
@@ -61,18 +58,10 @@ namespace StreetFoo.Client
             // did it actually work?
             result.AssertNoErrors();
 
-            // log...
-            logger.Info("Downloaded {0} report(s)...", result.Reports.Count);
-
-            // record whether we changed anything...
-            bool changed = false;
-
             // update...
             var conn = StreetFooRuntime.GetUserDatabase();
             foreach (var report in result.Reports)
             {
-                logger.Info("Syncing report #{0}...", report.NativeId);
-
                 // load the existing one, deleting it if we find it...
                 var existing = await conn.Table<ReportItem>().Where(v => v.NativeId == report.NativeId).FirstOrDefaultAsync();
                 if (existing != null)
@@ -80,16 +69,7 @@ namespace StreetFoo.Client
 
                 // create...
                 await conn.InsertAsync(report);
-
-                // flag...
-                changed = true;
             }
-
-            // we also need to delete local reports that are no longer on the server...
-
-            // log...
-            logger.Info("Finished downloading reports.");
-            return changed;
         }
 
         // reads the local cache and populates a collection...
@@ -291,90 +271,84 @@ namespace StreetFoo.Client
             await conn.UpdateAsync(this);
         }
 
-        internal static async Task SendLocalChangesAsync()
+        private static async Task<IEnumerable<ReportItem>> GetLocallyChangedReportsAsync()
         {
-            var logger = LogManagerFactory.DefaultLogManager.GetLogger<ReportItem>();
-            logger.Info("Sending changes...");
-
-            // get the items that have changed...
-            var reports = await GetChangedItemsAsync();
-            if (reports.Any())
-            {
-                logger.Info("Found {0} report(s) to send...", reports.Count());
-
-                // send...
-                var tasks = new List<Task>();
-                foreach (var report in reports)
-                    tasks.Add(report.SendChangesAsync());
-
-                // wait...
-                await Task.WhenAll(tasks);
-            }
-            else
-                logger.Info("Nothing to send.");
-
-            // finally...
-            logger.Info("Finished sending changes.");
+            var conn = StreetFooRuntime.GetUserDatabase();
+            return await conn.Table<ReportItem>().Where(v => v.Status != ReportItemStatus.Unchanged || v.ImageChanged).ToListAsync();
         }
 
-        private async Task SendChangesAsync()
+        internal static async Task PushServerUpdatesAsync()
         {
-            this.Logger.Info("Saving changes to #{0}...", this.Id);
+            var logger = LogManagerFactory.DefaultLogManager.GetLogger<ReportItem>();
+            logger.Info("Pushing server updates...");
 
-            // what's happened?
+            // get all of the changed reports...
+            var reports = await GetLocallyChangedReportsAsync();
+
+            // how many?
+            logger.Info("Found '{0}' changed report(s)...", reports.Count());
+
+            // if nothing, quit...
+            if (!(reports.Any()))
+                return;
+
+            // otherwise...
+            var tasks = new List<Task>();
+            foreach (var report in reports)
+                tasks.Add(report.PushServerUpdateAsync());
+
+            // wait...
+            await Task.WhenAll(tasks);
+
+            // finished...
+            logger.Info("Finished pushing updates.");
+        }
+
+        // sends the update to the server...
+        internal async Task PushServerUpdateAsync()
+        {
+            this.Logger.Info("Pushing update for #{0} ({1})...", this.Id, this.Status);
+
+            // what happened?
             if (this.Status == ReportItemStatus.Unchanged)
             {
                 // no-op...
-                this.Logger.Info("Nothing to do.");
             }
             else if (this.Status == ReportItemStatus.New)
             {
-                this.Logger.Info("Asking server to create report...");
-
                 // insert...
-                var proxy = new CreateReportProxy();
-                var result = await proxy.CreateReportAsync(this.Title, this.Description, this.Latitude, this.Longitude);
+                var service = new CreateReportServiceProxy();
+                var result = await service.CreateReportAsync(this.Title, this.Description, this.Longitude, this.Latitude);
 
-                // did it work?
+                // patch back the native ID, if it worked...
                 if (!(result.HasErrors))
-                {
-                    // patch the native id back in... (we invented one before)
-                    this.NativeId = result.ReportId;
-                }
+                    this.NativeId = result.NativeId;
                 else
-                {
-                    // in a real app we'd have to be smarter here - we're just going to crash...
-                    throw new InvalidOperationException("Server insert failed: " + result.GetErrorsAsString());
-                }
+                    this.Logger.Warn("Failed to insert report: " + result.GetErrorsAsString());
             }
-            else if (this.Status == ReportItemStatus.Updated)
-            {
-                // handle update...
-                throw new NotImplementedException("This operation has not been implemented.");
-            }
-            else if (this.Status == ReportItemStatus.Deleted)
-            {
-                // handle delete...
-                throw new NotImplementedException("This operation has not been implemented.");
-            }
+            else
+                throw new NotSupportedException(string.Format("Cannot handle '{0}'.", this.Status));
 
-            // reset...
+            // push the image update...
+            await PushServerImageUpdateAsync();
+
+            // reset our flag...
             this.Status = ReportItemStatus.Unchanged;
-                
-            // save the changes...
+
+            // set...
             var conn = StreetFooRuntime.GetUserDatabase();
             await conn.UpdateAsync(this);
-
-            // log...
-            this.Logger.Info("Finished saving changes.");
         }
 
-        private static async Task<IEnumerable<ReportItem>> GetChangedItemsAsync()
+        private Task PushServerImageUpdateAsync()
         {
-            // get the items which are new, the data has changed, or the image has changed...
-            var conn = StreetFooRuntime.GetUserDatabase();
-            return await conn.Table<ReportItem>().Where(v => v.Status == ReportItemStatus.New || 
-                v.Status == ReportItemStatus.Updated || v.ImageChanged).ToListAsync();
+            // no-op if not changed...
+            if (!(this.ImageChanged))
+                return Task.FromResult<bool>(false);
+
+            // won't do this in the book, but will be in the downloads...
+            this.ImageChanged = false;
+            return Task.FromResult<bool>(true);
         }
     }
 }

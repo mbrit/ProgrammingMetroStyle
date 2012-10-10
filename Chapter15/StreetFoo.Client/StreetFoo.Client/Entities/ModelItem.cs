@@ -11,11 +11,11 @@ namespace StreetFoo.Client
 {
     public abstract class ModelItem : INotifyPropertyChanged
     {
-        // holds the model item...
-        private Dictionary<string, object> Values { get; set; }
-
-        // holds a demand created log item...
+        // logger...
         private ILogger _logger;
+
+        // values...
+        private Dictionary<string, object> Values { get; set; }
 
         protected ModelItem()
         {

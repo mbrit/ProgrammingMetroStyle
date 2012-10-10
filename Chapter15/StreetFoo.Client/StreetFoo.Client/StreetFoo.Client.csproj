@@ -24,7 +24,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>AnyCPU</PlatformTarget>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -33,8 +32,6 @@
     <DefineConstants>TRACE;NETFX_CORE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -128,7 +125,6 @@
     <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ModelItem.cs" />
     <Compile Include="Entities\ReportItemStatus.cs" />
-    <Compile Include="Entities\SignalItem.cs" />
     <Compile Include="Entities\WrappingModelItem.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
@@ -172,11 +168,6 @@
     <Compile Include="Location\LocationResult.cs" />
     <Compile Include="Location\LocationHelper.cs" />
     <Compile Include="Location\LocationResultCode.cs" />
-    <Compile Include="Model\Signals\ISignalSink.cs" />
-    <Compile Include="Model\Signals\NewReportsSignal.cs" />
-    <Compile Include="Model\Signals\SignalBase.cs" />
-    <Compile Include="Model\Signals\SignalRegistration.cs" />
-    <Compile Include="Model\Signals\SignalManager.cs" />
     <Compile Include="Objects\ImageHelper.cs" />
     <Compile Include="Objects\StringHelper.cs" />
     <Compile Include="Objects\WriteableBitmapExtender.cs" />
@@ -195,13 +186,14 @@
     <Compile Include="Objects\StreetFooRuntime.cs" />
     <Compile Include="Objects\TaskExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\CreateReportProxy.cs" />
-    <Compile Include="Services\CreateResult.cs" />
+    <Compile Include="Services\CreateReportServiceProxy.cs" />
+    <Compile Include="Services\CreateReportResult.cs" />
     <Compile Include="Services\GetReportImageResult.cs" />
     <Compile Include="Services\GetReportImageServiceProxy.cs" />
     <Compile Include="Services\EnsureTestReportsServiceProxy.cs" />
     <Compile Include="Services\GetReportsByUserResult.cs" />
     <Compile Include="Services\GetReportsByUserServiceProxy.cs" />
+    <Compile Include="Services\ICreateReportServiceProxy.cs" />
     <Compile Include="Services\IEnsureTestReportsServiceProxy.cs" />
     <Compile Include="Services\IGetReportImageServiceProxy.cs" />
     <Compile Include="Services\IGetReportsByUserServiceProxy.cs" />
@@ -214,20 +206,23 @@
     <Compile Include="Services\RegisterServiceProxy.cs" />
     <Compile Include="Services\ServiceExecuteResult.cs" />
     <Compile Include="Services\ServiceProxy.cs" />
-    <Compile Include="Tasks\BackgroundTask.cs" />
-    <Compile Include="Tasks\SynchronizeReportsTask.cs" />
+    <Compile Include="Tasks\BackgroundSyncTask.cs" />
+    <Compile Include="Tasks\TaskBase.cs" />
+    <Compile Include="Tasks\TaskHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MetroLog">
-      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.6.4.0\lib\netcore45\MetroLog.dll</HintPath>
     </Reference>
     <Reference Include="MetroLog.NetCore">
-      <HintPath>..\..\..\..\Code\MetroLog\MetroLog\MetroLog.NetCore\bin\Debug\MetroLog.NetCore.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.6.4.0\lib\netcore45\MetroLog.NetCore.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.9\lib\winrt45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\winrt45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <SDKReference Include="Microsoft.VCLibs, Version=11.0">
@@ -236,9 +231,6 @@
     <SDKReference Include="SQLite.WinRT, Version=3.7.14">
       <Name>SQLite for Windows Runtime</Name>
     </SDKReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

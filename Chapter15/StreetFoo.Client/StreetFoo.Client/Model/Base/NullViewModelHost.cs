@@ -4,18 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
-using Windows.UI.Popups;
 
 namespace StreetFoo.Client
 {
     public class NullViewModelHost : IViewModelHost
     {
-        public IAsyncOperation<IUICommand> ShowAlertAsync(ErrorBucket errors)
+        public IAsyncOperation<Windows.UI.Popups.IUICommand> ShowAlertAsync(ErrorBucket errors)
         {
             return null;
         }
 
-        public IAsyncOperation<IUICommand> ShowAlertAsync(string message)
+        public IAsyncOperation<Windows.UI.Popups.IUICommand> ShowAlertAsync(string message)
         {
             return null;
         }
@@ -34,11 +33,6 @@ namespace StreetFoo.Client
 
         public void GoBack()
         {
-        }
-
-        public void SafeInvoke(Action action)
-        {
-            action();
         }
     }
 }

@@ -16,7 +16,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="StreetFoo.Client.UI.App">
       <VisualElements DisplayName="StreetFoo.Client.UI" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="StreetFoo.Client.UI" ForegroundText="light" BackgroundColor="#00A0D1" ToastCapable="true">
-        <LockScreen Notification="badgeAndTileText" BadgeLogo="Assets\BadgetLogo.png" />
+        <LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
         <DefaultTile ShowName="allLogos" WideLogo="Assets\LogoWide.png" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
@@ -32,8 +32,9 @@
           </ShareTarget>
         </Extension>
         <Extension Category="windows.search" />
-        <Extension Category="windows.backgroundTasks" EntryPoint="StreetFoo.Client.Tasks.SynchronizeReportsTaskRunner">
+        <Extension Category="windows.backgroundTasks" EntryPoint="StreetFoo.Client.Tasks.BackgroundSyncTaskFacade">
           <BackgroundTasks>
+            <Task Type="systemEvent" />
             <Task Type="timer" />
           </BackgroundTasks>
         </Extension>

@@ -17,8 +17,16 @@ namespace StreetFoo.Client
         public async Task RunAsync(IBackgroundTaskInstance instance)
         {
             // configure the logging system to use a streaming target...
-            LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal,
-                new FileStreamingTarget());
+            try
+            {
+                LogManagerFactory.DefaultConfiguration.AddTarget(LogLevel.Trace, LogLevel.Fatal,
+                    new FileStreamingTarget());
+            }
+            catch
+            {
+                // no-op... waiting for a change in MetroLog to see if the config
+                // has already been done...
+            }
 
             // logging is a bit tricky as we have to gather all of the messages
             // and flush them out...

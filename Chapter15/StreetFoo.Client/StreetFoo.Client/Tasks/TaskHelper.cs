@@ -42,7 +42,7 @@ namespace StreetFoo.Client
         public static async Task RequestLockScreenAsync()
         {
             // lock?
-            await BackgroundExecutionManager.RequestAccessAsync();
+            //await BackgroundExecutionManager.RequestAccessAsync();
         }
     }
 }

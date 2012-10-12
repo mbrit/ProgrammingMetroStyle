@@ -138,8 +138,13 @@ namespace StreetFoo.Client
         {
             base.Activated(args);
 
-            // update...
-            await DoRefresh(false);
+            // do we have spooled reports?
+            var force = false;
+            if (await ReportItem.HasSpooledReportsAsync())
+                force = true;
+
+            // refresh...
+            await DoRefresh(force);
         }
     }
 }

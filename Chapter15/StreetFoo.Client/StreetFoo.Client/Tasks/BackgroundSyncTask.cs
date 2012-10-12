@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -6,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Windows.Storage;
 
 namespace StreetFoo.Client
 {
     public class BackgroundSyncTask : TaskBase
     {
         private const string SyncExpirationKey = "SyncExpiration";
+        internal const string SpoolFilename = "SpooledReports.json";
 
         protected override async Task DoRunAsync(IBackgroundTaskInstance instance)
         {
@@ -21,6 +24,27 @@ namespace StreetFoo.Client
 
             // send up changes...
             await ReportItem.PushServerUpdatesAsync();
+
+            // still have connectivity?
+            if (StreetFooRuntime.HasConnectivity)
+            {
+                this.Logger.Info("Getting reports from server...");
+
+                // get...
+                var proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
+                var reports = await proxy.GetReportsByUserAsync();
+
+                // errors?
+                if(!(reports.HasErrors))
+                {
+                    this.Logger.Info("Stashing reports on disk...");
+
+                    // save...
+                    var json = JsonConvert.SerializeObject(reports.Reports);
+                    var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(SpoolFilename, CreationCollisionOption.ReplaceExisting);
+                    await FileIO.WriteTextAsync(file, json);
+                }
+            }
         }
 
         private async Task<bool> CanRunAsync()

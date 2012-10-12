@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Shapes;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.UI.Xaml.Media;
 using MetroLog;
+using Newtonsoft.Json;
 
 namespace StreetFoo.Client
 {
@@ -51,16 +52,23 @@ namespace StreetFoo.Client
         // updates the local cache of the reports...
         public static async Task UpdateCacheFromServerAsync()
         {
-            // create a service proxy to call up to the server...
-            IGetReportsByUserServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
-            var result = await proxy.GetReportsByUserAsync();
+            IEnumerable<ReportItem> reports = await GetSpooledReportsAsync();
+            if (reports == null)
+            {
+                // create a service proxy to call up to the server...
+                var proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
+                var result = await proxy.GetReportsByUserAsync();
 
-            // did it actually work?
-            result.AssertNoErrors();
+                // did it actually work?
+                result.AssertNoErrors();
+
+                // set...
+                reports = result.Reports;
+            }
 
             // update...
             var conn = StreetFooRuntime.GetUserDatabase();
-            foreach (var report in result.Reports)
+            foreach (var report in reports)
             {
                 // load the existing one, deleting it if we find it...
                 var existing = await conn.Table<ReportItem>().Where(v => v.NativeId == report.NativeId).FirstOrDefaultAsync();
@@ -69,6 +77,44 @@ namespace StreetFoo.Client
 
                 // create...
                 await conn.InsertAsync(report);
+            }
+        }
+
+        internal static async Task<bool> HasSpooledReportsAsync()
+        {
+            try
+            {
+                await ApplicationData.Current.TemporaryFolder.GetFileAsync(BackgroundSyncTask.SpoolFilename);
+                return true;
+            }
+            catch (FileNotFoundException)
+            {
+                return false;
+            }
+        }
+
+        private static async Task<IEnumerable<ReportItem>> GetSpooledReportsAsync()
+        {
+            IStorageFile file = null;
+            try
+            {
+                file = await ApplicationData.Current.TemporaryFolder.GetFileAsync(BackgroundSyncTask.SpoolFilename);
+            }
+            catch (FileNotFoundException)
+            {
+                return null;
+            }
+
+            // load...
+            try
+            {
+                var json = await FileIO.ReadTextAsync(file);
+                return JsonConvert.DeserializeObject<IEnumerable<ReportItem>>(json);
+            }
+            finally
+            {
+                // delete the file - we have to do this regardless, but we can't await here...
+                file.DeleteAsync();
             }
         }
 

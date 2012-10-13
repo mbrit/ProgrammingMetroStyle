@@ -10,11 +10,14 @@ namespace StreetFoo.Client
     public static class TaskHelper
     {
         // registers a task with the given name...
-        public static void RegisterTask<T>(string name, Action<BackgroundTaskBuilder> configureCallback)
+        public static async Task RegisterTaskAsync<T>(string name, Action<BackgroundTaskBuilder> configureCallback)
             where T : TaskBase
         {
             // unregister any old one...
             UnregisterTask(name);
+
+            // unlock it...
+            await TaskBase.ResetLockFileAsync(typeof(T));
 
             // register the new one...
             var builder = new BackgroundTaskBuilder();
@@ -37,12 +40,6 @@ namespace StreetFoo.Client
             var existing = BackgroundTaskRegistration.AllTasks.Values.Where(v => v.Name == name).FirstOrDefault();
             if (existing != null)
                 existing.Unregister(true);
-        }
-
-        public static async Task RequestLockScreenAsync()
-        {
-            // lock?
-            //await BackgroundExecutionManager.RequestAccessAsync();
         }
     }
 }

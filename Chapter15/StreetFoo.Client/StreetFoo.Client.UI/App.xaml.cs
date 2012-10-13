@@ -101,10 +101,10 @@ namespace StreetFoo.Client.UI
             settings.CommandsRequested += settings_CommandsRequested;
 
             // configure tasks...
-            BackgroundSyncTask.Configure();
+            await BackgroundSyncTask.ConfigureAsync();
 
             // ask about the lock screen...
-            await TaskHelper.RequestLockScreenAsync();
+            await BackgroundExecutionManager.RequestAccessAsync();
         }
 
         void settings_CommandsRequested(SettingsPane sender, SettingsPaneCommandsRequestedEventArgs args)

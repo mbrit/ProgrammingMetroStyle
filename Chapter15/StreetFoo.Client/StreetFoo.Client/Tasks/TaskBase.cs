@@ -2,16 +2,23 @@
 using MetroLog.Targets;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Windows.Storage;
 
 namespace StreetFoo.Client
 {
     public abstract class TaskBase 
     {
+        // holds the logger...
         private ILogger _logger;
+
+        protected TaskBase()
+        {
+        }
 
         // runs the operation...
         public async Task RunAsync(IBackgroundTaskInstance instance)
@@ -74,54 +81,103 @@ namespace StreetFoo.Client
             }
         }
 
-        // Registers a background task, on the assumption that the task
-        // is actual in a different assembly with a different name...
-        public static BackgroundTaskBuilder RegisterTask<T>(Action<BackgroundTaskBuilder> configureCallback)
-            where T : TaskBase
+        //// Registers a background task, on the assumption that the task
+        //// is actual in a different assembly with a different name...
+        //public static BackgroundTaskBuilder RegisterTask<T>(Action<BackgroundTaskBuilder> configureCallback)
+        //    where T : TaskBase
+        //{
+        //    // de-register any old tasks (this is really important)...
+        //    DeregisterTask<T>();
+
+        //    // reset any lock file...
+        //    ResetLockFileAsync(typeof(T));
+
+        //    // get the name...
+        //    string name = GetRealTaskName<T>();
+
+        //    // create...
+        //    var builder = new BackgroundTaskBuilder();
+        //    builder.Name = name;
+        //    builder.TaskEntryPoint = name;
+
+        //    // setup...
+        //    configureCallback(builder);
+
+        //    // register...
+        //    builder.Register();
+
+        //    // log...
+        //    var logger = LogManagerFactory.DefaultLogManager.GetLogger<TaskBase>();
+        //    if (logger.IsInfoEnabled)
+        //        logger.Info("Registered task '{0}.", typeof(T));
+
+        //    // return...
+        //    return builder;
+        //}
+
+        //private static string GetRealTaskName<T>()
+        //    where T : TaskBase
+        //{
+        //    // it's the name of the class, with a different namespace, suffixed with "Runner"...
+        //    return string.Format("StreetFoo.Client.Tasks.{0}Facade", typeof(T).Name);
+        //}
+
+        //private static void DeregisterTask<T>()
+        //    where T : TaskBase
+        //{
+        //    // need to walk and remove old tasks with this name...
+        //    var name = GetRealTaskName<T>();
+        //    foreach (var task in BackgroundTaskRegistration.AllTasks.Values)
+        //    {
+        //        if (task.Name == name)
+        //            task.Unregister(true);
+        //    }
+        //}
+
+        internal async static Task<bool> CreateLockFileAsync(Type type)
         {
-            // de-register any old tasks (this is really important)...
-            DeregisterTask<T>();
-
-            // get the name...
-            string name = GetRealTaskName<T>();
-
-            // create...
-            var builder = new BackgroundTaskBuilder();
-            builder.Name = name;
-            builder.TaskEntryPoint = name;
-
-            // setup...
-            configureCallback(builder);
-
-            // register...
-            builder.Register();
-
-            // log...
-            var logger = LogManagerFactory.DefaultLogManager.GetLogger<TaskBase>();
-            if (logger.IsInfoEnabled)
-                logger.Info("Registered task '{0}.", typeof(T));
-
-            // return...
-            return builder;
-        }
-
-        private static string GetRealTaskName<T>()
-            where T : TaskBase
-        {
-            // it's the name of the class, with a different namespace, suffixed with "Runner"...
-            return string.Format("StreetFoo.Client.Tasks.{0}Facade", typeof(T).Name);
-        }
-
-        private static void DeregisterTask<T>()
-            where T : TaskBase
-        {
-            // need to walk and remove old tasks with this name...
-            var name = GetRealTaskName<T>();
-            foreach (var task in BackgroundTaskRegistration.AllTasks.Values)
+            try
             {
-                if (task.Name == name)
-                    task.Unregister(true);
+                var filename = GetLockFileName(type);
+                await ApplicationData.Current.LocalFolder.CreateFileAsync(filename, CreationCollisionOption.FailIfExists);
+                return true;
             }
+            catch
+            {
+                // any exception - just return false...
+                return false;
+            }
+        }
+
+        protected Task<bool> CreateLockFileAsync()
+        {
+            return CreateLockFileAsync(this.GetType());
+        }
+
+        internal async static Task ResetLockFileAsync(Type type)
+        {
+            try
+            {
+                var filename = GetLockFileName(type);
+
+                // get...
+                var file = await ApplicationData.Current.LocalFolder.GetFileAsync(filename);
+                await file.DeleteAsync();
+            }
+            catch (FileNotFoundException)
+            {
+                // no-op...
+            }
+        }
+
+        protected Task ResetLockFileAsync()
+        {
+            return ResetLockFileAsync(this.GetType());
+        }
+
+        private static string GetLockFileName(Type type)
+        {
+            return "Task-" + type.FullName + ".lock";
         }
     }
 }

@@ -18,32 +18,47 @@ namespace StreetFoo.Client
 
         protected override async Task DoRunAsync(IBackgroundTaskInstance instance)
         {
-            // should we run?
-            if (!(await CanRunAsync()))
-                return;
-
-            // send up changes...
-            await ReportItem.PushServerUpdatesAsync();
-
-            // still have connectivity?
-            if (StreetFooRuntime.HasConnectivity)
+            // try and lock...
+            if (!(await CreateLockFileAsync()))
             {
-                this.Logger.Info("Getting reports from server...");
+                this.Logger.Info("Locked - skipping...");
+                return;
+            }
 
-                // get...
-                var proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
-                var reports = await proxy.GetReportsByUserAsync();
+            try
+            {
+                // should we run?
+                if (!(await CanRunAsync()))
+                    return;
 
-                // errors?
-                if(!(reports.HasErrors))
+                // send up changes...
+                await ReportItem.PushServerUpdatesAsync();
+
+                // still have connectivity?
+                if (StreetFooRuntime.HasConnectivity)
                 {
-                    this.Logger.Info("Stashing reports on disk...");
+                    this.Logger.Info("Getting reports from server...");
 
-                    // save...
-                    var json = JsonConvert.SerializeObject(reports.Reports);
-                    var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(SpoolFilename, CreationCollisionOption.ReplaceExisting);
-                    await FileIO.WriteTextAsync(file, json);
+                    // get...
+                    var proxy = ServiceProxyFactory.Current.GetHandler<IGetReportsByUserServiceProxy>();
+                    var reports = await proxy.GetReportsByUserAsync();
+
+                    // errors?
+                    if (!(reports.HasErrors))
+                    {
+                        this.Logger.Info("Stashing reports on disk...");
+
+                        // save...
+                        var json = JsonConvert.SerializeObject(reports.Reports);
+                        var file = await ApplicationData.Current.TemporaryFolder.CreateFileAsync(SpoolFilename, CreationCollisionOption.ReplaceExisting);
+                        await FileIO.WriteTextAsync(file, json);
+                    }
                 }
+            }
+            finally
+            {
+                // reset the lock file...
+                ResetLockFileAsync();
             }
         }
 
@@ -69,6 +84,8 @@ namespace StreetFoo.Client
                 var asString = await SettingItem.GetValueAsync(SyncExpirationKey);
                 if (!(string.IsNullOrEmpty(asString)))
                 {
+                    this.Logger.Info("Expiration time: {0}", asString);
+
                     // parse...
                     var expiration = DateTime.ParseExact(asString, "o", CultureInfo.InvariantCulture).ToUniversalTime();
 
@@ -79,6 +96,8 @@ namespace StreetFoo.Client
                         return false;
                     }
                 }
+                else
+                    this.Logger.Info("No expiration time available.");
             }
 
             // we're ok - set the new expiration period...
@@ -90,24 +109,24 @@ namespace StreetFoo.Client
             return await model.RestorePersistentLogonAsync();
         }
 
-        public static void Configure()
+        public static async Task ConfigureAsync()
         {
             // setup the maintenance task...
-            TaskHelper.RegisterTask<BackgroundSyncTask>("BackgroundSyncMaintenance", (builder) =>
+            await TaskHelper.RegisterTaskAsync<BackgroundSyncTask>("BackgroundSyncMaintenance", (builder) =>
             {
                 // every 15 minutes, continuous...
                 builder.SetTrigger(new MaintenanceTrigger(15, false));
             });
 
             // setup the time task...
-            TaskHelper.RegisterTask<BackgroundSyncTask>("BackgroundSyncTime", (builder) =>
+            await TaskHelper.RegisterTaskAsync<BackgroundSyncTask>("BackgroundSyncTime", (builder) =>
             {
                 // every 15 minutes, continuous...
                 builder.SetTrigger(new TimeTrigger(15, false));
             });
 
             // setup the connectivity task...
-            TaskHelper.RegisterTask<BackgroundSyncTask>("BackgroundSyncConnectivity", (builder) =>
+            await TaskHelper.RegisterTaskAsync<BackgroundSyncTask>("BackgroundSyncConnectivity", (builder) =>
             {
                 // whenever we get connectivity...
                 builder.SetTrigger(new SystemTrigger(SystemTriggerType.InternetAvailable, false));

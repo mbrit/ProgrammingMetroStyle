@@ -22,7 +22,7 @@ namespace StreetFoo.Client
         internal static string UserDatabaseConnectionString = null;
 
         // defines the base URL of our services...
-        internal const string ServiceUrlBase = "http://streetfoo.apphb.com/handlers/";
+        internal const string ServiceUrlBase = "https://streetfoo.apphb.com/handlers/";
 
         // starts the application/sets up state...
         public static async Task Start(string module)

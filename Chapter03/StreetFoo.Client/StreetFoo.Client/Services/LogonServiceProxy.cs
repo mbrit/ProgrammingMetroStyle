@@ -14,7 +14,7 @@ namespace StreetFoo.Client
         {
         }
 
-        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure, Action complete)
+        public async Task<LogonResult> LogonAsync(string username, string password)
         {
             // input..
             JsonObject input = new JsonObject();
@@ -22,19 +22,18 @@ namespace StreetFoo.Client
             input.Add("password", password);
 
             // call...
-            return this.Execute(input, (output) =>
+            var executeResult = await this.Execute(input);
+
+            // get the user ID from the server result...
+            if (!(executeResult.HasErrors))
             {
-                // get the user ID from the server result...
-                string token = output.GetNamedString("token");
+                string token = executeResult.Output.GetNamedString("token");
 
                 // return...
-                if (success != null)
-                {
-                    LogonResult result = new LogonResult(token);
-                    success(result);
-                }
-
-            }, failure, complete);
+                return new LogonResult(token);
+            }
+            else
+                return new LogonResult(executeResult);
         }
     }
 }

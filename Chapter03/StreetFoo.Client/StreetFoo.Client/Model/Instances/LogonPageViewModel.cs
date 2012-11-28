@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TinyIoC;
 
 namespace StreetFoo.Client
 {
@@ -14,9 +15,14 @@ namespace StreetFoo.Client
         public ICommand LogonCommand { get; private set; }
         public ICommand RegisterCommand { get; private set; }
 
-        public LogonPageViewModel(IViewModelHost host)
-            : base(host)
+        public LogonPageViewModel()
         {
+        }
+
+        public override void Initialize(IViewModelHost host)
+        {
+            base.Initialize(host);
+
             // set RegisterCommand to defer to the DoRegistration method...
             this.LogonCommand = new DelegateCommand((args) => DoLogon(args as CommandExecutionContext));
             this.RegisterCommand = new NavigateCommand<IRegisterPageViewModel>(host);
@@ -34,7 +40,7 @@ namespace StreetFoo.Client
             set { this.SetValue(value); }
         }
 
-        private void DoLogon(CommandExecutionContext context)
+        private async void DoLogon(CommandExecutionContext context)
         {
             // validate...
             ErrorBucket errors = new ErrorBucket();
@@ -44,22 +50,33 @@ namespace StreetFoo.Client
             if (!(errors.HasErrors))
             {
                 // get a handler...
-                ILogonServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<ILogonServiceProxy>();
+                var proxy = TinyIoCContainer.Current.Resolve<ILogonServiceProxy>();
 
                 // call...
-                this.EnterBusy();
-                proxy.Logon(this.Username, this.Password, async (result) =>
+                using (this.EnterBusy())
                 {
-                    // show a message to say that a user has been created... (this isn't a helpful message, 
-                    // included for illustration...)
-                    await this.Host.ShowAlertAsync("The user is now logged on.");
+                    var result = await proxy.LogonAsync(this.Username, this.Password);
+                    if (!(result.HasErrors))
+                    {
+                        //// logon... pass through the username as each user gets their own database...
+                        //await StreetFooRuntime.LogonAsync(this.Username, result.Token);
 
-                }, this.GetFailureHandler(), this.GetCompleteHandler(true)).AddToContext(context);
+                        //// while we're here - store a setting containing the logon name of the user...
+                        //await SettingItem.SetValueAsync(LastUsernameKey, this.Username);
+
+                        //// show the reports page...
+                        //this.Host.ShowView(typeof(IReportsPageViewModel));
+
+                        await this.Host.ShowAlertAsync("Logon OK!");
+                    }
+                    else
+                        errors.CopyFrom(result);
+                }
             }
 
             // errors?
             if (errors.HasErrors)
-                this.Host.ShowAlertAsync(errors);
+                await this.Host.ShowAlertAsync(errors);
         }
 
         private void Validate(ErrorBucket errors)

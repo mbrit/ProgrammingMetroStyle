@@ -9,7 +9,7 @@ namespace StreetFoo.Client
     // provides a route back from a view-model to a view...
     public interface IViewModelHost
     {
-        void ShowAlertAsync(ErrorBucket errors);
-        void ShowAlertAsync(string message);
+        Task ShowAlertAsync(ErrorBucket errors);
+        Task ShowAlertAsync(string message);
     }
 }

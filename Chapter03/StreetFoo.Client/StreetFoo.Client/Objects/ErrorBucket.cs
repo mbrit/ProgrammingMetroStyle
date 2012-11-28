@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
-    // delegate for error handler methods...
-    public delegate void FailureHandler(object sender, ErrorBucket bucket);
+    //// delegate for error handler methods...
+    //public delegate void FailureHandler(object sender, ErrorBucket bucket);
 
     // holds a set of errors that we can build up as work through a process...
     public class ErrorBucket
@@ -28,6 +28,13 @@ namespace StreetFoo.Client
             : this()
         {
             this.Fatal = ex;
+        }
+
+        // special constructor for cloning another error bucket...
+        protected ErrorBucket(ErrorBucket donor)
+            : this()
+        {
+            CopyFrom(donor);
         }
 
         public void AddError(string error)
@@ -101,6 +108,16 @@ namespace StreetFoo.Client
         internal static ErrorBucket CreateFatalBucket(Exception ex)
         {
             return new ErrorBucket(ex);
+        }
+
+        public void CopyFrom(ErrorBucket donor)
+        {
+            // copy the normal errors...
+            this.Errors.Clear();
+            this.Errors.AddRange(donor.Errors);
+
+            // copy the fatal error...
+            this.Fatal = donor.Fatal;
         }
     }
 }

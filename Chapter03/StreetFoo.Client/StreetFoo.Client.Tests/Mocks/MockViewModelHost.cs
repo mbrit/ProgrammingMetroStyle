@@ -32,72 +32,21 @@ namespace StreetFoo.Client.Tests
             this.PageChanges = new List<Type>();
         }
 
-        public IAsyncOperation<IUICommand> ShowAlertAsync(ErrorBucket errors)
+        public Task ShowAlertAsync(ErrorBucket errors)
         {
             // log and defer...
             this.NumErrorBucketMessages++;
             return this.ShowAlertAsync(errors.GetErrorsAsString());
         }
 
-        public IAsyncOperation<IUICommand> ShowAlertAsync(string message)
+        public Task ShowAlertAsync(string message)
         {
             // log...
             this.NumMessages++;
             this.LastMessage = message;
 
-            // return a dummy handler...
-            return new DummyAsyncOperation();
-        }
-
-        private class DummyAsyncOperation : IAsyncOperation<IUICommand>
-        {
-            public AsyncOperationCompletedHandler<IUICommand> Completed
-            {
-                get
-                {
-                    return null;
-                }
-                set
-                {
-                }
-            }
-
-            public IUICommand GetResults()
-            {
-                return null;
-            }
-
-            public void Cancel()
-            {
-            }
-
-            public void Close()
-            {
-            }
-
-            public Exception ErrorCode
-            {
-                get
-                {
-                    return null;
-                }
-            }
-
-            public uint Id
-            {
-                get
-                {
-                    return 1;
-                }
-            }
-
-            public AsyncStatus Status
-            {
-                get
-                {
-                    return AsyncStatus.Completed;
-                }
-            }
+            // return a dummy task...
+            return Task.FromResult<bool>(true);
         }
 
         public void ShowView(Type viewModelInterfaceType)

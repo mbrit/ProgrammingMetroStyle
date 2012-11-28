@@ -12,16 +12,16 @@ namespace StreetFoo.Client.UI
     // extension methods for presenting MessageDialog instances...
     internal static class Alert
     {
-        internal static IAsyncOperation<IUICommand> ShowAlertAsync(this Page page, ErrorBucket errors)
+        internal static Task ShowAlertAsync(this Page page, ErrorBucket errors)
         {
             return ShowAlertAsync(page, errors.GetErrorsAsString());
         }
 
-        internal static IAsyncOperation<IUICommand> ShowAlertAsync(this Page page, string message)
+        internal static Task ShowAlertAsync(this Page page, string message)
         {
             // show...
             MessageDialog dialog = new MessageDialog(message != null ? message : string.Empty);
-            return dialog.ShowAsync();
+            return dialog.ShowAsync().AsTask();
         }
     }
 }

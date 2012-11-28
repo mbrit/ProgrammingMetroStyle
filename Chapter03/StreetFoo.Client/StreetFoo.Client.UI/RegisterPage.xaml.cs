@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TinyIoC;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -14,20 +15,15 @@ using Windows.UI.Xaml.Navigation;
 
 namespace StreetFoo.Client.UI
 {
+    [ViewModel(typeof(IRegisterPageViewModel))]
     public sealed partial class RegisterPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
-        // hold the model...
-        private IRegisterPageViewModel Model { get; set; }
-
         public RegisterPage()
         {
             this.InitializeComponent();
 
             // obtain a real instance of a model... now done by dependency injection...
-            this.Model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(this);
-
-            // pass the model through to the DataContext (for databinding)...
-            this.DataContext = this.Model;
+            this.InitializeModel();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

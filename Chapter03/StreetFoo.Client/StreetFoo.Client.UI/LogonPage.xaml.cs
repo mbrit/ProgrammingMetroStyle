@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TinyIoC;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
@@ -20,20 +21,15 @@ namespace StreetFoo.Client.UI
     /// A page that displays details for a single item within a group while allowing gestures to
     /// flip through other items belonging to the same group.
     /// </summary>
+    [ViewModel(typeof(ILogonPageViewModel))]
     public sealed partial class LogonPage : StreetFoo.Client.UI.Common.LayoutAwarePage
     {
-        // hold the model...
-        private ILogonPageViewModel Model { get; set; }
-
         public LogonPage()
         {
             this.InitializeComponent();
 
-            // obtain a real instance of a model... 
-            this.Model = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(this);
-
-            // pass the model through to the DataContext (for databinding)...
-            this.DataContext = this.Model;
+            // obtain a real instance of a model...
+            this.InitializeModel();
         }
 
         /// <summary>

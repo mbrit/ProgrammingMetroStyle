@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TinyIoC;
 
 namespace StreetFoo.Client
 {
@@ -14,9 +15,14 @@ namespace StreetFoo.Client
         // commands...
         public ICommand RegisterCommand { get; private set; }
 
-        public RegisterPageViewModel(IViewModelHost host)
-            : base(host)
+        public RegisterPageViewModel()
         {
+        }
+
+        public override void Initialize(IViewModelHost host)
+        {
+ 	        base.Initialize(host);
+
             // set RegisterCommand to defer to the DoRegistration method...
             this.RegisterCommand = new DelegateCommand((args) => DoRegistration(args as CommandExecutionContext));
         }
@@ -54,7 +60,7 @@ namespace StreetFoo.Client
             set { this.SetValue(value); }
         }
 
-        private void DoRegistration(CommandExecutionContext context)
+        private async void DoRegistration(CommandExecutionContext context)
         {
             // if we don't have a context, create one...
             if (context == null)
@@ -68,28 +74,31 @@ namespace StreetFoo.Client
             if (!(errors.HasErrors))
             {
                 // get a handler...
-                IRegisterServiceProxy proxy = ServiceProxyFactory.Current.GetHandler<IRegisterServiceProxy>();
+                var proxy = TinyIoCContainer.Current.Resolve<IRegisterServiceProxy>();
 
                 // call...
-                this.EnterBusy();
-                var task = proxy.Register(this.Username, this.Email, this.Password, this.Confirm, async (result) =>
+                using (this.EnterBusy())
                 {
-                    // show a message to say that a user has been created... (this isn't a helpful message, 
-                    // included for illustration...)
-                    await this.Host.ShowAlertAsync(string.Format("The new user has been created.\r\n\r\nUser ID: {0}", result.UserId));
+                    var result = await proxy.RegisterAsync(this.Username, this.Email, this.Password, this.Confirm);
 
-                    // navigate to the logon page...
-                    this.Host.ShowView(typeof(ILogonPageViewModel));
+                    // ok?
+                    if (!(result.HasErrors))
+                    {
+                        // show a message to say that a user has been created... (this isn't a helpful message, 
+                        // included for illustration...)
+                        await this.Host.ShowAlertAsync(string.Format("The new user has been created.\r\n\r\nUser ID: {0}", result.UserId));
 
-                }, this.GetFailureHandler(), this.GetCompleteHandler(true));
-
-                // add...
-                context.AddTask(task);
+                        // show the reports page...
+                        this.Host.ShowView(typeof(ILogonPageViewModel));
+                    }
+                    else
+                        errors.CopyFrom(result);
+                }
             }
 
             // errors?
             if(errors.HasErrors)
-                this.Host.ShowAlertAsync(errors);
+                await this.Host.ShowAlertAsync(errors);
         }
 
         private void Validate(ErrorBucket errors)

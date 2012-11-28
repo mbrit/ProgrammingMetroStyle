@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace StreetFoo.Client
 {
-    public class RegisterResult
+    public class RegisterResult : ErrorBucket
     {
         public string UserId { get; private set; }
 
         public RegisterResult(string userId)
         {
             this.UserId = userId;
+        }
+
+        internal RegisterResult(ErrorBucket bucket)
+            : base(bucket)
+        {
         }
     }
 }

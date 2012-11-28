@@ -29,5 +29,11 @@ namespace StreetFoo.Client
             // invoke the delegate that we stored earlier...
             Handler(parameter);
         }
+
+        protected virtual void OnCanExecuteChanged(EventArgs e)
+        {
+            if (this.CanExecuteChanged != null)
+                this.CanExecuteChanged(this, e);
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
@@ -540,14 +541,14 @@ namespace StreetFoo.Client.UI.Common
             }
         }
 
-        void IViewModelHost.ShowAlertAsync(ErrorBucket errors)
+        Task IViewModelHost.ShowAlertAsync(ErrorBucket errors)
         {
-            this.ShowAlertAsync(errors);
+            return this.ShowAlertAsync(errors);
         }
 
-        void IViewModelHost.ShowAlertAsync(string message)
+        Task IViewModelHost.ShowAlertAsync(string message)
         {
-            this.ShowAlertAsync(message);
+            return this.ShowAlertAsync(message);
         }
     }
 }

@@ -41,7 +41,7 @@
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Grid.Column="1" Text="Reports" Style="{StaticResource PageHeaderTextStyle}"/>
             
-            <Button Content="Refresh" Margin="392,66,0,36" Grid.Column="1" Command="{Binding RefreshCommand}" />
+            <Button Content="Refresh" Visibility="Collapsed" Margin="392,66,0,36" Grid.Column="1" Command="{Binding RefreshCommand}" />
             
         </Grid>
 

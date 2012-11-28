@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Windows.Data.Json;
 
 namespace StreetFoo.Client
@@ -25,9 +26,8 @@ namespace StreetFoo.Client
                 // get the reports...
                 string asString = executeResult.Output.GetNamedString("reports");
 
-                // create some objects...
-                var mapper = JsonMapperFactory.GetMapper<ReportItem>();
-                List<ReportItem> reports = mapper.LoadArray(asString);
+                // use JSON.NET to create the reports...
+                var reports = JsonConvert.DeserializeObject<List<ReportItem>>(asString);
 
                 // return...
                 return new GetReportsByUserResult(reports);

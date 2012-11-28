@@ -41,7 +41,7 @@
             <TextBox HorizontalAlignment="Left" Width="400" Text="{Binding Username, Mode=TwoWay}"/>
 
             <TextBlock Text="Password"></TextBlock>
-            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}"/>
+            <PasswordBox HorizontalAlignment="Left" Width="400" Password="{Binding Password, Mode=TwoWay}" IsPasswordRevealButtonEnabled="true"/>
 
             <StackPanel Orientation="Horizontal">
                 <Button Content="Logon" Command="{Binding LogonCommand}" IsEnabled="{Binding IsBusy, Converter={StaticResource NegationConverter}}"></Button>

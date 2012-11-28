@@ -106,23 +106,6 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data\IJsonMapper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\JsonMapper.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\JsonMapperFactory.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\JsonMapperField.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\JsonMappingAttribute.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Data\SQLite.cs" />
-    <Compile Include="Data\SQLiteAsync.cs" />
     <Compile Include="Entities\ReportItem.cs" />
     <Compile Include="Entities\SettingItem.cs" />
     <Compile Include="Ioc\IocBase.cs" />
@@ -159,9 +142,8 @@
     <Compile Include="Services\RegisterServiceProxy.cs" />
     <Compile Include="Services\ServiceExecuteResult.cs" />
     <Compile Include="Services\ServiceProxy.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="sqlite3.dll" />
+    <Compile Include="SQLite.cs" />
+    <Compile Include="SQLiteAsync.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -170,6 +152,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, Version=11.0">
+      <Name>Microsoft Visual C++ Runtime Package</Name>
+    </SDKReference>
+    <SDKReference Include="SQLite.WinRT, Version=3.7.14.1">
+      <Name>SQLite for Windows Runtime</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

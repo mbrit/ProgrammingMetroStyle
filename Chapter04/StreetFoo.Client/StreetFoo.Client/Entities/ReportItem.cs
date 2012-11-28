@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SQLite;
 using Windows.Data.Json;
 
@@ -12,23 +13,23 @@ namespace StreetFoo.Client
     public class ReportItem
     {
         // key field...
-        [AutoIncrement(), PrimaryKey()]
+        [AutoIncrement, PrimaryKey, JsonIgnore]
         public int Id { get; set; }
 
         // other fields...
-        [Unique, JsonMapping("_id")]
+        [Unique, JsonProperty("_id")]
         public string NativeId { get; set; }
 
-        [JsonMapping]
+        [JsonProperty("title")]
         public string Title { get; set; }
 
-        [JsonMapping]
+        [JsonProperty("description")]
         public string Description { get; set; }
 
-        [JsonMapping]
+        [JsonProperty("latitude")]
         public decimal Latitude { get; set; }
 
-        [JsonMapping]
+        [JsonProperty("longitude")]
         public decimal Longitude { get; set; }
 
         public ReportItem()

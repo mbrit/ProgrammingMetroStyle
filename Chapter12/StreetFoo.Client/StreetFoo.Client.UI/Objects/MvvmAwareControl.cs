@@ -15,12 +15,12 @@ namespace StreetFoo.Client.UI
         {
         }
 
-        IAsyncOperation<IUICommand> IViewModelHost.ShowAlertAsync(ErrorBucket errors)
+        Task IViewModelHost.ShowAlertAsync(ErrorBucket errors)
         {
             return PageExtender.ShowAlertAsync(this, errors);
         }
 
-        IAsyncOperation<IUICommand> IViewModelHost.ShowAlertAsync(string message)
+        Task IViewModelHost.ShowAlertAsync(string message)
         {
             return PageExtender.ShowAlertAsync(this, message);
         }

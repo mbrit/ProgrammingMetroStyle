@@ -54,7 +54,7 @@ namespace RandomScratch
             var buffer = CryptographicBuffer.GenerateRandom(8);
 
             // convert it...
-            long val = BitConverter.ToInt64(buffer.ToArray(), 0);
+            ulong val = BitConverter.ToUInt64(buffer.ToArray(), 0);
             this.buttonLong.Content = val.ToString();
         }
     }

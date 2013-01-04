@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="EncryptionScratch.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EncryptionScratch"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+
+        <StackPanel Margin="10,10,10,10" HorizontalAlignment="Left" Width="400">
+            <TextBlock Text="Text to encrypt"></TextBlock>
+            <TextBox AcceptsReturn="true" Height="150" Text="Hello, world." x:Name="textData"></TextBox>
+            <StackPanel Orientation="Horizontal">
+                <Button Content="Encrypt" Click="HandleEncryptClick"></Button>
+                <Button Content="Decrypt" Click="HandleDecryptClick"></Button>
+            </StackPanel>
+        </StackPanel>
+        
+    </Grid>
+    
+</Page>

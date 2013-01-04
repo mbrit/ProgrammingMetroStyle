@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Foundation;
@@ -12,16 +13,16 @@ namespace StreetFoo.Client.UI
     // extension methods for presenting MessageDialog instances...
     internal static class PageExtender
     {
-        internal static IAsyncOperation<IUICommand> ShowAlertAsync(this IViewModelHost page, ErrorBucket errors)
+        internal static Task ShowAlertAsync(this IViewModelHost page, ErrorBucket errors)
         {
             return ShowAlertAsync(page, errors.GetErrorsAsString());
         }
 
-        internal static IAsyncOperation<IUICommand> ShowAlertAsync(this IViewModelHost page, string message)
+        internal static Task ShowAlertAsync(this IViewModelHost page, string message)
         {
             // show...
             MessageDialog dialog = new MessageDialog(message != null ? message : string.Empty);
-            return dialog.ShowAsync();
+            return dialog.ShowAsync().AsTask();
         }
 
         internal static void InitializeModel(this IViewModelHost page, IViewModel model)

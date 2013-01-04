@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SQLite;
+using TinyIoC;
 using Windows.Networking.Connectivity;
 
 namespace StreetFoo.Client
@@ -28,6 +29,9 @@ namespace StreetFoo.Client
         public static async Task Start(string module)
         {
             Module = module;
+
+            // setup TinyIoC...
+            TinyIoCContainer.Current.AutoRegister();
 
             // setup the default IoC handlers for the view models...
             ViewModelFactory.Current.SetHandler(typeof(IRegisterPageViewModel), typeof(RegisterPageViewModel));

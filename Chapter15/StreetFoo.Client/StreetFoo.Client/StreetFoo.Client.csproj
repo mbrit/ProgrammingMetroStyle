@@ -209,6 +209,8 @@
     <Compile Include="Tasks\BackgroundSyncTask.cs" />
     <Compile Include="Tasks\TaskBase.cs" />
     <Compile Include="Tasks\TaskHelper.cs" />
+    <Compile Include="TinyIoC.cs" />
+    <Compile Include="TypeExtender.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MetroLog">

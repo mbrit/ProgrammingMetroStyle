@@ -25,7 +25,7 @@ namespace StreetFoo.Client
         {
             get
             {
-                return this.Errors.Count > 0;
+                return this.Errors.Any();
             }
         }
 

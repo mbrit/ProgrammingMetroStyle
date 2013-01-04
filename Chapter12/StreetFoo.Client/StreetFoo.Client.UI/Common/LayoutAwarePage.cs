@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System;
@@ -555,12 +556,12 @@ namespace StreetFoo.Client.UI.Common
             this.Frame.Navigate(handler, args);
         }
 
-        IAsyncOperation<IUICommand> IViewModelHost.ShowAlertAsync(ErrorBucket errors)
+        Task IViewModelHost.ShowAlertAsync(ErrorBucket errors)
         {
             return PageExtender.ShowAlertAsync(this, errors);
         }
 
-        IAsyncOperation<IUICommand> IViewModelHost.ShowAlertAsync(string message)
+        Task IViewModelHost.ShowAlertAsync(string message)
         {
             return PageExtender.ShowAlertAsync(this, message);
         }

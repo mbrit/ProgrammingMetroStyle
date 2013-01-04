@@ -28,8 +28,8 @@ namespace StreetFoo.Client.UI
             this.InitializeComponent();
 
             // get...
-            this.Model = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(this);
-            this.InitializeModel(this.Model);
+//            this.Model = ViewModelFactory.Current.GetHandler<ILogonPageViewModel>(this);
+            this.InitializeModel<ILogonPageViewModel>();
         }
 
         /// <summary>

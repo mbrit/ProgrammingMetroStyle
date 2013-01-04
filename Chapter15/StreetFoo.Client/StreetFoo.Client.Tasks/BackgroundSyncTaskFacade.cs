@@ -12,6 +12,8 @@ namespace StreetFoo.Client.Tasks
     {
         public async void Run(IBackgroundTaskInstance taskInstance)
         {
+            Debug.WriteLine("Hello, world.");
+
             var deferral = taskInstance.GetDeferral();
             try
             {

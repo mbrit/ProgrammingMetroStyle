@@ -12,13 +12,10 @@ namespace StreetFoo.Client
     public interface IViewModelHost
     {
         // show messages...
-        IAsyncOperation<IUICommand> ShowAlertAsync(ErrorBucket errors);
-        IAsyncOperation<IUICommand> ShowAlertAsync(string message);
+        Task ShowAlertAsync(ErrorBucket errors);
+        Task ShowAlertAsync(string message);
 
         // shows a view from a given view-model...
         void ShowView(Type viewModelInterfaceType);
-
-        // allows the host to marshal an operation to the UI thread...
-        void InvokeOnUiThread(Action action);
     }
 }

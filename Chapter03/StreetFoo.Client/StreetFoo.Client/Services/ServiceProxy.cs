@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Json;
@@ -29,73 +30,33 @@ namespace StreetFoo.Client
             data.Add("apiKey", ApiKey);
         }
 
-        public Task Execute(JsonObject input, Action<JsonObject> processor, FailureHandler failure, Action complete = null)
+        public async Task<ServiceExecuteResult> Execute(JsonObject input)
         {
             // set the api key...
             ConfigureInputArgs(input);
 
-            // create a request...
-            HttpWebRequest request = HttpWebRequest.CreateHttp(this.Url);
-            request.Method = "POST";
+             // package it us as json...
+            var json = input.Stringify();
+            var content = new StringContent(json);
 
-            // make a request for a stream to post the data up...
-            var grsTask = request.GetRequestStreamAsync();
-            grsTask.ContinueWith((grsResult) => {
+            // client...
+            var client = new HttpClient();
+            var response = await client.PostAsync(this.Url, content);
 
-                // the result holds the stream...
-                using (Stream stream = grsResult.Result)
-                {
-                    // get the data to send...
-                    string json = input.Stringify();
-                    byte[] bs = Encoding.UTF8.GetBytes(json);
-                    
-                    // send it...
-                    stream.Write(bs, 0, bs.Length);
-                }
+            // load it up...
+            var outputJson = await response.Content.ReadAsStringAsync();
+            JsonObject output = JsonObject.Parse(outputJson);
 
-                // now, the response...
-                var grTask = request.GetResponseAsync();
-                grTask.ContinueWith((grResult) =>
-                {
-                    // unpack...
-                    string json = null;
-                    using (Stream stream = grResult.Result.GetResponseStream())
-                    {
-                        // unpack the json...
-                        StreamReader reader = new StreamReader(stream);
-                        json = reader.ReadToEnd();
-                    }
-
-                    // load it up...
-                    JsonObject output = JsonObject.Parse(json);
-
-                    // did the server return an error?
-                    bool isOk = output.GetNamedBoolean("isOk");
-                    if (isOk)
-                    {
-                        // run the delegate that processes the results...
-                        processor(output);
-                    }
-                    else
-                    {
-                        // we have an error returned from the server...
-                        string error = output.GetNamedString("error");
-
-                        // create a bucket and pass it through...
-                        ErrorBucket bucket = new ErrorBucket();
-                        bucket.AddError(error);
-                        failure(this, bucket);
-                    }
-
-                    // complete?
-                    complete();
-
-                }).ChainFailureHandler(failure, complete);
-                
-            }).ChainFailureHandler(failure, complete);
-
-            // return...
-            return grsTask;
+            // did the server return an error?
+            bool isOk = output.GetNamedBoolean("isOk");
+            if (isOk)
+                return new ServiceExecuteResult(output);
+            else
+            {
+                // we have an error returned from the server, so return that...
+                string error = output.GetNamedString("error");
+                return new ServiceExecuteResult(output, error);
+            }
         }
     }
 }

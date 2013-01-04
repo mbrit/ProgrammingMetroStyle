@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TinyIoC;
 
 namespace StreetFoo.Client
 {
@@ -19,13 +20,17 @@ namespace StreetFoo.Client
         {
             Module = module;
 
-            // setup the default IoC handlers for the view models...
-            ViewModelFactory.Current.SetHandler(typeof(IRegisterPageViewModel), typeof(RegisterPageViewModel));
-            ViewModelFactory.Current.SetHandler(typeof(ILogonPageViewModel), typeof(LogonPageViewModel));
+            //// setup the default IoC handlers for the view models...
+            //ViewModelFactory.Current.SetHandler(typeof(IRegisterPageViewModel), typeof(RegisterPageViewModel));
+            //ViewModelFactory.Current.SetHandler(typeof(ILogonPageViewModel), typeof(LogonPageViewModel));
 
-            // ...and then for the service proxies...
-            ServiceProxyFactory.Current.SetHandler(typeof(IRegisterServiceProxy), typeof(RegisterServiceProxy));
-            ServiceProxyFactory.Current.SetHandler(typeof(ILogonServiceProxy), typeof(LogonServiceProxy));
+            //// ...and then for the service proxies...
+            //ServiceProxyFactory.Current.SetHandler(typeof(IRegisterServiceProxy), typeof(RegisterServiceProxy));
+            //ServiceProxyFactory.Current.SetHandler(typeof(ILogonServiceProxy), typeof(LogonServiceProxy));
+
+            // tinyioc...
+            var container = TinyIoCContainer.Current;
+            container.AutoRegister();
         }
     }
 }

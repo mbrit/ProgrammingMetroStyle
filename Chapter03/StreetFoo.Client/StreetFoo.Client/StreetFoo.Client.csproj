@@ -106,6 +106,7 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Ioc\IocBase.cs" />
@@ -124,7 +125,6 @@
     <Compile Include="Objects\ErrorBucket.cs" />
     <Compile Include="Objects\JsonObjectExtender.cs" />
     <Compile Include="Objects\StreetFooRuntime.cs" />
-    <Compile Include="Objects\TaskExtender.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ILogonServiceProxy.cs" />
     <Compile Include="Services\IRegisterServiceProxy.cs" />
@@ -133,7 +133,10 @@
     <Compile Include="Services\LogonServiceProxy.cs" />
     <Compile Include="Services\RegisterResult.cs" />
     <Compile Include="Services\RegisterServiceProxy.cs" />
+    <Compile Include="Services\ServiceExecuteResult.cs" />
     <Compile Include="Services\ServiceProxy.cs" />
+    <Compile Include="TinyIoC.cs" />
+    <Compile Include="TypeExtender.cs" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' ">
     <VisualStudioVersion>11.0</VisualStudioVersion>

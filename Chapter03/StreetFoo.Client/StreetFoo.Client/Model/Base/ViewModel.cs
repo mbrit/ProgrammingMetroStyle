@@ -18,15 +18,19 @@ namespace StreetFoo.Client
         private Dictionary<string, object> Values { get; set; }
 
         // support field for IsBusy flag...
-        private int BusyCounter { get; set; }
+        private int BusyCount { get; set; }
         
         // event for the change...
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ViewModel(IViewModelHost host)
+        public ViewModel()
+        {
+            this.Values = new Dictionary<string, object>();
+        }
+
+        public virtual void Initialize(IViewModelHost host)
         {
             this.Host = host;
-            this.Values = new Dictionary<string, object>();
         }
 
         // uses an optional value set to the name of the caller by default...
@@ -56,28 +60,13 @@ namespace StreetFoo.Client
             this.Values[key] = value;
 
             // raise the event...
-            this.Host.InvokeOnUiThread(() => OnPropertyChanged(new PropertyChangedEventArgs(key)));
+            OnPropertyChanged(new PropertyChangedEventArgs(key));
         }
 
         public virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (this.PropertyChanged != null)
                 this.PropertyChanged(this, e);
-        }
-
-        // gets a delegate that can be told about fatal errors...
-        protected virtual FailureHandler GetFailureHandler()
-        {
-            return (sender, errors) => this.Host.ShowAlertAsync(errors);
-        }
-
-        // gets a delegate that can be told about completions...
-        protected virtual Action GetCompleteHandler(bool exitBusy = false)
-        {
-            if (exitBusy)
-                return () => this.ExitBusy();
-            else
-                return () => { };
         }
 
         // indicates whether the view model is busy...
@@ -87,31 +76,47 @@ namespace StreetFoo.Client
             private set { SetValue(value); }
         }
 
-        // indicates that the view-model is running a background task...
-        protected void EnterBusy()
+        public IDisposable EnterBusy()
         {
-            this.BusyCounter++;
+            this.BusyCount++;
 
-            // set the flag?
-            if (this.BusyCounter == 1)
+            // trigger a UI change?
+            if (this.BusyCount == 1)
                 this.IsBusy = true;
+
+            // return an object we can use to roll this back...
+            return new BusyExiter(this);
         }
 
-        // indicates that the view-model is no longer running a background task...
-        protected void ExitBusy()
+        private class BusyExiter : IDisposable
         {
-            if(this.BusyCounter > 0)
-                this.BusyCounter--;
+            private ViewModel Owner { get; set; }
 
-            // set the flag?
-            if (this.BusyCounter == 0)
+            internal BusyExiter(ViewModel owner)
+            {
+                this.Owner = owner;
+            }
+
+            public void Dispose()
+            {
+                this.Owner.ExitBusy();
+            }
+        }
+
+        public void ExitBusy()
+        {
+            this.BusyCount--;
+
+            // trigger a UI change?
+            if (this.BusyCount == 0)
                 this.IsBusy = false;
         }
+
 
         // called when the view is activated...
         public virtual void Activated()
         {
-            this.BusyCounter = 0;
+            this.BusyCount = 0;
             this.IsBusy = false;
         }
     }

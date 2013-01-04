@@ -3,19 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
+using TinyIoC;
 
 namespace StreetFoo.Client.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class TestRegisterViewModel : TestBase
     {
-        [TestMethod()]
+        [TestMethod]
         public void TestMessageShowOnFailure()
         {
             // get the view model, passing in our mock host...
             MockViewModelHost host = new MockViewModelHost();
-            IRegisterPageViewModel model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(host);
+            IRegisterPageViewModel model = TinyIoCContainer.Current.Resolve<IRegisterPageViewModel>();
+            model.Initialize(new MockViewModelHost());
 
             // if we run the model's command and don't pass in any properties, we should 
             // get an error message...
@@ -25,12 +27,13 @@ namespace StreetFoo.Client.Tests
             Assert.AreEqual(1, host.NumErrorBucketMessages);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestNoNavigationOnFailure()
         {
             // get the view model, passing in our mock host...
             MockViewModelHost host = new MockViewModelHost();
-            IRegisterPageViewModel model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(host);
+            IRegisterPageViewModel model = TinyIoCContainer.Current.Resolve<IRegisterPageViewModel>();
+            model.Initialize(new MockViewModelHost());
 
             // if we run the model's command and don't pass in any properties, we should 
             // get an error message...
@@ -40,12 +43,13 @@ namespace StreetFoo.Client.Tests
             Assert.IsNull(host.LastPageChange);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestMessageShowOnValidationPass()
         {
             // get the view model, passing in our mock host...
             MockViewModelHost host = new MockViewModelHost();
-            IRegisterPageViewModel model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(host);
+            IRegisterPageViewModel model = TinyIoCContainer.Current.Resolve<IRegisterPageViewModel>();
+            model.Initialize(new MockViewModelHost());
 
             // set the data...
             model.Username = "mbrit";
@@ -60,12 +64,13 @@ namespace StreetFoo.Client.Tests
             Assert.AreEqual(0, host.NumErrorBucketMessages);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void TestNavigateToLogonOnSuccess()
         {
             // get the view model, passing in our mock host...
             MockViewModelHost host = new MockViewModelHost();
-            IRegisterPageViewModel model = ViewModelFactory.Current.GetHandler<IRegisterPageViewModel>(host);
+            IRegisterPageViewModel model = TinyIoCContainer.Current.Resolve<IRegisterPageViewModel>();
+            model.Initialize(new MockViewModelHost());
 
             // set the data...
             model.Username = "mbrit";

@@ -8,7 +8,6 @@ namespace StreetFoo.Client
 {
     public interface IRegisterServiceProxy : IServiceProxy
     {
-        Task Register(string username, string email, string password, string confirm, Action<RegisterResult> success,
-            FailureHandler failure, Action complete);
+        Task<RegisterResult> RegisterAsync(string username, string email, string password, string confirm);
     }
 }

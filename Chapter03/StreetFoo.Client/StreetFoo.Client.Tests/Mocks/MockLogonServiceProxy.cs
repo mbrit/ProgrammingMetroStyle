@@ -8,23 +8,10 @@ namespace StreetFoo.Client.Tests
 {
     public class MockLogonServiceProxy : ILogonServiceProxy
     {
-        public Task Logon(string username, string password, Action<LogonResult> success, FailureHandler failure, 
-            Action complete = null)
+        public Task<LogonResult> LogonAsync(string username, string password)
         {
-            // create a task that simulates a call up to the server...
-            return Task.Factory.StartNew(() =>
-            {
-                // validate the data...
-
-                // raise a success result...
-                LogonResult result = new LogonResult(Guid.NewGuid().ToString());
-                success(result);
-
-                // complete?
-                if (complete != null)
-                    complete();
-
-            });
+            // raise a success result...
+            return Task.FromResult<LogonResult>(new LogonResult(Guid.NewGuid().ToString()));
         }
     }
 }

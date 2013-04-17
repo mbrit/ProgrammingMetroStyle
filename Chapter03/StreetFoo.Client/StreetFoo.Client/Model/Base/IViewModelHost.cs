@@ -16,6 +16,6 @@ namespace StreetFoo.Client
         Task ShowAlertAsync(string message);
 
         // shows a view from a given view-model...
-        void ShowView(Type viewModelInterfaceType);
+        void ShowView(Type viewModelInterfaceType, object parameter = null);
     }
 }

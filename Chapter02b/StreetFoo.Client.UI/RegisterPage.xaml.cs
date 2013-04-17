@@ -26,7 +26,7 @@ namespace StreetFoo.Client.UI
             this.InitializeComponent();
 
             // initialize the model...
-            this.InitializeViewModel<IRegisterPageViewModel>();
+            this.InitializeViewModel();
         }
 
         /// <summary>

@@ -18,19 +18,10 @@ namespace StreetFoo.Client
         // starts the application/sets up state...
         public static void Start(string module)
         {
-            Module = module;
+            Module = module;        
 
-            //// setup the default IoC handlers for the view models...
-            //ViewModelFactory.Current.SetHandler(typeof(IRegisterPageViewModel), typeof(RegisterPageViewModel));
-            //ViewModelFactory.Current.SetHandler(typeof(ILogonPageViewModel), typeof(LogonPageViewModel));
-
-            //// ...and then for the service proxies...
-            //ServiceProxyFactory.Current.SetHandler(typeof(IRegisterServiceProxy), typeof(RegisterServiceProxy));
-            //ServiceProxyFactory.Current.SetHandler(typeof(ILogonServiceProxy), typeof(LogonServiceProxy));
-
-            // tinyioc...
-            var container = TinyIoCContainer.Current;
-            container.AutoRegister();
+            // initialize TinyIoC...
+            TinyIoCContainer.Current.AutoRegister();
         }
     }
 }

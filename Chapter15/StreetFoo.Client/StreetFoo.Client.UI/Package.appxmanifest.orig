@@ -1,14 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="569e8a16-efb8-4992-ada5-7407fecb3dee-ch08" Publisher="CN=Matthew" Version="1.0.0.0" />
+<<<<<<< HEAD
+  <Identity Name="569e8a16-efb8-4992-ada5-7407fecb3dee-ch15" Publisher="CN=Matthew" Version="1.0.61221.1413" />
+=======
+  <Identity Name="569e8a16-efb8-4992-ada5-7407fecb3dee-ch15" Publisher="CN=Matthew" Version="1.0.61025.2108" />
+>>>>>>> 98037a3cc0d7a799f120b6a3751b8d1531d7dfae
   <Properties>
     <DisplayName>StreetFoo.Client.UI</DisplayName>
     <PublisherDisplayName>Matthew</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
-    <OSMinVersion>6.2.1</OSMinVersion>
-    <OSMaxVersionTested>6.2.1</OSMaxVersionTested>
+    <OSMinVersion>6.2.0</OSMinVersion>
+    <OSMaxVersionTested>6.2.0</OSMaxVersionTested>
   </Prerequisites>
   <Resources>
     <Resource Language="x-generate" />
@@ -16,6 +20,7 @@
   <Applications>
     <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="StreetFoo.Client.UI.App">
       <VisualElements DisplayName="StreetFoo.Client.UI" Logo="Assets\Logo.png" SmallLogo="Assets\SmallLogo.png" Description="StreetFoo.Client.UI" ForegroundText="light" BackgroundColor="#00A0D1" ToastCapable="true">
+        <LockScreen Notification="badge" BadgeLogo="Assets\BadgeLogo.png" />
         <DefaultTile ShowName="allLogos" WideLogo="Assets\LogoWide.png" />
         <SplashScreen Image="Assets\SplashScreen.png" />
       </VisualElements>
@@ -30,10 +35,19 @@
             <DataFormat>bitmap</DataFormat>
           </ShareTarget>
         </Extension>
+        <Extension Category="windows.search" />
+        <Extension Category="windows.backgroundTasks" EntryPoint="StreetFoo.Client.Tasks.BackgroundSyncTaskFacade">
+          <BackgroundTasks>
+            <Task Type="systemEvent" />
+            <Task Type="timer" />
+          </BackgroundTasks>
+        </Extension>
       </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="location" />
+    <DeviceCapability Name="webcam" />
   </Capabilities>
 </Package>

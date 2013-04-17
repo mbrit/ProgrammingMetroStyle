@@ -34,7 +34,7 @@ namespace StreetFoo.Client.UI.Common
     /// </list>
     /// </summary>
     [Windows.Foundation.Metadata.WebHostHidden]
-    public class LayoutAwarePage : Page
+    public class LayoutAwarePage : Page, IViewModelHost
     {
         /// <summary>
         /// Identifies the <see cref="DefaultViewModel"/> dependency property.

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest">
-  <Identity Name="569e8a16-efb8-4992-ada5-7407fecb3dee" Publisher="CN=Matthew" Version="1.0.0.0" />
+  <Identity Name="569e8a16-efb8-4992-ada5-7407fecb3dee-ch5" Publisher="CN=Matthew" Version="1.0.0.0" />
   <Properties>
     <DisplayName>StreetFoo.Client.UI</DisplayName>
     <PublisherDisplayName>Matthew</PublisherDisplayName>

@@ -30,7 +30,7 @@ namespace StreetFoo.Client
             data.Add("apiKey", ApiKey);
         }
 
-        public async Task<ServiceExecuteResult> Execute(JsonObject input)
+        public async Task<ServiceExecuteResult> ExecuteAsync(JsonObject input)
         {
             // set the api key...
             ConfigureInputArgs(input);

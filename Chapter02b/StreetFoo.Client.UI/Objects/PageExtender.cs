@@ -22,11 +22,10 @@ namespace StreetFoo.Client.UI
             return dialog.ShowAsync().AsTask();
         }
 
-        internal static void InitializeViewModel<T>(this IViewModelHost page)
-            where T : IViewModel
+        internal static void InitializeViewModel(this IViewModelHost page)
         {
             // create the model - ultimately we'll replace this with an IoC container...
-            var model = new RegisterPageViewModel(page);
+            var model = new RegisterPageViewModel();
 
             // set the data context...
             ((Page)page).DataContext = model;

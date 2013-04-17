@@ -32,7 +32,7 @@ namespace StreetFoo.Client
 
         public void Execute(object parameter)
         {
-            this.Host.ShowView(typeof(T));
+            this.Host.ShowView<T>(parameter);
         }
     }
 }

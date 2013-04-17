@@ -29,7 +29,7 @@ namespace StreetFoo.Client.UI
             this.InitializeComponent();
 
             // obtain a real instance of a model...
-            this.InitializeModel();
+            this.InitializeViewModel();
         }
 
         /// <summary>

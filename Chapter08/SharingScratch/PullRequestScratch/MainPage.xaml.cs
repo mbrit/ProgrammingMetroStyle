@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -53,10 +54,7 @@ namespace SharingScratch
                 try
                 {
                     // download...
-                    var httpRequest = HttpWebRequest.CreateHttp("http://streetfoo.apphb.com/images/graffiti00.jpg");
-                    var response = await httpRequest.GetResponseAsync();
-
-                    using (var inStream = response.GetResponseStream())
+                    using (var inStream = await new HttpClient().GetStreamAsync("http://streetfoo.apphb.com/images/graffiti00.jpg"))
                     {
                         // copy the stream... but we'll need to obtain a facade
                         // to map between WinRT and .NET...

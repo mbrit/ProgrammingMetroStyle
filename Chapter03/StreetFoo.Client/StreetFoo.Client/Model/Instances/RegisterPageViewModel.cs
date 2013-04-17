@@ -79,6 +79,7 @@ namespace StreetFoo.Client
                 // call...
                 using (this.EnterBusy())
                 {
+                    // call the server...
                     var result = await proxy.RegisterAsync(this.Username, this.Email, this.Password, this.Confirm);
 
                     // ok?

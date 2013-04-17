@@ -11,3 +11,4 @@ namespace StreetFoo.Client
         Task<RegisterResult> RegisterAsync(string username, string email, string password, string confirm);
     }
 }
+    

@@ -14,7 +14,11 @@ namespace StreetFoo.Client
         //  somewhere to hold the host...
         protected IViewModelHost Host { get; private set; }
 
-        public ViewModel(IViewModelHost host)
+        public ViewModel()
+        {
+        }
+
+        public void Initialize(IViewModelHost host)
         {
             this.Host = host;
         }

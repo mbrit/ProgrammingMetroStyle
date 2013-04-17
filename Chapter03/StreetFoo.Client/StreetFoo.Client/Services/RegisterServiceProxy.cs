@@ -24,7 +24,7 @@ namespace StreetFoo.Client
             input.Add("confirm", confirm);
 
             // call...
-            var executeResult = await this.Execute(input);
+            var executeResult = await this.ExecuteAsync(input);
 
             // get the user ID from the server result...
             if (!(executeResult.HasErrors))

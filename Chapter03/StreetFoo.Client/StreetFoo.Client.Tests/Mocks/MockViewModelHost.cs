@@ -49,7 +49,7 @@ namespace StreetFoo.Client.Tests
             return Task.FromResult<bool>(true);
         }
 
-        public void ShowView(Type viewModelInterfaceType)
+        public void ShowView(Type viewModelInterfaceType, object parameter = null)
         {
             this.PageChanges.Add(viewModelInterfaceType);
         }

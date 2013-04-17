@@ -557,7 +557,7 @@ namespace StreetFoo.Client.UI.Common
         }
 
         // shows a view from a given view-model...
-        public void ShowView(Type viewModelType)
+        public void ShowView(Type viewModelType, object parameter = null)
         {
             // get the concrete handler and as the frame to flip... (note we use the ViewFactory,
             // not the ViewModelFactory here...)

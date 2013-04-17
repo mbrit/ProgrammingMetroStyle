@@ -22,7 +22,7 @@ namespace StreetFoo.Client
             input.Add("password", password);
 
             // call...
-            var executeResult = await this.Execute(input);
+            var executeResult = await this.ExecuteAsync(input);
 
             // get the user ID from the server result...
             if (!(executeResult.HasErrors))

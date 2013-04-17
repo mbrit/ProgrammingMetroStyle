@@ -14,8 +14,7 @@ namespace StreetFoo.Client
         // commands...
         public ICommand RegisterCommand { get; private set; }
 
-        public RegisterPageViewModel(IViewModelHost host)
-            : base(host)
+        public RegisterPageViewModel()
         {
             // set RegisterCommand to 
             this.RegisterCommand = new DelegateCommand((args) => DoRegistration());

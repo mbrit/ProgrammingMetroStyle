@@ -23,7 +23,7 @@ namespace StreetFoo.Client.UI
             this.InitializeComponent();
 
             // obtain a real instance of a model... now done by dependency injection...
-            this.InitializeModel();
+            this.InitializeViewModel();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

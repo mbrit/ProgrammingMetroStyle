@@ -15,7 +15,7 @@
 //        {
 //        }
 
-//        // returns the singleton instance...				
+//        // returns the singleton instance...				C
 //        public static ServiceProxyFactory Current
 //        {
 //            get

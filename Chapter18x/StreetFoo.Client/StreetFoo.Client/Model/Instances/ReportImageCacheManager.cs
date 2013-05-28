@@ -13,7 +13,7 @@ using Windows.UI.Xaml;
 
 namespace StreetFoo.Client
 {
-    internal class ReportImageCacheManager : ILoggable
+    internal class ReportImageCacheManager 
     {
         private const string LocalCacheFolderName = "ReportImages";
 

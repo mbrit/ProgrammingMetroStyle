@@ -1,0 +1,51 @@
+﻿<common:LayoutAwarePage
+    x:Name="pageRoot"
+    x:Class="StreetFoo.Client.UI.NotLoggedOnPage"
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    IsTabStop="false"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:StreetFoo.Client.UI"
+    xmlns:common="using:StreetFoo.Client.UI.Common"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:ExtensionType="ShareTarget">
+
+    <Page.Resources>
+        <common:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <common:BooleanNegationConverter x:Key="BooleanNegationConverter"/>
+    </Page.Resources>
+
+    <!--
+        This grid acts as a root panel for the page that defines three rows:
+        * Row 0 contains the standard share target header
+        * Row 1 contains a TextBox for adding a Comment
+        * Row 2 contains the standard share target footer
+    -->
+    <Grid Style="{StaticResource LayoutRootStyle}">
+        <Grid Margin="40,20,40,60">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="1">
+                <TextBlock
+                    Text="Not logged in"
+                    Margin="0,-10,0,20"
+                    TextWrapping="NoWrap"
+                    Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                    Style="{StaticResource SubheaderTextStyle}"/>
+                <TextBlock
+                    Text="You can't do this right now because you're not logged in. Start the app from the Start screen, login with 'Remember me' checked and try again."
+                    MaxHeight="60"
+                    Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}"
+                    Style="{StaticResource BodyTextStyle}"/>
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</common:LayoutAwarePage>

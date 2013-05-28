@@ -202,7 +202,13 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MetroLog">
-      <HintPath>..\..\..\Chapter15\MetroLog\MetroLog\bin\Debug\MetroLog.dll</HintPath>
+      <HintPath>..\packages\MetroLog.0.8.1.1\lib\netcore45\MetroLog.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroLog.NetCore">
+      <HintPath>..\packages\MetroLog.0.8.1.1\lib\netcore45\MetroLog.NetCore.dll</HintPath>
+    </Reference>
+    <Reference Include="MetroLog.WinRT">
+      <HintPath>..\packages\MetroLog.0.8.1.1\lib\netcore45\MetroLog.WinRT.winmd</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.4.5.7\lib\winrt45\Newtonsoft.Json.dll</HintPath>

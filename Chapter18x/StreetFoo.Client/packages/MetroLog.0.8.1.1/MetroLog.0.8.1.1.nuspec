@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>MetroLog</id>
+    <version>0.8.1.1</version>
+    <title>MetroLog Lightweight Logging for Portable and WinJS</title>
+    <authors>Matt Baxter-Reynolds, Oren Novotny</authors>
+    <owners>Matt Baxter-Reynolds, Oren Novotny</owners>
+    <licenseUrl>https://raw.github.com/mbrit/MetroLog/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/mbrit/MetroLog</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>MetroLog is a lightweight logging framework designed for portable code and WinJS. Although the API is based on NLog and log4net, the intention is that it's a very basic logging system.
+
+This version targets .NET 4.5,.NET Core 4.5 (Windows Store apps) and WinJS</description>
+    <releaseNotes>Added a WinRT wrapper to enable use by WinJS apps</releaseNotes>
+    <copyright />
+    <language />
+    <tags>Logging WinRT NLog log4net portable pcl WinJS</tags>
+    <references>
+      <reference file="MetroLog.dll" />
+      <reference file="MetroLog.NetFx.dll" />
+      <reference file="MetroLog.NetCore.dll" />
+      <reference file="MetroLog.WinRT.winmd" />
+    </references>
+  </metadata>
+</package>
